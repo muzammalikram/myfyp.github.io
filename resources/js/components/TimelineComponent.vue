@@ -289,14 +289,14 @@
 
 <script>
     import profileHeader from './ProfileHeader.vue'
-    import { statics } from '../static_variable'
+   // import { statics } from '../static_variable'
 
      export default {
         mounted() {
             console.log('timeline mounted.');
-            console.log(statics.countries);
-            this.countries = statics.countries;
-            this.get_posts();
+            // console.log(statics.countries);
+            // this.countries = statics.countries;
+            // this.get_posts();
             
         },
         data(){
