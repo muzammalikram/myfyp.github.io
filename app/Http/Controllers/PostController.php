@@ -18,11 +18,11 @@ class PostController extends Controller
         $id = auth()->user()->id;
         //$posts = Post::where('user_id' , $id)->orderBy('created_at', 'desc')->get();
 
-        $posts = User::find(1)->user_images;
+        $posts = User::find(1);
         //$abc = $posts->user_images;
 
-            dd($posts);
-        return response()->json($abc);
+             dd($posts);
+        return response()->json($posts);
 
     }
 

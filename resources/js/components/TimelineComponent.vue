@@ -9,8 +9,6 @@
            
 
  <profileHeader></profileHeader>   
-
- 
  
         <div id="page-contents">
           <div class="row">
@@ -294,9 +292,9 @@
      export default {
         mounted() {
             console.log('timeline mounted.');
-            console.log(statics.countries);
-            this.countries = statics.countries;
-            this.get_posts();
+          //  console.log(statics.countries);
+         //   this.countries = statics.countries;
+          //  this.get_posts();
             
         },
         data(){

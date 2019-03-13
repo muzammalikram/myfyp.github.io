@@ -2956,10 +2956,9 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
-    console.log('timeline mounted.');
-    console.log(_static_variable__WEBPACK_IMPORTED_MODULE_1__["statics"].countries);
-    this.countries = _static_variable__WEBPACK_IMPORTED_MODULE_1__["statics"].countries;
-    this.get_posts();
+    console.log('timeline mounted.'); //  console.log(statics.countries);
+    //   this.countries = statics.countries;
+    //  this.get_posts();
   },
   data: function data() {
     return {
