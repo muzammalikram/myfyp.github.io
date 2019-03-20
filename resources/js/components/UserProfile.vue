@@ -764,13 +764,21 @@
                     .then(function (response) {
 
                     _this.interest_info.user_interest = '';
-                    
+                     _this.$toast.success({
+                            title:'Interest',
+                            message:'Interest Add Successfully'
+                        })
+
                         console.log(response.data);
 
                     })
                     .catch(function (error) {
 
                         console.log(error);
+                         _this.$toast.error({
+                                title:'Error',
+                                message:'Something Goes Wrong'
+                            })
 
                     });
 
@@ -795,6 +803,10 @@
                     .catch(function (error) {
 
                         console.log(error);
+                         _this.$toast.error({
+                                title:'Error',
+                                message:'Something Goes Wrong'
+                            })
 
                     });
 
@@ -847,11 +859,28 @@
                     .then(function (response) {
 
                         console.log(response.data);
+                        let res = response.data; 
+                        if (res == 1) {
+                            _this.$toast.success({
+                                title:'Updated',
+                                message:'Educational Info Updated'
+                            })
+                        }else if (res == 0) {
+                        
+                            _this.$toast.success({
+                                title:'Added',
+                                message:'Educational Info Added'
+                            })
+                        }
 
                     })
                     .catch(function (error) {
 
                         console.log(error);
+                        _this.$toast.error({
+                                title:'Error',
+                                message:'Something Goes Wrong'
+                            })
 
                     });
 
@@ -865,11 +894,28 @@
                     .then(function (response) {
 
                         console.log(response.data);
+                         let res = response.data; 
+                        if (res == 1) {
+                            _this.$toast.success({
+                                title:'Updated',
+                                message:'Work Information Updated'
+                            })
+                        }else if (res == 0) {
+                        
+                            _this.$toast.success({
+                                title:'Added',
+                                message:'Work Information Added'
+                            })
+                        }
 
                     })
                     .catch(function (error) {
 
                         console.log(error);
+                         _this.$toast.error({
+                                title:'Error',
+                                message:'Something Goes Wrong'
+                            })
 
                     });
 

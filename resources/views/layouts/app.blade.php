@@ -12,6 +12,7 @@
         <meta name="description" content="TeleFriend Social WebSie for Final Year Project" />
         <meta name="keywords" content="TeleFriend, Social Media," />
         <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="userId" content="{{ Auth::check() ? Auth::user()->id : '' }}">
         <title>TeleFriend | A Complete Social Network Website</title>
 
     <!-- Stylesheets
@@ -42,9 +43,9 @@
 
     <div id="app"> 
 
-  <!--   @ if (!is_null(auth()->user()))
-      @ include('includes.common.header')  
-  @ endif -->
+   @if (!is_null(auth()->user()))
+            <asdsadasdas></asdsadasdas>
+  @endif
 
 
 

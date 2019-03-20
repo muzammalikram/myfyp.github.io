@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\NotifyAddFriend;
 use App\UserImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +11,8 @@ use App\Profile;
 use App\UserInterest;
 use App\Post;
 use App\Friends;
+use Psy\Util\Json;
+
 
 class ProfileController extends Controller
 {
@@ -88,7 +91,7 @@ class ProfileController extends Controller
 
             $user->save();
 
-            $user = "inserted";
+            $user = 0;
 
         }
 
@@ -98,11 +101,11 @@ class ProfileController extends Controller
             ->update(['university'=> $request->university, 'edu_from'=> $request->edu_from,
                 'edu_to'=> $request->edu_to, 'edu_description'=> $request->edu_description, 'graduate'=>$request->graduate]);
 
-            $user = "updated";
+            $user = 1;
 
         }
 
-        return response()->json(['message' => $user]);
+        return response()->json($user);
 
 
 
@@ -135,7 +138,7 @@ class ProfileController extends Controller
 
             $user->save();
 
-            $user = "inserted";
+            $user = 0;
         }
         else
         {
@@ -147,10 +150,10 @@ class ProfileController extends Controller
                 'work_city' => $request->work_city , 'work_description'=>$request->work_description
                 ]);
 
-            $user = "updated";
+            $user = 1;
         }
 
-        return response()->json(['message' => $user]);
+        return response()->json($user);
 
     }
     public function interest(Request $request )
@@ -188,10 +191,83 @@ class ProfileController extends Controller
      public function addFriend($id)
      {
          $sender_id = auth()->user()->id;
-         $receiver_id = $id;
-         $sendRequest = Friends::create(['sender_id' => $sender_id , 'receiver_id' => $receiver_id,
+         $friend_id = $id;
+         $sendRequest = Friends::create(['sender_id' => $sender_id , 'receiver_id' => $friend_id,
              ]);
-         return response()->json($sendRequest);
+
+         $friend = User::find($friend_id);
+         //$arr = array($friend->f_name , $friend->id);
+         //dd($arr);
+
+         User::find($sender_id)->notify(new NotifyAddFriend($friend));
+
+         return response()->json($friend);
      }
-   
+     public function get_user_info(){
+
+	    $id = auth()->user()->id;
+         $user = User::where('id' , $id)->first();
+
+        $profile =Profile::where('user_id' , $id)->first();
+//
+//         $userImg =UserImage::where('user_id' , $id)->get();
+//
+        $interest =UserInterest::where('user_id' , $id)->get();
+//
+//         $posts = Post::where('user_id' , $id)->get();
+//
+//         $profileImg = UserImage::where('user_id' , $id)->orderBy('created_at', 'desc')->first();
+
+         return response()->json(['user'=>$user , 'profile'=>$profile ,
+             'userInterest'=>$interest
+         ]);
+     }
+     public function all_friends()
+
+     {
+         $id = auth()->user()->id;
+
+         $res = Friends::where('sender_id',$id)->Where('status' , 1)->get();
+         //   $res = Friends::where(['sender_id' => $id , 'status'=> 1]);
+
+         // $res = User::find(1)->friends()->get();
+         $res = auth()->user()->friends->where('status' , 1);
+
+         $user_name = '';
+         foreach ($res as $r )
+         {
+             //dd($r->receiver_id);
+             $a = $r->receiver_id;
+             $user_name .= User::where('id', $a)->get();
+
+         }
+
+
+         /*===============*/
+
+        // $f = Friends::where('sender_id' , $id )->where('status' , 1)->get();
+        // dd($f);
+
+        //$abc = User::whereIn("id" , $f)->get();
+
+
+
+        //dd($abc);
+
+         /*===============*/
+
+         //dd($user_name);
+        // dd($user_name);
+
+          //dd($a);
+         return json_encode($user_name);
+     //    return $user_name;
+
+         //return response()->json(['user_name'=>$user_name]);
+
+
+
+         //User::whereIn("id" , Friends::where(senderid , authid ) Or where(receiverid , auth id)->(status , 1)
+         //dd($getFriends);
+     }
 }

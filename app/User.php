@@ -42,8 +42,17 @@ class User extends Authenticatable
         return $this->hasMany('App\Post');
     }
 
+    public function profile()
+    {
+        return $this->hasOne('App\Profile');
+    }
+
     public function user_images()
     {
         return $this->hasMany('App\UserImage');
+    }
+    public function friends()
+    {
+        return $this->hasMany('App\Friends'  , 'sender_id');
     }
 }

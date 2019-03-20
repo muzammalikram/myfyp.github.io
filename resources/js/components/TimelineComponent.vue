@@ -8,7 +8,7 @@
       <div class="timeline">
            
 
- <profileHeader></profileHeader>   
+ <profileHeader @added="get_posts"></profileHeader>
 
  
  
@@ -17,7 +17,8 @@
             <div class="col-md-3"></div>
             <div class="col-md-7">
                 
-                <button @click.prevent="get_posts()">ABCDFGH</button>
+                <!--<button @click.prevent="get_posts()">ABCDFGH</button>-->
+              <!--{{ postProfile.image }}-->
 
               <!-- Post Create Box
               ================================================= -->
@@ -26,17 +27,17 @@
                     <form>
                   <div class="col-md-7 col-sm-7">
                     <div class="form-group">
-                      <img src="assets/images/users/user-1.jpg" alt="" class="profile-photo-md" />
+                      <img :src="'storage/uploads/'+postProfile.image" alt="" class="profile-photo-md" />
                       <textarea v-model="captions" name="texts" id="exampleTextarea" cols="30" rows="1" class="form-control" placeholder="Write what you wish"></textarea>
                     </div>
                     <!-- =======================PREVIEW IMAGE=================== -->
-                            <div v-if="price_input != true">
+                            <div v-if="price_input" >
                                 
                       <input type="text" class="form-control" name="price" placeholder="Add Price Here" v-model="price">
                               
                             </div>
 
-<button type="button" @click.prevent="showData()">asdasds</button>
+<!--<button type="button" @click.prevent="showData()">asdasds</button>-->
 
                     <!-- =======================PREVIEW IMAGE======================= -->
 
@@ -54,7 +55,7 @@
                         <li><a href="#"><i class="ion-ios-videocam"></i></a></li>
                         <li><a href="#"><i class="ion-map"></i></a></li>
                         <li>
-                            <input id="add_price" type="checkbox" name="add_price" v-model="price_box" value="Y" @click="add_price()">
+                            <input id="add_price" type="checkbox" name="add_price"   value="Y" v-on:click="price_input = !price_input" >
                         </li>
                       </ul><!-- ref="postImage" id="postUpload"  @change="ImageSaved" -->
 
@@ -74,8 +75,9 @@
 
               <!-- Post Content
               ================================================= -->
-              <div class="post-content" v-for="post in posts">
+              <div class="post-content" v-for="(post , index) in posts">
 
+                {{ post.id }}
                 <!--Post Date-->
                 <div class="post-date hidden-xs hidden-sm">
                   <h5>Sarah</h5>
@@ -84,14 +86,14 @@
 
                 <img v-if="post.image != null " :src="'storage/uploads/UserPost/'+post.image" alt="post-image" class="img-responsive post-image" />
                 <div class="post-container">
-                  <img src="assets/images/users/user-1.jpg" alt="user" class="profile-photo-md pull-left" />
+                  <img :src="'storage/uploads/'+postProfile.image" alt="user" class="profile-photo-md pull-left" />
                   <div class="post-detail">
                     <div class="user-info">
                       <h5><a href="timeline.html" class="profile-link">Sarah Cruiz</a> <span class="following">following</span></h5>
                       <p class="text-muted">Published a photo about 15 mins ago</p>
                     </div>
                     <div class="reaction">
-                      <a class="btn text-green"><i class="icon ion-thumbsup"></i> 13</a>
+                      <a class="btn text-green"><i class="icon ion-thumbsup"></i></a>
                       <a class="btn text-red"><i class="fa fa-thumbs-down"></i> 0</a>
                       <a class="btn btn-danger" v-if="post.price != null ">Add To Cart</a>
                     </div>
@@ -100,17 +102,22 @@
                       <p v-if="post.caption != null">{{ post.caption }} <i class="em em-anguished"></i> <i class="em em-anguished"></i> <i class="em em-anguished"></i></p>
                     </div>
                     <div class="line-divider"></div>
-                    <div class="post-comment">
-                      <img src="assets/images/users/user-11.jpg" alt="" class="profile-photo-sm" />
-                      <p><a href="timeline.html" class="profile-link">Diana </a><i class="em em-laughing"></i> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud </p>
+
+                    <div  v-for="(comments , index) in post_comments">
+                      <div class="post-comment" v-if="comments.model_id == post.id">
+                        <img :src="'storage/uploads/'+userImg.image" alt="" class="profile-photo-sm" />
+                        <p><a href="timeline.html" class="profile-link">{{ userName }} </a><i class="em em-laughing"></i> {{ comments.details }}</p>
+                      </div>
                     </div>
-                    <div class="post-comment">
-                      <img src="assets/images/users/user-4.jpg" alt="" class="profile-photo-sm" />
-                      <p><a href="timeline.html" class="profile-link">John</a> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud </p>
-                    </div>
-                    <div class="post-comment">
-                      <img src="assets/images/users/user-1.jpg" alt="" class="profile-photo-sm" />
-                      <input type="text" class="form-control" placeholder="Post a comment">
+
+
+                    <div class="post-comment"  >
+                      <!--{{ post_id = post.id }}-->
+                      <!--{{ userImg.image }}-->
+                      <img  :src="'storage/uploads/'+userImg.image" alt="" class="profile-photo-sm" />
+                      <input type="text" class="form-control" placeholder="Post a comment" v-model="comment[index]"> {{ post.id }} <b>{{ index }}</b>
+                      <button type="button" @click="addComment(post.id , index)">click</button>
+
                     </div>
                   </div>
                 </div>
@@ -200,6 +207,7 @@
                       <img src="assets/images/users/user-1.jpg" alt="" class="profile-photo-sm" />
                       <input type="text" class="form-control" placeholder="Post a comment">
                     </div>
+
                   </div>
                 </div>
               </div>
@@ -296,7 +304,9 @@
             console.log('timeline mounted.');
             // console.log(statics.countries);
             // this.countries = statics.countries;
-            // this.get_posts();
+             this.get_posts();
+             this.get_comments();
+            // this.addComment(this.post_id);
             
         },
         data(){
@@ -305,14 +315,25 @@
                postImg : '',
                
                countries : {},
-               price_input : true,
+               price_input : false,
                price_box : '',
                price : '',
-               posts : {}
+               posts : {},
+                postProfile : {},
+                comment : [],
+                post_comments : [],
+                like : 0,
+                dislike : 0,
+                userImg : '',
+                post_index : [],
+                userName : ''
             }
         },
-        methods : {
+         computed: {
 
+         },
+        methods : {
+/*
             showData()
             {
                // $comment = App\Comment::find(1);
@@ -324,7 +345,59 @@
                     .catch(function (error) {
                         console.log(error);
                     });
+            },*/
+
+          addComment(id , index){
+            //alert(this.comment);
+        //      console.log(index);
+               let comm  = this.comment[index];
+        //         console.log(com);
+              let _this = this;
+              let post_id = id;
+              //let comment = _this.comment;
+              let like = _this.like;
+              let dislike = _this.dislike;
+
+             // array.indexOf(2);
+
+              axios.post('/post_action/'+post_id , { 'comment' : comm })
+                  .then(function (response) {
+
+                      _this.post_comments = response.data.result;
+                    _this.comment[index] = '';
+                    _this.userImg = response.data.userImg;
+                    _this.userName = response.data.userName;
+
+                     console.log(_this.post_comments);
+                  })
+                  .catch(function (error) {
+                      console.log(error);
+                  });
+
+
+
+
+
+          },
+
+            get_comments(){
+               let  _this = this;
+                axios.post('/all_comments/')
+                    .then(function (response) {
+                         _this.post_comments = response.data.comments;
+                        _this.userImg = response.data.userImg;
+                        _this.userName = response.data.userName;
+
+console.log(response.data);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+
+
             },
+
 
             ImageSaved (e) {
                 //console.log(e.target.files[0]);
@@ -374,20 +447,29 @@
                             _this.price = '';
 
                             console.log(response.data);
-                        }).catch(function (error) {
+                            _this.$toast.success({
+                                        title:'Success',
+                                        message:'Post Added successfully'
+                                    })
 
+                        }).catch(function (error) {
+                                  _this.$toast.error({
+                                        title:'Failed',
+                                        message:'Post Failed'
+                                    })
                             console.log(error);
                     });
 
                // console.log(this.postImg); 
             },
-            get_posts() {
+            get_posts(img = null) {
 
                 let _this = this;
                 axios.get('/get_posts')
                     .then(function (response) {
-                        _this.posts = response.data;
-                        console.log(response.data);
+                        _this.posts = response.data.posts;
+                        _this.postProfile = response.data.userImg;
+                        console.log(response.data.userImg);
                     })
                     .catch(function (error) {
                         console.log(error);
