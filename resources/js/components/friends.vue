@@ -15,6 +15,13 @@
             <div class="col-md-3"></div>
             <div class="col-md-7">
 
+
+              <span v-for="u in users">
+                {{ u }}
+              </span>
+
+              <button type="button" @click="allFriends()">all Friend</button>
+
               <!-- Friend List
               ================================================= -->
               <div class="friend-list">
@@ -187,11 +194,29 @@
         },
         data() {
             return {
-
+                users : {}
             }
         },
         methods : {
-             
+            allFriends() {
+//                alert('d');
+                let _this = this;
+                axios.post('/all_friends')
+                    .then(function (response) {
+                      //  _this.users = response.data ;
+                       // _this.$toaster.success('Your toaster success message.');
+
+                        _this.$toast.success({
+                            title:'as',
+                            message:'ggggggggggg'
+                        })
+
+                        console.log(response.data);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
         },
         components : {
             profileHeader

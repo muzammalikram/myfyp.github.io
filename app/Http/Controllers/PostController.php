@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\UserImage;
 use Illuminate\Http\Request;
 use App\Post;
 use App\User;
+use App\PostActions;
 
 class PostController extends Controller
 {
@@ -16,13 +18,22 @@ class PostController extends Controller
     public function index()
     {
         $id = auth()->user()->id;
-        //$posts = Post::where('user_id' , $id)->orderBy('created_at', 'desc')->get();
+          $posts = Post::where('user_id' , $id)->orderBy('created_at', 'desc')->get();
 
-        $posts = User::find(1);
+ 
+      //  $posts = User::find(1);
         //$abc = $posts->user_images;
 
-             dd($posts);
-        return response()->json($posts);
+            // dd($posts);
+       // return response()->json($posts);
+ 
+          $image = UserImage::where('user_id' , $id)->orderBy('created_at', 'desc')->first();
+//        $posts = User::find(1);
+//        //$abc = $posts->user_images;
+//
+//            dd($posts);
+        return response()->json(['posts'=>$posts , 'userImg'=>$image]);
+ 
 
     }
 
@@ -98,6 +109,64 @@ class PostController extends Controller
         //$caption =  $request->all(); 
 
         return response()->json($result);
+    }
+
+    public function post_action(Request $request , $id)
+    {
+
+        //$cc = auth()->user()->posts->post_action;
+
+        //dd($cc);
+
+        $user_id = auth()->user()->id;
+        $userImg = auth()->user()->user_images->last();
+        $userName = auth()->user()->f_name;
+
+        //dd($userName);
+
+        $comment = $request->comment;
+
+        $addComment = PostActions::create([
+           'action_perform_user_id' => $user_id,
+           'model_name' => 'App\PostActions',
+           'model_id' => $id,
+           'details' => $comment,
+           'action' => 3
+        ]);
+
+        if ($addComment)
+        {
+            // $result = PostActions::where('model_id' , $id)->get();
+            $result = PostActions::where(['action'=>3, 'action_perform_user_id'=>$user_id])->get();
+
+            //where(['name'=>'ali' , 'id'=>1])->where('date','12-3-4');
+
+        }
+        else if (!$addComment)
+        {
+            $result = "comment is not posted";
+        }
+        else
+        {
+            $result = PostActions::where(['action'=>3, 'action_perform_user_id'=>$user_id])->get();
+        }
+
+        return response()->json(['result'=>$result , 'userImg' => $userImg , 'userName'=>$userName]);
+    }
+
+    public function all_comments()
+    {
+        $user_id = auth()->user()->id;
+
+        $userName = auth()->user()->f_name;
+
+        $userImg = auth()->user()->user_images->last();
+
+        $result = PostActions::where(['action'=>3, 'action_perform_user_id'=>$user_id])->get();
+
+        return response()->json(['comments' => $result , 'userImg'=> $userImg , 'userName' => $userName]);
+
+
     }
 
     /**

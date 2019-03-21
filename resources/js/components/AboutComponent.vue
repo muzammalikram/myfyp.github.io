@@ -5,34 +5,11 @@
 
       <!-- Timeline
       ================================================= -->
-      <div class="timeline">
-        <div class="timeline-cover">
+      <div class="timeline" >
+         <profileHeader></profileHeader>
 
           <!--Timeline Menu for Large Screens-->
-          <div class="timeline-nav-bar hidden-sm hidden-xs">
-            <div class="row">
-              <div class="col-md-3">
-                <div class="profile-info">
-                  <img src="images/users/user-1.jpg" alt="" class="img-responsive profile-photo" />
-                  <h3>Sarah Cruiz</h3>
-                  <p class="text-muted">Creative Director</p>
-                </div>
-              </div>
-              <div class="col-md-9">
-                <ul class="list-inline profile-menu">
-                  <li><a href="timeline.html">Timeline</a></li>
-                  <li><a href="timeline-about.html" class="active">About</a></li>
-                  <li><a href="timeline-album.html">Album</a></li>
-                  <li><a href="timeline-friends.html">Friends</a></li>
-                </ul>
-                <ul class="follow-me list-inline">
-                  <li>1,299 people following her</li>
-                  <li><button class="btn-primary">Add Friend</button></li>
-                </ul>
-              </div>
-            </div>
-          </div><!--Timeline Menu for Large Screens End-->
-
+         <!-- <header></header>-->
           <!--Timeline Menu for Small Screens-->
           <div class="navbar-mobile hidden-lg hidden-md">
             <div class="profile-info">
@@ -52,45 +29,35 @@
           </div><!--Timeline Menu for Small Screens End-->
 
         </div>
-        <div id="page-contents">
+        <div id="page-contents" v-if="load == 1">
           <div class="row">
             <div class="col-md-3"></div>
             <div class="col-md-7">
 
               <!-- About
               ================================================= -->
-              <div class="about-profile">
+              <div class="about-profile"  >
+
                 <div class="about-content-block">
                   <h4 class="grey"><i class="ion-ios-information-outline icon-in-title"></i>Personal Information</h4>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur</p>
+                  <p>{{ user.description }}</p>
                 </div>
                 <div class="about-content-block">
                   <h4 class="grey"><i class="ion-ios-briefcase-outline icon-in-title"></i>Work Experiences</h4>
                   <div class="organization">
                     <img src="images/envato.png" alt="" class="pull-left img-org" />
                     <div class="work-info">
-                      <h5>Envato</h5>
-                      <p>Seller - <span class="text-grey">1 February 2013 to present</span></p>
+                      <h5>{{ profile.work_company }}</h5>
+                      <p>{{ profile.work_designation }} <br><span class="text-grey">
+                        {{ profile.work_from }} To {{ profile.work_to }}</span></p>
                     </div>
                   </div>
-                  <div class="organization">
-                    <img src="images/envato.png" alt="" class="pull-left img-org" />
-                    <div class="work-info">
-                      <h5>Envato</h5>
-                      <p>Seller - <span class="text-grey">1 February 2013 to present</span></p>
-                    </div>
-                  </div>
-                  <div class="organization">
-                    <img src="images/envato.png" alt="" class="pull-left img-org" />
-                    <div class="work-info">
-                      <h5>Envato</h5>
-                      <p>Seller - <span class="text-grey">1 February 2013 to present</span></p>
-                    </div>
-                  </div>
+
+
                 </div>
                 <div class="about-content-block">
                   <h4 class="grey"><i class="ion-ios-location-outline icon-in-title"></i>Location</h4>
-                  <p>228 Park Eve, New York</p>
+                  <p>{{ profile.work_city }}</p>
                   <div class="google-maps">
                     <div id="map" class="map"></div>
                   </div>
@@ -98,19 +65,26 @@
                 <div class="about-content-block">
                   <h4 class="grey"><i class="ion-ios-heart-outline icon-in-title"></i>Interests</h4>
                   <ul class="interests list-inline">
-                    <li><span class="int-icons" title="Bycycle riding"><i class="icon ion-android-bicycle"></i></span></li>
-                    <li><span class="int-icons" title="Photography"><i class="icon ion-ios-camera"></i></span></li>
-                    <li><span class="int-icons" title="Shopping"><i class="icon ion-android-cart"></i></span></li>
-                    <li><span class="int-icons" title="Traveling"><i class="icon ion-android-plane"></i></span></li>
-                    <li><span class="int-icons" title="Eating"><i class="icon ion-android-restaurant"></i></span></li>
+                    <li v-for="userInterest in userInterests">
+
+                      <span class="int-icons" title="Bycycle riding">
+                        <i class="icon ion-android-bicycle"></i>
+                        {{ userInterest.interest }}
+                      </span>
+
+                    </li>
+                    <!--<li><span class="int-icons" title="Photography"><i class="icon ion-ios-camera"></i></span></li>-->
+                    <!--<li><span class="int-icons" title="Shopping"><i class="icon ion-android-cart"></i></span></li>-->
+                    <!--<li><span class="int-icons" title="Traveling"><i class="icon ion-android-plane"></i></span></li>-->
+                    <!--<li><span class="int-icons" title="Eating"><i class="icon ion-android-restaurant"></i></span></li>-->
                   </ul>
                 </div>
                 <div class="about-content-block">
                   <h4 class="grey"><i class="ion-ios-chatbubble-outline icon-in-title"></i>Language</h4>
-                    <ul>
-                      <li><a href="#">Russian</a></li>
-                      <li><a href="#">English</a></li>
-                    </ul>
+                  <ul>
+                    <li><a href="#">Russian</a></li>
+                    <li><a href="#">English</a></li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -152,9 +126,52 @@
 </template>
 
 <script>
+  import profileHeader from './ProfileHeader.vue'
     export default {
         mounted() {
-            console.log('Component mounted.')
+            console.log('Component mounted.');
+            this.get_about();
+        },
+        data() {
+            return {
+              user : {},
+                load : 0,
+                profile : {},
+                userInterests : {},
+
+
+            }
+        },
+        methods : {
+          get_about() {
+              let _this = this;
+
+              _this.$Progress.start();
+
+
+              axios.get('/get_user_info')
+                  .then(function (response) {
+
+                      _this.user = response.data.user;
+
+
+                      _this.profile = response.data.profile;
+                      _this.userInterests = response.data.userInterest;
+
+                      _this.$Progress.finish();
+                       _this.load = 1;
+                      console.log( response.data);
+                  })
+                  .catch(function (error) {
+                      _this.$Progress.fail();
+                      console.log(error);
+                  });
+
+             // this.$Progress.finish();
+          }
+        },
+        components : {
+            profileHeader
         }
     }
 </script>

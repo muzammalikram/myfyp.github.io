@@ -55,7 +55,7 @@
                                 <li><router-link to="/friends">Fiends</router-link></li>
                                 <li><router-link to="/profile">Profile</router-link></li>
                             </ul>
-                            <button class="btn-primary">Add Friend</button>
+                            <button class="btn-primary" >Add Friend</button>
                         </div>
                     </div><!--Timeline Menu for Small Screens End-->
 
@@ -68,6 +68,8 @@
     export default {
         mounted() {
             console.log('ProfileHeader mounted.');
+            // let userId = $('meta[name="userId"]').attr('content');
+            // alert(userId);
             this.getImage();
         },
         data(){
@@ -107,18 +109,27 @@
                         .then(function (response) {
                             //_this.images = response.data;
                             if (response.data == "no_image.jpg") {
-                                alert('Sorry Image Uploaded Failed');
-                            //    console.log('Image is not uploaded');
+                                //alert('Sorry Image Uploaded Failed');
+                                 _this.$toast.error({
+                                        title:'Error',
+                                        message:'Sorry Image Uploaded Failed'
+                                    })
                             }
                             else
                             { 
                                 _this.userImg =  response.data;
                                  _this.$emit('added' , _this.userImg);
-                                console.log('Image Uploaded');
-                            }
-                            console.log();
+                                 
+                                 _this.$toast.success({
+                                        title:'Success',
+                                        message:'Image Uploaded Successfully'
+                                    }) 
+                            } 
                         }).catch(function (error) {
-
+                                    _this.$toast.error({
+                                        title:'Error',
+                                        message:'Sorry Image Uploaded Failed'
+                                    })
                             console.log(error);
                     });
             }

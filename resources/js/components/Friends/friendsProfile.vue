@@ -252,14 +252,14 @@
 </template>
 
 <script>
-    import profileHeader from './ProfileHeader.vue'
+   // import profileHeader from './ProfileHeader.vue'
     import axios from 'axios'
 
     export default {
         mounted() {
             console.log('Component mounted.');
 
-
+            this.show_about(this.$route.params.userId);
             //this.get_basic_information();
             //  this.get_edu_information();
             //this.get_auth();
@@ -333,7 +333,7 @@
                     .then(function (response) {
 
                       //  _this.Basic_info = response.data;
-                        console.log(response.data);
+                  //   console.log(response.data);
 
                     })
                     .catch(function (error) {
@@ -344,7 +344,7 @@
             }
         },
         components : {
-            profileHeader
+           // profileHeader
         }
     }
 </script>
