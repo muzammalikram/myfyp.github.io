@@ -13,4 +13,11 @@ class UserImage extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+
+    public function profile()
+    {
+        return $this->belongsTo('App\Profile'  , 'user_id');
+    }
+
 }

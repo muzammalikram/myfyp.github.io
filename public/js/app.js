@@ -2939,146 +2939,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-<<<<<<< HEAD
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  mounted: function mounted() {
-    console.log('timeline mounted.'); //  console.log(statics.countries);
-    //   this.countries = statics.countries;
-    //  this.get_posts();
-=======
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
  // import { statics } from '../static_variable'
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3087,28 +2947,13 @@ __webpack_require__.r(__webpack_exports__);
     // this.countries = statics.countries;
 
     this.get_posts();
-    this.get_comments(); // this.addComment(this.post_id);
->>>>>>> working
+    this.get_comments();
   },
   data: function data() {
     return {
       captions: '',
       postImg: '',
       countries: {},
-<<<<<<< HEAD
-      price_input: true,
-      price_box: '',
-      price: '',
-      posts: {}
-    };
-  },
-  methods: {
-    showData: function showData() {
-      // $comment = App\Comment::find(1);
-      var _this = this;
-
-      axios.get('/showData').then(function (response) {
-=======
       price_input: false,
       price_box: '',
       price: '',
@@ -3156,8 +3001,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.post_comments = response.data.result;
         _this.comment[index] = '';
         _this.userImg = response.data.userImg;
-        _this.userName = response.data.userName;
-        console.log(_this.post_comments);
+        _this.userName = response.data.userName; //  console.log(_this.post_comments);
       }).catch(function (error) {
         console.log(error);
       });
@@ -3168,9 +3012,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('/all_comments/').then(function (response) {
         _this.post_comments = response.data.comments;
         _this.userImg = response.data.userImg;
-        _this.userName = response.data.userName;
->>>>>>> working
-        console.log(response.data);
+        _this.userName = response.data.userName; //console.log(response.data);
       }).catch(function (error) {
         console.log(error);
       });
@@ -3189,9 +3031,8 @@ __webpack_require__.r(__webpack_exports__);
           
       }*/
       //  alert('asd');
-      this.price_input = false;
-      console.log(this.price_box);
-      console.log(this.price_input);
+      this.price_input = false; //     console.log(this.price_box);
+      //   console.log(this.price_input);
     },
     add_post: function add_post() {
       this.postImg = this.$refs.postImage.files[0];
@@ -3211,11 +3052,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.posts = response.data;
         _this.captions = '';
         _this.postImg = '';
-        _this.price = '';
-        console.log(response.data);
-<<<<<<< HEAD
-      }).catch(function (error) {
-=======
+        _this.price = ''; //      console.log(response.data);
 
         _this.$toast.success({
           title: 'Success',
@@ -3227,27 +3064,17 @@ __webpack_require__.r(__webpack_exports__);
           message: 'Post Failed'
         });
 
->>>>>>> working
         console.log(error);
       }); // console.log(this.postImg); 
     },
     get_posts: function get_posts() {
-<<<<<<< HEAD
-      var _this = this;
-
-      axios.get('/get_posts').then(function (response) {
-        _this.posts = response.data;
-        console.log(response.data);
-=======
       var img = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
       var _this = this;
 
       axios.get('/get_posts').then(function (response) {
         _this.posts = response.data.posts;
-        _this.postProfile = response.data.userImg;
-        console.log(response.data.userImg);
->>>>>>> working
+        _this.postProfile = response.data.userImg; //     console.log(response.data.userImg);
       }).catch(function (error) {
         console.log(error);
       });
@@ -3272,6 +3099,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ProfileHeader_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ProfileHeader.vue */ "./resources/js/components/ProfileHeader.vue");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+//
+//
+//
 //
 //
 //
@@ -4008,7 +3838,13 @@ __webpack_require__.r(__webpack_exports__);
       isActive_pass: '',
       disabled: 1,
       ABC: '',
-      auth: {}
+      auth: {},
+      Color: '',
+      update_pass: {
+        old_pass: '',
+        new_pass: '',
+        confirm_pass: ''
+      }
     };
   },
   computed: {
@@ -4224,6 +4060,53 @@ __webpack_require__.r(__webpack_exports__);
       _this.isActive_edu = '';
       _this.isActive_interest = '';
       _this.isActive_account = '';
+    },
+    update_pass_fn: function update_pass_fn() {
+      var _this = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/changePassword', _this.update_pass).then(function (response) {
+        var res = response.data.result;
+        console.log(res);
+
+        if (res == 1) {
+          _this.Color = '1';
+        }
+
+        if (res == 2) {
+          _this.Color = '';
+          _this.update_pass.new_pass = '';
+          _this.update_pass.old_pass = '';
+          _this.update_pass.confirm_pass = '';
+
+          _this.$toast.success({
+            title: 'Congratulate!',
+            message: 'Password Update Successfully'
+          });
+        }
+
+        if (res == 0) {
+          _this.Color = '';
+          _this.Color = '0';
+        } //    console.log(response.data);
+        //  let res = response.data; 
+        // if (res == 1) {
+        //     _this.$toast.success({
+        //         title:'Updated',
+        //         message:'Work Information Updated'
+        //     })
+        // }else if (res == 0) {
+        //     _this.$toast.success({
+        //         title:'Added',
+        //         message:'Work Information Added'
+        //     })
+        // }
+
+      }).catch(function (error) {// console.log(error);
+        //  _this.$toast.error({
+        //         title:'Error',
+        //         message:'Something Goes Wrong'
+        //     })
+      });
     }
   },
   components: {
@@ -4430,6 +4313,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
@@ -4437,7 +4321,9 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      users: {}
+      users: [],
+      profile: [],
+      imgs: []
     };
   },
   methods: {
@@ -4446,8 +4332,11 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios.post('/all_friends').then(function (response) {
-        //  _this.users = response.data ;
-        // _this.$toaster.success('Your toaster success message.');
+        _this.users = response.data.all_friends; //   _this.users.push(response.data.Profiles);
+
+        _this.profile = response.data.Profiles;
+        _this.imgs = response.data.images; //    _this.imgs[_this.imgs.length - 1];
+
         _this.$toast.success({
           title: 'as',
           message: 'ggggggggggg'
@@ -52323,6 +52212,21 @@ var render = function() {
                               },
                               domProps: { value: _vm.comment[index] },
                               on: {
+                                keyup: function($event) {
+                                  if (
+                                    !$event.type.indexOf("key") &&
+                                    _vm._k(
+                                      $event.keyCode,
+                                      "enter",
+                                      13,
+                                      $event.key,
+                                      "Enter"
+                                    )
+                                  ) {
+                                    return null
+                                  }
+                                  return _vm.addComment(post.id, index)
+                                },
                                 input: function($event) {
                                   if ($event.target.composing) {
                                     return
@@ -52336,38 +52240,19 @@ var render = function() {
                               }
                             }),
                             _vm._v(" " + _vm._s(post.id) + " "),
-                            _c("b", [_vm._v(_vm._s(index))]),
-                            _vm._v(" "),
-                            _c(
-                              "button",
-                              {
-                                attrs: { type: "button" },
-                                on: {
-                                  click: function($event) {
-                                    return _vm.addComment(post.id, index)
-                                  }
-                                }
-                              },
-                              [_vm._v("click")]
-                            )
+                            _c("b", [_vm._v(_vm._s(index))])
                           ])
                         ],
                         2
                       )
                     ])
                   ])
-                }),
-                _vm._v(" "),
-                _vm._m(8),
-                _vm._v(" "),
-                _vm._m(9),
-                _vm._v(" "),
-                _vm._m(10)
+                })
               ],
               2
             ),
             _vm._v(" "),
-            _vm._m(11)
+            _vm._m(8)
           ])
         ])
       ],
@@ -52462,384 +52347,6 @@ var staticRenderFns = [
     return _c("a", { staticClass: "btn text-red" }, [
       _c("i", { staticClass: "fa fa-thumbs-down" }),
       _vm._v(" 0")
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "post-content" }, [
-      _c("div", { staticClass: "post-date hidden-xs hidden-sm" }, [
-        _c("h5", [_vm._v("Sarah")]),
-        _vm._v(" "),
-        _c("p", { staticClass: "text-grey" }, [_vm._v("Sometimes ago")])
-      ]),
-      _vm._v(" "),
-      _c("img", {
-        staticClass: "img-responsive post-image",
-        attrs: { src: "assets/images/post-images/13.jpg", alt: "post-image" }
-      }),
-      _vm._v(" "),
-      _c("div", { staticClass: "post-container" }, [
-        _c("img", {
-          staticClass: "profile-photo-md pull-left",
-          attrs: { src: "assets/images/users/user-1.jpg", alt: "user" }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "post-detail" }, [
-          _c("div", { staticClass: "user-info" }, [
-            _c("h5", [
-              _c(
-                "a",
-                {
-                  staticClass: "profile-link",
-                  attrs: { href: "timeline.html" }
-                },
-                [_vm._v("Sarah Cruiz")]
-              ),
-              _vm._v(" "),
-              _c("span", { staticClass: "following" }, [_vm._v("following")])
-            ]),
-            _vm._v(" "),
-            _c("p", { staticClass: "text-muted" }, [
-              _vm._v("Published a photo about 15 mins ago")
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "reaction" }, [
-            _c("a", { staticClass: "btn text-green" }, [
-              _c("i", { staticClass: "icon ion-thumbsup" }),
-              _vm._v(" 13")
-            ]),
-            _vm._v(" "),
-            _c("a", { staticClass: "btn text-red" }, [
-              _c("i", { staticClass: "fa fa-thumbs-down" }),
-              _vm._v(" 0")
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "line-divider" }),
-          _vm._v(" "),
-          _c("div", { staticClass: "post-text" }, [
-            _c("p", [
-              _vm._v(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. "
-              ),
-              _c("i", { staticClass: "em em-anguished" }),
-              _vm._v(" "),
-              _c("i", { staticClass: "em em-anguished" }),
-              _vm._v(" "),
-              _c("i", { staticClass: "em em-anguished" })
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "line-divider" }),
-          _vm._v(" "),
-          _c("div", { staticClass: "post-comment" }, [
-            _c("img", {
-              staticClass: "profile-photo-sm",
-              attrs: { src: "assets/images/users/user-11.jpg", alt: "" }
-            }),
-            _vm._v(" "),
-            _c("p", [
-              _c(
-                "a",
-                {
-                  staticClass: "profile-link",
-                  attrs: { href: "timeline.html" }
-                },
-                [_vm._v("Diana ")]
-              ),
-              _c("i", { staticClass: "em em-laughing" }),
-              _vm._v(
-                " Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud "
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "post-comment" }, [
-            _c("img", {
-              staticClass: "profile-photo-sm",
-              attrs: { src: "assets/images/users/user-4.jpg", alt: "" }
-            }),
-            _vm._v(" "),
-            _c("p", [
-              _c(
-                "a",
-                {
-                  staticClass: "profile-link",
-                  attrs: { href: "timeline.html" }
-                },
-                [_vm._v("John")]
-              ),
-              _vm._v(
-                " Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud "
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "post-comment" }, [
-            _c("img", {
-              staticClass: "profile-photo-sm",
-              attrs: { src: "assets/images/users/user-1.jpg", alt: "" }
-            }),
-            _vm._v(" "),
-            _c("input", {
-              staticClass: "form-control",
-              attrs: { type: "text", placeholder: "Post a comment" }
-            })
-          ])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "post-content" }, [
-      _c("div", { staticClass: "post-date hidden-xs hidden-sm" }, [
-        _c("h5", [_vm._v("Sarah")]),
-        _vm._v(" "),
-        _c("p", { staticClass: "text-grey" }, [_vm._v("10/22/2016")])
-      ]),
-      _vm._v(" "),
-      _c("img", {
-        staticClass: "img-responsive post-image",
-        attrs: { src: "assets/images/post-images/13.jpg", alt: "post-image" }
-      }),
-      _vm._v(" "),
-      _c("div", { staticClass: "post-container" }, [
-        _c("img", {
-          staticClass: "profile-photo-md pull-left",
-          attrs: { src: "assets/images/users/user-1.jpg", alt: "user" }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "post-detail" }, [
-          _c("div", { staticClass: "user-info" }, [
-            _c("h5", [
-              _c(
-                "a",
-                {
-                  staticClass: "profile-link",
-                  attrs: { href: "timeline.html" }
-                },
-                [_vm._v("Sarah Cruiz")]
-              ),
-              _vm._v(" "),
-              _c("span", { staticClass: "following" }, [_vm._v("following")])
-            ]),
-            _vm._v(" "),
-            _c("p", { staticClass: "text-muted" }, [_vm._v("Yesterday")])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "reaction" }, [
-            _c("a", { staticClass: "btn text-green" }, [
-              _c("i", { staticClass: "icon ion-thumbsup" }),
-              _vm._v(" 49")
-            ]),
-            _vm._v(" "),
-            _c("a", { staticClass: "btn text-red" }, [
-              _c("i", { staticClass: "fa fa-thumbs-down" }),
-              _vm._v(" 0")
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "line-divider" }),
-          _vm._v(" "),
-          _c("div", { staticClass: "post-text" }, [
-            _c("p", [
-              _vm._v(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. "
-              ),
-              _c("i", { staticClass: "em em-anguished" }),
-              _vm._v(" "),
-              _c("i", { staticClass: "em em-anguished" }),
-              _vm._v(" "),
-              _c("i", { staticClass: "em em-anguished" })
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "line-divider" }),
-          _vm._v(" "),
-          _c("div", { staticClass: "post-comment" }, [
-            _c("img", {
-              staticClass: "profile-photo-sm",
-              attrs: { src: "assets/images/users/user-11.jpg", alt: "" }
-            }),
-            _vm._v(" "),
-            _c("p", [
-              _c(
-                "a",
-                {
-                  staticClass: "profile-link",
-                  attrs: { href: "timeline.html" }
-                },
-                [_vm._v("Diana ")]
-              ),
-              _c("i", { staticClass: "em em-laughing" }),
-              _vm._v(
-                " Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud "
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "post-comment" }, [
-            _c("img", {
-              staticClass: "profile-photo-sm",
-              attrs: { src: "assets/images/users/user-4.jpg", alt: "" }
-            }),
-            _vm._v(" "),
-            _c("p", [
-              _c(
-                "a",
-                {
-                  staticClass: "profile-link",
-                  attrs: { href: "timeline.html" }
-                },
-                [_vm._v("John")]
-              ),
-              _vm._v(
-                " Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud "
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "post-comment" }, [
-            _c("img", {
-              staticClass: "profile-photo-sm",
-              attrs: { src: "assets/images/users/user-1.jpg", alt: "" }
-            }),
-            _vm._v(" "),
-            _c("input", {
-              staticClass: "form-control",
-              attrs: { type: "text", placeholder: "Post a comment" }
-            })
-          ])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "post-content" }, [
-      _c("div", { staticClass: "post-date hidden-xs hidden-sm" }, [
-        _c("h5", [_vm._v("Sarah")]),
-        _vm._v(" "),
-        _c("p", { staticClass: "text-grey" }, [_vm._v("10/21/2016")])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "post-container" }, [
-        _c("img", {
-          staticClass: "profile-photo-md pull-left",
-          attrs: { src: "assets/images/users/user-1.jpg", alt: "user" }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "post-detail" }, [
-          _c("div", { staticClass: "user-info" }, [
-            _c("h5", [
-              _c(
-                "a",
-                {
-                  staticClass: "profile-link",
-                  attrs: { href: "timeline.html" }
-                },
-                [_vm._v("Sarah Cruiz")]
-              ),
-              _vm._v(" "),
-              _c("span", { staticClass: "following" }, [_vm._v("following")])
-            ]),
-            _vm._v(" "),
-            _c("p", { staticClass: "text-muted" }, [_vm._v("2 days ago")])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "reaction" }, [
-            _c("a", { staticClass: "btn text-green" }, [
-              _c("i", { staticClass: "icon ion-thumbsup" }),
-              _vm._v(" 49")
-            ]),
-            _vm._v(" "),
-            _c("a", { staticClass: "btn text-red" }, [
-              _c("i", { staticClass: "fa fa-thumbs-down" }),
-              _vm._v(" 0")
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "line-divider" }),
-          _vm._v(" "),
-          _c("div", { staticClass: "post-text" }, [
-            _c("p", [
-              _vm._v(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. "
-              ),
-              _c("i", { staticClass: "em em-anguished" }),
-              _vm._v(" "),
-              _c("i", { staticClass: "em em-anguished" }),
-              _vm._v(" "),
-              _c("i", { staticClass: "em em-anguished" })
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "line-divider" }),
-          _vm._v(" "),
-          _c("div", { staticClass: "post-comment" }, [
-            _c("img", {
-              staticClass: "profile-photo-sm",
-              attrs: { src: "assets/images/users/user-11.jpg", alt: "" }
-            }),
-            _vm._v(" "),
-            _c("p", [
-              _c(
-                "a",
-                {
-                  staticClass: "profile-link",
-                  attrs: { href: "timeline.html" }
-                },
-                [_vm._v("Diana ")]
-              ),
-              _c("i", { staticClass: "em em-laughing" }),
-              _vm._v(
-                " Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud "
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "post-comment" }, [
-            _c("img", {
-              staticClass: "profile-photo-sm",
-              attrs: { src: "assets/images/users/user-4.jpg", alt: "" }
-            }),
-            _vm._v(" "),
-            _c("p", [
-              _c(
-                "a",
-                {
-                  staticClass: "profile-link",
-                  attrs: { href: "timeline.html" }
-                },
-                [_vm._v("John")]
-              ),
-              _vm._v(
-                " Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud "
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "post-comment" }, [
-            _c("img", {
-              staticClass: "profile-photo-sm",
-              attrs: { src: "assets/images/users/user-1.jpg", alt: "" }
-            }),
-            _vm._v(" "),
-            _c("input", {
-              staticClass: "form-control",
-              attrs: { type: "text", placeholder: "Post a comment" }
-            })
-          ])
-        ])
-      ])
     ])
   },
   function() {
@@ -55910,12 +55417,182 @@ var render = function() {
                   ? _c("div", { staticClass: "edit-profile-container" }, [
                       _vm._m(10),
                       _vm._v(" "),
-                      _vm._m(11)
+                      _c("div", { staticClass: "edit-block" }, [
+                        _c(
+                          "form",
+                          {
+                            staticClass: "form-inline",
+                            attrs: { name: "update-pass", id: "education" }
+                          },
+                          [
+                            _c("div", { staticClass: "row" }, [
+                              _c(
+                                "div",
+                                { staticClass: "form-group col-xs-12" },
+                                [
+                                  _c(
+                                    "label",
+                                    { attrs: { for: "my-password" } },
+                                    [_vm._v("Old password")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.update_pass.old_pass,
+                                        expression: "update_pass.old_pass"
+                                      }
+                                    ],
+                                    staticClass: "form-control input-group-lg",
+                                    style: [
+                                      _vm.Color == "0"
+                                        ? { border: "1px solid red" }
+                                        : { border: "none" }
+                                    ],
+                                    attrs: {
+                                      id: "my-password",
+                                      type: "password",
+                                      name: "password",
+                                      title: "Enter password",
+                                      placeholder: "Old password"
+                                    },
+                                    domProps: {
+                                      value: _vm.update_pass.old_pass
+                                    },
+                                    on: {
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          _vm.update_pass,
+                                          "old_pass",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  })
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "row" }, [
+                              _c(
+                                "div",
+                                { staticClass: "form-group col-xs-6" },
+                                [
+                                  _c("label", [_vm._v("New password")]),
+                                  _vm._v(" "),
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.update_pass.new_pass,
+                                        expression: "update_pass.new_pass"
+                                      }
+                                    ],
+                                    staticClass: "form-control input-group-lg",
+                                    style: [
+                                      _vm.Color == "1"
+                                        ? { border: "1px solid red" }
+                                        : { border: "none" }
+                                    ],
+                                    attrs: {
+                                      type: "password",
+                                      name: "password",
+                                      title: "Enter password",
+                                      placeholder: "New password"
+                                    },
+                                    domProps: {
+                                      value: _vm.update_pass.new_pass
+                                    },
+                                    on: {
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          _vm.update_pass,
+                                          "new_pass",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  })
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                { staticClass: "form-group col-xs-6" },
+                                [
+                                  _c("label", [_vm._v("Confirm password")]),
+                                  _vm._v(" "),
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.update_pass.confirm_pass,
+                                        expression: "update_pass.confirm_pass"
+                                      }
+                                    ],
+                                    staticClass: "form-control input-group-lg",
+                                    style: [
+                                      _vm.Color == "1"
+                                        ? { border: "1px solid red" }
+                                        : { border: "none" }
+                                    ],
+                                    attrs: {
+                                      type: "password",
+                                      name: "password",
+                                      title: "Enter password",
+                                      placeholder: "Confirm password"
+                                    },
+                                    domProps: {
+                                      value: _vm.update_pass.confirm_pass
+                                    },
+                                    on: {
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          _vm.update_pass,
+                                          "confirm_pass",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  })
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-primary",
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    return _vm.update_pass_fn()
+                                  }
+                                }
+                              },
+                              [_vm._v("Update Password")]
+                            )
+                          ]
+                        )
+                      ])
                     ])
                   : _vm._e()
               ]),
               _vm._v(" "),
-              _vm._m(12)
+              _vm._m(11)
             ])
           ])
         ],
@@ -56252,78 +55929,6 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "edit-block" }, [
-      _c(
-        "form",
-        {
-          staticClass: "form-inline",
-          attrs: { name: "update-pass", id: "education" }
-        },
-        [
-          _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "form-group col-xs-12" }, [
-              _c("label", { attrs: { for: "my-password" } }, [
-                _vm._v("Old password")
-              ]),
-              _vm._v(" "),
-              _c("input", {
-                staticClass: "form-control input-group-lg",
-                attrs: {
-                  id: "my-password",
-                  type: "password",
-                  name: "password",
-                  title: "Enter password",
-                  placeholder: "Old password"
-                }
-              })
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "form-group col-xs-6" }, [
-              _c("label", [_vm._v("New password")]),
-              _vm._v(" "),
-              _c("input", {
-                staticClass: "form-control input-group-lg",
-                attrs: {
-                  type: "password",
-                  name: "password",
-                  title: "Enter password",
-                  placeholder: "New password"
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group col-xs-6" }, [
-              _c("label", [_vm._v("Confirm password")]),
-              _vm._v(" "),
-              _c("input", {
-                staticClass: "form-control input-group-lg",
-                attrs: {
-                  type: "password",
-                  name: "password",
-                  title: "Enter password",
-                  placeholder: "Confirm password"
-                }
-              })
-            ])
-          ]),
-          _vm._v(" "),
-          _c("p", [
-            _c("a", { attrs: { href: "#" } }, [_vm._v("Forgot Password?")])
-          ]),
-          _vm._v(" "),
-          _c("button", { staticClass: "btn btn-primary" }, [
-            _vm._v("Update Password")
-          ])
-        ]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-md-2 static" }, [
       _c("div", { attrs: { id: "sticky-sidebar" } }, [
         _c("h4", { staticClass: "grey" }, [_vm._v("Sarah's activity")]),
@@ -56415,33 +56020,36 @@ var render = function() {
           _c("div", { staticClass: "row" }, [
             _c("div", { staticClass: "col-md-3" }),
             _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "col-md-7" },
-              [
-                _vm._l(_vm.users, function(u) {
-                  return _c("span", [
-                    _vm._v("\n            " + _vm._s(u) + "\n          ")
-                  ])
-                }),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    attrs: { type: "button" },
-                    on: {
-                      click: function($event) {
-                        return _vm.allFriends()
-                      }
+            _c("div", { staticClass: "col-md-7" }, [
+              _c(
+                "button",
+                {
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.allFriends()
                     }
-                  },
-                  [_vm._v("all Friend")]
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "friend-list" }, [
-                  _c("div", { staticClass: "row" }, [
-                    _c("div", { staticClass: "col-md-6 col-sm-6" }, [
+                  }
+                },
+                [_vm._v("all Friendss")]
+              ),
+              _vm._v(" "),
+              _c("br"),
+              _vm._v("\n" + _vm._s(_vm.imgs) + "\n              "),
+              _c("div", { staticClass: "friend-list" }, [
+                _c(
+                  "div",
+                  { staticClass: "row" },
+                  _vm._l(_vm.users, function(u, index) {
+                    return _c("div", { staticClass: "col-md-6 col-sm-6" }, [
                       _c("div", { staticClass: "friend-card" }, [
+                        _vm._v(
+                          " " +
+                            _vm._s(u.id) +
+                            "  && " +
+                            _vm._s(index) +
+                            "\n                      "
+                        ),
                         _c("img", {
                           staticClass: "img-responsive cover",
                           attrs: {
@@ -56489,7 +56097,7 @@ var render = function() {
                                         staticClass: "profile-link",
                                         attrs: { to: "friendsProfile/1" }
                                       },
-                                      [_vm._v("Sophia Lee")]
+                                      [_vm._v(_vm._s(u.f_name))]
                                     )
                                   ]
                                 )
@@ -56497,35 +56105,24 @@ var render = function() {
                               1
                             ),
                             _vm._v(" "),
-                            _c("p", [_vm._v("Student at Harvard")])
+                            _c("p", [
+                              _vm._v(
+                                "Student at " +
+                                  _vm._s(_vm.profile[index].university)
+                              )
+                            ])
                           ])
                         ])
                       ])
-                    ]),
-                    _vm._v(" "),
-                    _vm._m(0),
-                    _vm._v(" "),
-                    _vm._m(1),
-                    _vm._v(" "),
-                    _vm._m(2),
-                    _vm._v(" "),
-                    _vm._m(3),
-                    _vm._v(" "),
-                    _vm._m(4),
-                    _vm._v(" "),
-                    _vm._m(5),
-                    _vm._v(" "),
-                    _vm._m(6),
-                    _vm._v(" "),
-                    _vm._m(7)
-                  ])
-                ])
-              ],
-              2
-            ),
-            _vm._v(" "),
-            _vm._m(8)
-          ])
+                    ])
+                  }),
+                  0
+                )
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _vm._m(0)
         ])
       ],
       1
@@ -56533,332 +56130,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-6 col-sm-6" }, [
-      _c("div", { staticClass: "friend-card" }, [
-        _c("img", {
-          staticClass: "img-responsive cover",
-          attrs: { src: "assets/images/covers/3.jpg", alt: "profile-cover" }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-info" }, [
-          _c("img", {
-            staticClass: "profile-photo-lg",
-            attrs: { src: "assets/images/users/user-4.jpg", alt: "user" }
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "friend-info" }, [
-            _c(
-              "a",
-              { staticClass: "pull-right text-green", attrs: { href: "#" } },
-              [_vm._v("My Friend")]
-            ),
-            _vm._v(" "),
-            _c("h5", [
-              _c(
-                "a",
-                {
-                  staticClass: "profile-link",
-                  attrs: { href: "timeline.html" }
-                },
-                [_vm._v("John Doe")]
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [_vm._v("Traveler")])
-          ])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-6 col-sm-6" }, [
-      _c("div", { staticClass: "friend-card" }, [
-        _c("img", {
-          staticClass: "img-responsive cover",
-          attrs: { src: "assets/images/covers/4.jpg", alt: "profile-cover" }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-info" }, [
-          _c("img", {
-            staticClass: "profile-photo-lg",
-            attrs: { src: "assets/images/users/user-10.jpg", alt: "user" }
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "friend-info" }, [
-            _c(
-              "a",
-              {
-                staticClass: "pull-right text-green",
-                attrs: { href: "timeline.html" }
-              },
-              [_vm._v("My Friend")]
-            ),
-            _vm._v(" "),
-            _c("h5", [
-              _c("a", { staticClass: "profile-link", attrs: { href: "#" } }, [
-                _vm._v("Julia Cox")
-              ])
-            ]),
-            _vm._v(" "),
-            _c("p", [_vm._v("Art Designer")])
-          ])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-6 col-sm-6" }, [
-      _c("div", { staticClass: "friend-card" }, [
-        _c("img", {
-          staticClass: "img-responsive cover",
-          attrs: { src: "assets/images/covers/5.jpg", alt: "profile-cover" }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-info" }, [
-          _c("img", {
-            staticClass: "profile-photo-lg",
-            attrs: { src: "assets/images/users/user-7.jpg", alt: "user" }
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "friend-info" }, [
-            _c(
-              "a",
-              { staticClass: "pull-right text-green", attrs: { href: "#" } },
-              [_vm._v("My Friend")]
-            ),
-            _vm._v(" "),
-            _c("h5", [
-              _c(
-                "a",
-                {
-                  staticClass: "profile-link",
-                  attrs: { href: "timelime.html" }
-                },
-                [_vm._v("Robert Cook")]
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [_vm._v("Photographer at Photography")])
-          ])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-6 col-sm-6" }, [
-      _c("div", { staticClass: "friend-card" }, [
-        _c("img", {
-          staticClass: "img-responsive cover",
-          attrs: { src: "assets/images/covers/6.jpg", alt: "profile-cover" }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-info" }, [
-          _c("img", {
-            staticClass: "profile-photo-lg",
-            attrs: { src: "assets/images/users/user-8.jpg", alt: "user" }
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "friend-info" }, [
-            _c(
-              "a",
-              { staticClass: "pull-right text-green", attrs: { href: "#" } },
-              [_vm._v("My Friend")]
-            ),
-            _vm._v(" "),
-            _c("h5", [
-              _c(
-                "a",
-                {
-                  staticClass: "profile-link",
-                  attrs: { href: "timeline.html" }
-                },
-                [_vm._v("Richard Bell")]
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [_vm._v("Graphic Designer at Envato")])
-          ])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-6 col-sm-6" }, [
-      _c("div", { staticClass: "friend-card" }, [
-        _c("img", {
-          staticClass: "img-responsive cover",
-          attrs: { src: "assets/images/covers/7.jpg", alt: "profile-cover" }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-info" }, [
-          _c("img", {
-            staticClass: "profile-photo-lg",
-            attrs: { src: "assets/images/users/user-2.jpg", alt: "user" }
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "friend-info" }, [
-            _c(
-              "a",
-              { staticClass: "pull-right text-green", attrs: { href: "#" } },
-              [_vm._v("My Friend")]
-            ),
-            _vm._v(" "),
-            _c("h5", [
-              _c(
-                "a",
-                {
-                  staticClass: "profile-link",
-                  attrs: { href: "timeline.html" }
-                },
-                [_vm._v("Linda Lohan")]
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [_vm._v("Software Engineer")])
-          ])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-6 col-sm-6" }, [
-      _c("div", { staticClass: "friend-card" }, [
-        _c("img", {
-          staticClass: "img-responsive cover",
-          attrs: { src: "assets/images/covers/8.jpg", alt: "profile-cover" }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-info" }, [
-          _c("img", {
-            staticClass: "profile-photo-lg",
-            attrs: { src: "assets/images/users/user-9.jpg", alt: "user" }
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "friend-info" }, [
-            _c(
-              "a",
-              { staticClass: "pull-right text-green", attrs: { href: "#" } },
-              [_vm._v("My Friend")]
-            ),
-            _vm._v(" "),
-            _c("h5", [
-              _c(
-                "a",
-                {
-                  staticClass: "profile-link",
-                  attrs: { href: "timeline.html" }
-                },
-                [_vm._v("Anna Young")]
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [_vm._v("Musician")])
-          ])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-6 col-sm-6" }, [
-      _c("div", { staticClass: "friend-card" }, [
-        _c("img", {
-          staticClass: "img-responsive cover",
-          attrs: { src: "assets/images/covers/9.jpg", alt: "profile-cover" }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-info" }, [
-          _c("img", {
-            staticClass: "profile-photo-lg",
-            attrs: { src: "assets/images/users/user-6.jpg", alt: "user" }
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "friend-info" }, [
-            _c(
-              "a",
-              { staticClass: "pull-right text-green", attrs: { href: "#" } },
-              [_vm._v("My Friend")]
-            ),
-            _vm._v(" "),
-            _c("h5", [
-              _c(
-                "a",
-                {
-                  staticClass: "profile-link",
-                  attrs: { href: "timeline.html" }
-                },
-                [_vm._v("James Carter")]
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [_vm._v("CEO at IT Farm")])
-          ])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-6 col-sm-6" }, [
-      _c("div", { staticClass: "friend-card" }, [
-        _c("img", {
-          staticClass: "img-responsive cover",
-          attrs: { src: "assets/images/covers/10.jpg", alt: "profile-cover" }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-info" }, [
-          _c("img", {
-            staticClass: "profile-photo-lg",
-            attrs: { src: "assets/images/users/user-5.jpg", alt: "user" }
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "friend-info" }, [
-            _c(
-              "a",
-              { staticClass: "pull-right text-green", attrs: { href: "#" } },
-              [_vm._v("My Friend")]
-            ),
-            _vm._v(" "),
-            _c("h5", [
-              _c(
-                "a",
-                {
-                  staticClass: "profile-link",
-                  attrs: { href: "timeline.html" }
-                },
-                [_vm._v("Alexis Clark")]
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [_vm._v("Traveler")])
-          ])
-        ])
-      ])
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

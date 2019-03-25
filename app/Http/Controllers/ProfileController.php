@@ -12,7 +12,8 @@ use App\UserInterest;
 use App\Post;
 use App\Friends;
 use Psy\Util\Json;
-
+use Hash;
+use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
 {
@@ -223,51 +224,87 @@ class ProfileController extends Controller
          ]);
      }
      public function all_friends()
-
      {
-         $id = auth()->user()->id;
 
-         $res = Friends::where('sender_id',$id)->Where('status' , 1)->get();
-         //   $res = Friends::where(['sender_id' => $id , 'status'=> 1]);
+        $id = auth()->user()->id; 
+ 
+         $resIdsArr2 = auth()->user()->friends->where('status' , 1)->pluck('receiver_id')->toArray();
+          
+            $allFriends = User::whereIn('id', $resIdsArr2)->get();
 
-         // $res = User::find(1)->friends()->get();
-         $res = auth()->user()->friends->where('status' , 1);
+           //  $a = $allFriends->profile;
+            $arr = array();
+            foreach ($allFriends as $name) {
+                $n = $name->f_name;
+                $arr[] .= $name->id;
+          
+            }
+       $profile =    Profile::whereIn('user_id' , $arr)->get();
 
-         $user_name = '';
-         foreach ($res as $r )
-         {
-             //dd($r->receiver_id);
-             $a = $r->receiver_id;
-             $user_name .= User::where('id', $a)->get();
+       //  $imgs = UserImage::where('user_id' , $arr)->orderBy('created_at','desc')->get();
 
-         }
+         //dd($imgs);
 
-
-         /*===============*/
-
-        // $f = Friends::where('sender_id' , $id )->where('status' , 1)->get();
-        // dd($f);
-
-        //$abc = User::whereIn("id" , $f)->get();
+        // dd($imgs);
+        $imgs = UserImage::whereIn('user_id' , $arr)->get();
 
 
+         // $imgs = UserImage::whereIn('user_id' , $arr)->pluck('user_id')->toArray();
 
-        //dd($abc);
+       //     $new = UserImage::whereIn('user_id' , $imgs)->get();
 
-         /*===============*/
-
-         //dd($user_name);
-        // dd($user_name);
-
-          //dd($a);
-         return json_encode($user_name);
-     //    return $user_name;
-
-         //return response()->json(['user_name'=>$user_name]);
-
-
-
-         //User::whereIn("id" , Friends::where(senderid , authid ) Or where(receiverid , auth id)->(status , 1)
-         //dd($getFriends);
+          // dd($imgs);
+         return json_encode(['all_friends' => $allFriends , 'Profiles'=>$profile ,
+                            'images'=>$imgs]);
+    
      }
+
+     public function changePassword(Request $request)
+    {
+
+      //  dd($request->old_pass);
+
+        $user = Auth::user();
+
+        $old_pass = $request->old_pass;
+        $new_pass = $request->new_pass;
+        $confirm_pass = $request->confirm_pass;
+
+        // $data = array('new_pass'=>$new_pass , 'confirm_pass'=>$confirm_pass , 'old_pass'=> $old_pass);
+
+
+        // $validate = Validator::make($data, [
+             
+        //     'new_pass' => ['required', 'string', 'min:6' ],
+        //     'confirm_pass' => ['required' , 'string' , 'min:6'],
+ 
+        // ]);
+
+        // //dd($validate);
+
+        // if ($validate) {
+        //     return response()->Json(["result" => 3]);
+        // }
+
+
+      // dd($new_pass."<br>".$confirm_pass);
+ 
+        if ($new_pass != $confirm_pass) {
+         return response()->json(["result"=> 1 ]);   
+        }
+        if (Hash::check($old_pass, $user->password) ) {
+            $user_id = $user->id;
+            $obj_user = User::find($user_id)->first();
+            $obj_user->password = Hash::make($new_pass);
+            $obj_user->save();
+
+            return response()->json(["result"=>2]);
+        }
+        else
+        {
+            return response()->json(["result"=>0]);
+        }
+    }
+
+
 }

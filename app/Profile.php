@@ -12,4 +12,10 @@ class Profile extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    public function userImage()
+    {
+        return $this->hasMany('App\UserImage'  , 'user_id');
+    }
+
 }

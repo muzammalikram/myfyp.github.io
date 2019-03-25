@@ -73,3 +73,4 @@ Route::get('get_user_info' , 'ProfileController@get_user_info');
 Route::post('post_action/{post_id}' , 'PostController@post_action');
 Route::post('all_comments' , 'PostController@all_comments');
 Route::post('all_friends' , 'ProfileController@all_friends');
+Route::post('changePassword' , 'ProfileController@changePassword');

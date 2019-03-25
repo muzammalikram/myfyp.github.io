@@ -622,21 +622,24 @@
                                         <div class="row">
                                             <div class="form-group col-xs-12">
                                                 <label for="my-password">Old password</label>
-                                                <input id="my-password" class="form-control input-group-lg" type="password" name="password" title="Enter password" placeholder="Old password"/>
+                                                <input id="my-password" class="form-control input-group-lg" type="password" name="password" title="Enter password" placeholder="Old password" v-model="update_pass.old_pass" v-bind:style= "[Color == '0' ? { 'border':'1px solid red'} : {'border' : 'none'}]"  />
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-xs-6">
                                                 <label>New password</label>
-                                                <input class="form-control input-group-lg" type="password" name="password" title="Enter password" placeholder="New password"/>
+                                                <input class="form-control input-group-lg" type="password" name="password" title="Enter password" placeholder="New password" v-model="update_pass.new_pass" v-bind:style= "[Color == '1' ? { 'border':'1px solid red'} : {'border' : 'none'}]" />
+                                                <!--  v-bind:style="{ 'border':'1px solid '+Color } -->
                                             </div>
                                             <div class="form-group col-xs-6">
                                                 <label>Confirm password</label>
-                                                <input class="form-control input-group-lg" type="password" name="password" title="Enter password" placeholder="Confirm password"/>
+                                                <input class="form-control input-group-lg" type="password" name="password" title="Enter password" placeholder="Confirm password"  v-model="update_pass.confirm_pass"
+                                                 v-bind:style= "[Color == '1' ? { 'border':'1px solid red'} : {'border' : 'none'}]"
+                                                 />
                                             </div>
                                         </div>
-                                        <p><a href="#">Forgot Password?</a></p>
-                                        <button class="btn btn-primary">Update Password</button>
+                                        
+                                        <button class="btn btn-primary" @click.prevent="update_pass_fn()">Update Password</button>
                                     </form>
                                 </div>
                             </div>
@@ -743,7 +746,15 @@
                 disabled: 1,
 
                 ABC : '',
-                auth : {}
+                auth : {},
+                Color : '',
+                
+                update_pass : {
+                    old_pass : '',
+                    new_pass : '',
+                    confirm_pass : ''
+                }
+
             }
         },
         computed : {
@@ -1012,7 +1023,67 @@
                 _this.isActive_interest='';
                 _this.isActive_account='';
 
-            }
+             },
+
+             update_pass_fn() {
+                
+                let _this = this;
+
+                    axios.post('/changePassword',  _this.update_pass )
+                    .then(function (response) {
+                        
+                        
+
+                        let res = response.data.result;
+                        console.log(res);
+                        if (res == 1) {
+                            
+                            _this.Color = '1';
+                        }
+                        if (res == 2) {
+                            _this.Color = '';
+                            _this.update_pass.new_pass  = '';
+                            _this.update_pass.old_pass  = '';
+                            _this.update_pass.confirm_pass  = '';
+
+                                _this.$toast.success({
+                                title:'Congratulate!',
+                                message:'Password Update Successfully'
+                            })
+                        }
+                        if (res == 0) {
+                            _this.Color = '';
+                            _this.Color = '0';
+                        }
+
+                    //    console.log(response.data);
+                        //  let res = response.data; 
+                        // if (res == 1) {
+                        //     _this.$toast.success({
+                        //         title:'Updated',
+                        //         message:'Work Information Updated'
+                        //     })
+                        // }else if (res == 0) {
+                        
+                        //     _this.$toast.success({
+                        //         title:'Added',
+                        //         message:'Work Information Added'
+                        //     })
+                        // }
+
+                    })
+                    .catch(function (error) {
+
+                        // console.log(error);
+                        //  _this.$toast.error({
+                        //         title:'Error',
+                        //         message:'Something Goes Wrong'
+                        //     })
+
+                    });
+
+
+             }
         },
         components : {
             profileHeader

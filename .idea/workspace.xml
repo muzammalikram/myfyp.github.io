@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ed21f4f3-5892-4b05-837a-2c667cb02b8d" name="Default Changelist" comment="">
-<<<<<<< HEAD
+<!-- <<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-=======
+======= -->
       <change afterPath="$PROJECT_DIR$/resources/js/components/HeaderComponent.vue" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/resources/js/components/Notifications.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/TeleFriend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/TeleFriend.iml" afterDir="false" />

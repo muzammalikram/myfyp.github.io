@@ -117,7 +117,7 @@ class PostController extends Controller
         //$cc = auth()->user()->posts->post_action;
 
         //dd($cc);
-
+ 
         $user_id = auth()->user()->id;
         $userImg = auth()->user()->user_images->last();
         $userName = auth()->user()->f_name;
