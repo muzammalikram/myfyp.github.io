@@ -73,7 +73,14 @@
                                 <li><a href="404.html">404 Not Found</a></li>
                             </ul>
                         </li>
-                        <li class="dropdown"><notification></notification></li>
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle pages" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-bell" style="font-size: 18px;"></i>{{ count_notifications }}</a>
+                            <!-- <notification @counter="count"></notification> -->
+                            <notification @counter="count"></notification>
+                        </li>
+
+                        <!-- <notification></notification> -->
                     </ul>
                     <form class="navbar-form navbar-right hidden-sm">
                         <div class="form-group">
@@ -101,12 +108,16 @@
         },
         data() {
             return {
-                nn : {}
-
+                nn : {},
+                count_notifications : '',
+                sender_name : ''
             }
         },
         methods : {
-
+            count(data)
+            { 
+                this.count_notifications = data;
+            }
         },
         components : {
             notification

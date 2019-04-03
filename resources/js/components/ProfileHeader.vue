@@ -14,8 +14,9 @@
                                         <img :src="'/storage/uploads/'+userImg" alt="" class="img-responsive profile-photo" />
                                     </label>
                                     <input type="file" name="file" ref="file" id="imagUpload"  @change="ImageUploaded()" style="display: none;">
-                                    <h3>Sarah Cruiz</h3>
-                                    <p class="text-muted">Creative Director</p>
+                                    <h3 v-if="profile.f_name != '' ">{{ user.f_name }}</h3>
+                                 
+                                    <p class="text-muted">{{ profile.work_designation }}</p>
                                 
                                 </div>
                             </div>
@@ -30,8 +31,7 @@
                                 <li><router-link to="/friends">Friends</router-link></li>
                                 </ul>
                                 <ul class="follow-me list-inline">
-                                    <li>1,299 people following her</li>
-                                  <!-- v-if="id == auth.id" -->   <li><button class="btn-primary">Add Friend</button></li>
+                                    <li style="margin-top: 8px;">1,299 people following her</li> 
 
                                 </ul>
                             </div>
@@ -54,8 +54,10 @@
                                 
                                 <li><router-link to="/friends">Fiends</router-link></li>
                                 <li><router-link to="/profile">Profile</router-link></li>
+
                             </ul>
                             <button class="btn-primary" >Add Friend</button>
+
                         </div>
                     </div><!--Timeline Menu for Small Screens End-->
 
@@ -75,7 +77,9 @@
         data(){
             return {
                 profileImg : '',
-                userImg : ''
+                userImg : '',
+                profile : {},
+                user : {}
             }
         },
         methods : {
@@ -83,8 +87,10 @@
                   let _this = this;
                 axios.get('/get_Image')
                     .then(function (response) {
-                        _this.userImg =  response.data.image;
-                       // console.log(response.data.image);
+                         _this.userImg =  response.data.get_image.image;
+                         _this.profile = response.data.get_profile;
+                         _this.user = response.data.user;
+                        console.log(response.data.get_image);
                     })
                     .catch(function (error) {
                         console.log(error);

@@ -18,8 +18,9 @@ class Post extends Model
 
     public function post_action()
     {
-        return $this->hasMany('App\UserImage');
+        return $this->hasMany('App\PostActions' , 'action_perform_user_id');
     }
+    
 
 
 }

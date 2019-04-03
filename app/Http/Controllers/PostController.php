@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Post;
 use App\User;
 use App\PostActions;
+use App\Friends;
 
 class PostController extends Controller
 {
@@ -17,8 +18,13 @@ class PostController extends Controller
      */
     public function index()
     {
+        //dd('asdsda');
         $id = auth()->user()->id;
           $posts = Post::where('user_id' , $id)->orderBy('created_at', 'desc')->get();
+
+         /* $count = Post::where('user_id' , $id)->orderBy('created_at', 'desc')->paginate(5)->count();*/
+
+
 
  
       //  $posts = User::find(1);
@@ -32,7 +38,8 @@ class PostController extends Controller
 //        //$abc = $posts->user_images;
 //
 //            dd($posts);
-        return response()->json(['posts'=>$posts , 'userImg'=>$image]);
+     //     return response()->json($posts);
+        return response()->json(['posts'=>$posts , 'userImg'=>$image ]);
  
 
     }
@@ -166,6 +173,72 @@ class PostController extends Controller
 
         return response()->json(['comments' => $result , 'userImg'=> $userImg , 'userName' => $userName]);
 
+
+    }
+
+    public function get_newsFeed() 
+    {
+        $id = auth()->user()->id;
+
+        $check_friends1 = Friends::where(['sender_id'=>$id , 'status'=>1])->pluck('receiver_id')->toArray();
+
+        $check_friends2 = Friends::where(['receiver_id'=>$id , 'status'=>1])->pluck('sender_id')->toArray();
+
+        $friends = array_merge($check_friends1 , $check_friends2);
+
+
+      //  dd($merge);
+        //$friends = Friends::where(['sender_id'=>$id , 'status'=>1])->orWhere('receiver_id' ,$id)->pluck('receiver_id')->toArray();
+
+       // dd($friends);
+
+        // if($friends->sender_id == $auth){
+
+        //     $sender_friends = Friends::where(['sender_id'=>$id , 'status'=>1])->pluck('receiver_id')->toArray();
+        // } 
+        // if($friends->receiver_id == $auth){
+            
+        //        $receiver_friends = Friends::where(['sender_id'=>$id , 'status'=>1])->pluck('receiver_id')->toArray();
+        // }  
+        //     $friends 
+
+        //$friends = Friends::where(['sender_id'=>$id, 'status'=>1])->pluck('receiver_id')->toArray();
+
+        $posts = Post::whereIn('user_id' , $friends)->orderBy('created_at' , 'desc')->get();
+
+       /// dd($posts);
+
+
+        $pluck_post = Post::whereIn('user_id' , $friends)->pluck('id')->toArray();
+
+        $post_action = PostActions::whereIn('model_id' , $pluck_post)->get()->toArray();
+
+        // Post::with('post_action')->whereIn('model_id' , $pluck_post)->get()->toArray();
+        //with('post_action')->
+
+        /*$comments = PostActions::where;
+
+        dd($comments);*/
+        //dd($post_action);
+        $userName = auth()->user()->f_name;
+
+        $userImg = auth()->user()->user_images->last();
+
+      //  dd($userImg);
+
+
+        return response()->json(['posts'=> $posts , 'post_action'=>$post_action , 'userName'=>$userName , 'userImg'=>$userImg]);
+       
+    }
+    public function get_friends_comments(Request $request) 
+    {
+         $get_posts = $request->posts;
+
+        $id = auth()->user()->id;
+          $friends = Friends::where(['sender_id'=>$id , 'status'=>1])->pluck('receiver_id')->toArray();
+         $posts = Post::with('post_action')->whereIn('user_id' , $friends)->get()->toArray();
+         
+         dd($posts);
 
     }
 

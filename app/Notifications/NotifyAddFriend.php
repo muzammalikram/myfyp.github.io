@@ -7,6 +7,8 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
+use Illuminate\Notifications\Messages\BroadcastMessage;
+
 class NotifyAddFriend extends Notification
 {
     use Queueable;
@@ -17,7 +19,7 @@ class NotifyAddFriend extends Notification
      *
      * @return void
      */
-    public function __construct(User $friend)
+    public function __construct($friend)
     {
         $this->friend = $friend;
     }
@@ -42,17 +44,22 @@ class NotifyAddFriend extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'user' => $this->friend
+            'user' => $this->friend  
         ];
     }
 
     public function toBroadcast($notifiable)
-    {
-        return [
+    { 
+        return new BroadcastMessage([
+
             'data' => [
-                'user' => $this->friend
+                'user' => $this->friend,
+                'count' => $notifiable->unreadNotifications->count(),
             ]
-        ];
+               // 'user' => $this->friend,
+               //  'count' => $notifiable->unreadNotifications->count(),
+            
+        ]);
     }
     /**
      * Get the array representation of the notification.

@@ -6,10 +6,7 @@
       ================================================= -->
       <div class="timeline">
 
-
-
-
-         <!--<profileHeader></profileHeader>-->
+ 
         <div class="timeline-cover">
 
           <!--Timeline Menu for Large Screens-->
@@ -32,12 +29,22 @@
                   <li><a v-on:click="show_about($route.params.userId)" >About</a></li>
                   <li><a v-on:click="show_album()">Album</a></li>
                   <li><a v-on:click="show_timeline()">Timeline</a></li>
-
-                  <li><router-link to="/friends">Friends</router-link></li>
+                  <li><a v-on:click="show_friends()">Friends</a></li>
+                  <!-- <li><router-link to="/friends">Friends</router-link></li> -->
                 </ul>
                 <ul class="follow-me list-inline">
-                  <li>1,299 people following her</li>
-                  <!-- v-if="id == auth.id" -->   <li><button class="btn-primary" @click.prevent="add_friend($route.params.userId)">Add Friend</button></li>
+                  <li>1,299 people following her   {{ auth_id }}</li>  
+
+                  <li v-if="request_status == 0"><button  class="btn-primary" @click.prevent="add_friend($route.params.userId)">Add Friend</button></li> 
+
+                  <li v-if="request_status == 2"><button  class="btn-primary" @click.prevent="add_friend($route.params.userId)">Request Sent</button></li> 
+
+                  <li v-if="request_status == 3"><button  class="btn-primary" @click.prevent="add_friend($route.params.userId)">Accept Request</button></li>
+                  
+                  <!-- <li v-if="receiver_id == auth_id"><button  class="btn-primary" @click.prevent="add_friend($route.params.userId)">Accept Request</button></li>  -->
+
+                  <li v-if="request_status == 1"><button  class="btn-success btn-primary ">Friend</button></li>
+
 
                 </ul>
               </div>
@@ -177,7 +184,7 @@
 
               </div>
 
-              {{ posts }}
+              <!-- {{ posts }} -->
 
               <ul class="album-photos" v-if="!album">
                 <li v-for="userImg in userImgs">
@@ -195,6 +202,19 @@
                 </li>
 
               </ul>
+
+
+              <div class="post-content" v-if="!friends">
+
+
+                <!--Post Date-->
+
+                <div class="post-container">
+                  FRIENDS 
+                </div>
+
+
+              </div>
 
               <!--
                 ========================Album End===============
@@ -260,9 +280,12 @@
             console.log('Component mounted.');
 
             this.show_about(this.$route.params.userId);
+             this.get_add_friend();
             //this.get_basic_information();
             //  this.get_edu_information();
             //this.get_auth();
+            this.auth_id = document.head.querySelector('meta[name="userId"]').content; 
+
 
 
         },
@@ -272,6 +295,7 @@
                 about: false,
                 timeline : true,
                 album : true,
+                friends : true,
                 userImg : '',
 
                 user : {},
@@ -279,7 +303,12 @@
                 userImgs : {},
                 userInterests : {},
                 profile : {},
-                profileImg : {}
+                profileImg : {},
+                request_status : '',
+                url_id : this.$route.params.userId ,
+                auth_id : '',
+                sender_id : '',
+                receiver_id : ''
 
 
             }
@@ -297,6 +326,7 @@
                 _this.about = false;
                 _this.timeline = true;
                 _this.album = true;
+                _this.friends = true;
 
                     axios.get('/get_friend_info/'+userId)
                     .then(function (response) {
@@ -319,11 +349,41 @@
                 this.about = true;
                 this.timeline = true;
                 this.album = false;
+                this.friends = true;
+            },
+            show_friends() {
+
+                this.about = true;
+                this.timeline = true;
+                this.album = true;
+                this.friends = false;
+           
             },
             show_timeline() {
                 this.about = true;
                 this.timeline = false;
                 this.album = true;
+                this.friends = true;
+            },
+            friend_request() 
+            {
+                let _this = this;
+               
+                axios.post('/friend_request')
+                    .then(function (response) {
+
+                      //  _this.Basic_info = response.data;
+                    //  _this.friend_data.push(response.data);
+
+                     console.log(response.data);
+
+                    })
+                    .catch(function (error) {
+
+                        console.log(error);
+
+                    });
+
             },
             add_friend(id) {
                 let _this = this;
@@ -332,8 +392,11 @@
                 axios.post('/addFriend/'+userId )
                     .then(function (response) {
 
-                      //  _this.Basic_info = response.data;
-                  //   console.log(response.data);
+                          _this.request_status = response.data.status;
+                          _this.sender_id = response.data.sender_id;
+                          _this.receiver_id = response.data.receiver_id;
+                          
+                      console.log(response.data );
 
                     })
                     .catch(function (error) {
@@ -341,6 +404,40 @@
                         console.log(error);
 
                     });
+            },
+
+            get_add_friend() { 
+              let _this = this;
+              let userId = _this.url_id;
+//               alert(_this.url_id);
+
+                axios.get('/get_add_friend/'+userId )
+                    .then(function (response) {
+
+                      if (response.data == 0) {
+                        console.log('asdasd');
+                      }
+                      else
+                      {
+                         _this.request_status = response.data;
+                        // console.log('asdasdasdasdadsadsadsd');
+
+                          // _this.sender_id = response.data.sender_id;
+                          // _this.receiver_id = response.data.receiver_id;
+
+                        // console.log(response.data);
+                      }
+
+                 //   _this.request_status = response.data.status;   
+                //      console.log(response.data);
+
+                    })
+                    .catch(function (error) {
+
+                        console.log(error);
+
+                    });
+
             }
         },
         components : {

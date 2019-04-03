@@ -15,7 +15,7 @@
             <div class="col-md-3"></div>
             <div class="col-md-7">
                 
-                <!--<button @click.prevent="get_posts()">ABCDFGH</button>-->
+                <!-- <button @click.prevent="loadMore()">ABCDFGH</button> -->
               <!--{{ postProfile.image }}-->
 
               <!-- Post Create Box
@@ -35,7 +35,7 @@
                               
                             </div>
 
-<!--<button type="button" @click.prevent="showData()">asdasds</button>-->
+<!-- <button type="button" @click.prevent="get_posts()">asdasds</button> -->
 
                     <!-- =======================PREVIEW IMAGE======================= -->
 
@@ -104,7 +104,7 @@
                     <div  v-for="(comments , index) in post_comments">
                       <div class="post-comment" v-if="comments.model_id == post.id">
                         <img :src="'storage/uploads/'+userImg.image" alt="" class="profile-photo-sm" />
-                        <p><a href="timeline.html" class="profile-link">{{ userName }} </a><i class="em em-laughing"></i> {{ comments.details }}</p>
+                        <p><a href="timeline.html" class="profile-link"> {{ userName }} </a><i class="em em-laughing"></i> {{ comments.details }}</p>
                       </div>
                     </div>
 
@@ -119,8 +119,17 @@
                     </div>
                   </div>
                 </div>
+              
+
+
+
               </div>
 
+    <!-- <infinite-loading @distance="1" @infinite="infiniteHandler"></infinite-loading> -->
+
+ 
+
+              
               <!--Post End here dynamically-->
 
             </div>
@@ -156,7 +165,12 @@
           </div>
         </div>
       </div>
+      
+      
+
     </div>
+
+   
 
 
 
@@ -165,17 +179,22 @@
 
 
 <script>
+     
     import profileHeader from './ProfileHeader.vue'
+   // import infiniteScroll from 'vue-infinite-scroll'
    // import { statics } from '../static_variable'
 
      export default {
+     
+
         mounted() {
             console.log('timeline mounted.');
  
             // console.log(statics.countries);
             // this.countries = statics.countries;
-             this.get_posts();
-             this.get_comments();
+               this.get_posts();
+             this.get_comments(); 
+             //this.loadMore();
             
             
         },
@@ -188,7 +207,7 @@
                price_input : false,
                price_box : '',
                price : '',
-               posts : {},
+               posts : [],
                 postProfile : {},
                 comment : [],
                 post_comments : [],
@@ -196,7 +215,8 @@
                 dislike : 0,
                 userImg : '',
                 post_index : [],
-                userName : ''
+                userName : '',
+                 page: 1 
             }
         },
          computed: {
@@ -205,20 +225,32 @@
         methods : {
 
 
-/*
-            showData()
-            {
-               // $comment = App\Comment::find(1);
-                let _this = this;
-                axios.get('/showData')
-                    .then(function (response) {
-                        console.log(response.data);
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            },*/
+            //           infiniteHandler($state) {
 
+            //     let _this = this;
+
+            //     axios.get('/get_posts?page='+_this.page)
+            //         .then(function (response) {
+
+            //             // if (response.data.count > 5) {
+                            
+            //             // } 
+            //             _this.posts = response.data.posts;
+            //             //_this.posts.push(response.data.posts);
+            //             console.log('Record count');
+            //         //    console.log(_this.postProfile);
+            //           //   _this.postProfile.push(response.data.userImg);
+            //             $state.loaded();
+                        
+            //             console.log(_this.posts);
+
+            //         })
+            //         .catch(function (error) {
+            //             console.log(error);
+            //         }); 
+            // },
+
+ 
           addComment(id , index){
             //alert(this.comment);
         //      console.log(index);
@@ -351,6 +383,6 @@
         },
         components: {
             profileHeader
-        }
+        } 
     }
 </script>

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\UserImage;
+use App\Profile;
+use App\User;
 
 class ImageController extends Controller
 {
@@ -70,9 +72,13 @@ class ImageController extends Controller
     {
         $id =  auth()->user()->id;   
 
+        $profile = auth()->user()->profile;
+
+        $user = User::where('id' , $id)->first();
+
          $getImage = UserImage::where(['user_id'=>$id ])->orderBy('created_at', 'desc')->first();
 
-            return response()->json($getImage);
+            return response()->json(['get_image' => $getImage , 'get_profile' => $profile , 'user' => $user]);
     }
 
     public function get_all_images() 

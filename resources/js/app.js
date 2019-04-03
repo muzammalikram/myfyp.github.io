@@ -8,6 +8,7 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+Vue.use(require('vue-resource'));
 
 import CxltToastr from 'cxlt-vue2-toastr'
 
@@ -23,7 +24,7 @@ Vue.use(CxltToastr, toastrConfigs)
 import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
-
+  
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -41,8 +42,9 @@ import timeline from './components/TimelineComponent.vue'
 import about from './components/AboutComponent.vue'
 import friendsProfile from './components/Friends/friendsProfile.vue'
 import friends from './components/friends.vue'
-
-
+import newsfeed from './components/NewsfeedComponent.vue' 
+import messages from './components/messegeComponent'
+import newsfeedsimilar from './components/newsfeedSimilar'
 
 
  const routes = [
@@ -53,7 +55,9 @@ import friends from './components/friends.vue'
   { path : '/about' , component : about},
   { path : '/timeline' , component : timeline},
   { path : '/friends' , component : friends },
-  { path : '/friendsProfile/:userId' , name : 'friendsProfile' , component : friendsProfile }
+  { path : '/friendsProfile/:userId' , name : 'friendsProfile' , component : friendsProfile },
+  { path : '/newsfeed' , component : newsfeed },
+  { path : '/messages' , component : messages },
 ]
 
 
@@ -73,7 +77,7 @@ const router = new VueRouter({
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('asdsadasdas', require('./components/HeaderComponent.vue').default);
-
+Vue.component('InfiniteLoading', require('vue-infinite-loading'));
 //Vue.component('LoginComponent', require('./components/LoginComponent.vue'));
 
 /**

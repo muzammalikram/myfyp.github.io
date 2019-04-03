@@ -18,7 +18,7 @@
               <button type="button" @click="allFriends()">all Friendss</button>
           
 <br>
-{{ imgs }}
+<!-- {{ imgs }} -->
               <div class="friend-list">
                 <div class="row">
                   <div class="col-md-6 col-sm-6" v-for="(u, index) in users">
@@ -32,7 +32,10 @@
                         <div class="friend-info">
                           <a href="#" class="pull-right text-green">My Friend</a>
                           <!--<a href="timeline.html" class="profile-link">Sophia Lee</a>-->
-                          <h5><router-link :to="{ name: 'friendsProfile', params: { userId: 2 }}" ><a class="profile-link" to="friendsProfile/1">{{ u.f_name }}</a></router-link></h5>
+                          <h5><router-link :to="{ name: 'friendsProfile', params: { userId: u.id }}" ><a class="profile-link" to="friendsProfile/1">{{ u.f_name }}</a></router-link>
+
+                           
+                        </h5>
                           <p >Student at {{ profile[index].university }}</p>
                         </div>
                       </div>

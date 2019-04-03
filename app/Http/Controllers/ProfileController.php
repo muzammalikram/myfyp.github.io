@@ -13,7 +13,12 @@ use App\Post;
 use App\Friends;
 use Psy\Util\Json;
 use Hash;
+use Notification;
 use Illuminate\Support\Facades\Validator;
+
+// use Illuminate\Foundation\Testing\WithoutMiddleware;
+// use Illuminate\Foundation\Testing\DatabaseMigrations;
+// use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ProfileController extends Controller
 {
@@ -192,17 +197,98 @@ class ProfileController extends Controller
      public function addFriend($id)
      {
          $sender_id = auth()->user()->id;
-         $friend_id = $id;
-         $sendRequest = Friends::create(['sender_id' => $sender_id , 'receiver_id' => $friend_id,
-             ]);
+         $friend_id = $id; 
 
-         $friend = User::find($friend_id);
-         //$arr = array($friend->f_name , $friend->id);
-         //dd($arr);
+            // $sender_id->befriend($friend_id);
+        
+            // $a = $this->assertCount(1, $recipient->getFriendRequests());
 
-         User::find($sender_id)->notify(new NotifyAddFriend($friend));
+            // dd($a);
+         $find = Friends::where(['sender_id' => $sender_id , 'receiver_id' => $friend_id])->first();
 
-         return response()->json($friend);
+    /*    if ($find) {
+
+            $sender_id->befriend($friend_id);
+        
+            $this->assertCount(1, $recipient->getFriendRequests());
+        }*/
+
+         if ($find) {
+
+             $already_request = Friends::where(['sender_id' => $sender_id , 'receiver_id' => $friend_id , 'status' => 0])->first();
+            
+             if ($already_request) {
+
+                $sendRequest = Friends::where('sender_id', $sender_id)
+                  ->where('receiver_id', $friend_id)
+                  ->update(['status' => 2]);
+
+                  $getStatus = Friends::where(['sender_id' => $sender_id , 'receiver_id' => $friend_id])->first();
+            
+            }
+            else
+            {
+                $sendRequest = Friends::where('sender_id', $sender_id)
+                  ->where('receiver_id', $friend_id)
+                  ->update(['status' => 0]);
+
+              $getStatus = Friends::where(['sender_id' => $sender_id , 'receiver_id' => $friend_id])->first();
+            }
+
+        }
+        else
+        {
+            /*==========Create user and send notification */
+
+                $sendRequest = Friends::create(['sender_id' => $sender_id , 'receiver_id' => $friend_id , 'status' =>2
+                     ]);  
+
+                $getStatus = Friends::where(['sender_id' => $sender_id , 'receiver_id' => $friend_id])->first();
+
+                 $sender_data = User::find($sender_id);
+
+                 $friend = User::find($friend_id); 
+            
+                  Notification::send($friend, new NotifyAddFriend($sender_data));
+
+
+        //     /*===========End===============================*/
+
+       }
+
+        //dd($getStatus);
+ 
+         return response()->json($getStatus);
+     }
+     public function get_add_friend($id) 
+     {
+        $auth = auth()->user()->id;
+
+        // Request Send
+
+        // $f = Friends::where(['sender_id'=> $auth , 'receiver_id'=> $id])->first();
+
+
+        $f = Friends::whereIn('sender_id' , [$auth, $id])->WhereIn('receiver_id', [$id,$auth])->first();
+
+        if($f->sender_id == $auth){
+
+            $addStatus = ($f->status == 2 ? 2 : 3);
+
+        } elseif($f->receiver_id == $auth){
+
+            $addStatus = ($f->status == 2 ? 3 : 2);
+        } 
+
+        if ($f == null) {
+            $addStatus = 0;
+        }
+
+        return response()->json($addStatus); 
+     }
+     public function get_user_notification_info($id)
+     {
+        dd($id);
      }
      public function get_user_info(){
 
@@ -270,28 +356,26 @@ class ProfileController extends Controller
         $new_pass = $request->new_pass;
         $confirm_pass = $request->confirm_pass;
 
-        // $data = array('new_pass'=>$new_pass , 'confirm_pass'=>$confirm_pass , 'old_pass'=> $old_pass);
+        $data = array('password'=>$new_pass , 'password_confirmation'=>$confirm_pass , 'old_pass'=> $old_pass);
 
+     //   dd($data);
 
-        // $validate = Validator::make($data, [
-             
-        //     'new_pass' => ['required', 'string', 'min:6' ],
-        //     'confirm_pass' => ['required' , 'string' , 'min:6'],
+        $validate = Validator::make($data, [
+              
+
+            'password' => [
+                                'required', 
+                                'min:6','confirmed',
+                                'max:50',
+                                'regex:/^(?=.*[a-z|A-Z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/',
+                            ], // asdASD123,./
+             ]);
  
-        // ]);
 
-        // //dd($validate);
-
-        // if ($validate) {
-        //     return response()->Json(["result" => 3]);
-        // }
-
-
-      // dd($new_pass."<br>".$confirm_pass);
+        if ($validate->fails()) {
+           return response()->json(["result"=> 1 ]);   
+        } 
  
-        if ($new_pass != $confirm_pass) {
-         return response()->json(["result"=> 1 ]);   
-        }
         if (Hash::check($old_pass, $user->password) ) {
             $user_id = $user->id;
             $obj_user = User::find($user_id)->first();
@@ -304,6 +388,14 @@ class ProfileController extends Controller
         {
             return response()->json(["result"=>0]);
         }
+    }
+
+    public function friend_request() {
+
+        $id = auth()->user()->id;
+        $req = Friends::where(['sender_id' => $id ])->get();
+
+        return response()->json($req);
     }
 
 

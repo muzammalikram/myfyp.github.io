@@ -74,3 +74,8 @@ Route::post('post_action/{post_id}' , 'PostController@post_action');
 Route::post('all_comments' , 'PostController@all_comments');
 Route::post('all_friends' , 'ProfileController@all_friends');
 Route::post('changePassword' , 'ProfileController@changePassword');
+Route::post('get_user-notification_info/{id}' , 'ProfileController@get_user_notification_info');
+Route::post('friend_request' , 'ProfileController@friend_request');
+Route::get('get_add_friend/{id}' , 'ProfileController@get_add_friend');
+Route::get('get_newsFeed' , 'PostController@get_newsFeed');
+Route::post('get_friends_comments' , 'PostController@get_friends_comments');
