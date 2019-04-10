@@ -9,3 +9,6 @@ $factory->define(App\UserImage::class, function (Faker $faker) {
         'image' => 'abc.png'
     ];
 });
+
+
+ 

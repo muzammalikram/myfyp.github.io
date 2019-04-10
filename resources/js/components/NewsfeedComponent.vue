@@ -41,9 +41,10 @@
 
             <!-- Post Content
             ================================================= -->
-              <div class="post-content" v-for="post in posts">
+              <div class="post-content" v-for="(post , index) in posts">
 
-              {{ post.id }}
+            {{ post.id }}
+
               <img v-if="post.image != null " :src="'/storage/uploads/'+post.image" alt="post-image" class="img-responsive post-image" />
               <div class="post-container">
                 <img src="assets/images/users/user-5.jpg" alt="user" class="profile-photo-md pull-left" />
@@ -77,7 +78,7 @@
                       <!--{{ post_id = post.id }}-->
                       <!--{{ userImg.image }}-->
                       <img  :src="'/storage/uploads/'+userImg" alt="" class="profile-photo-sm" />
-                      <input type="text" class="form-control" placeholder="Post a comment"  >  
+                      <input type="text" class="form-control" placeholder="Post a comment" v-model="comment[index]" v-on:keyup.enter="addComment(post.id , index)"  >
                     <!--   <button type="button" @click="addComment(post.id , index)">click</button>
  -->
                     </div>
@@ -144,13 +145,15 @@
         mounted() {
             console.log('Component mounted.');
             this.ClickedFn();
+            this.get_newsfeed_comments();
         },
         data() {
           return {
               posts : [],
               comments : [],
               userName: '',
-              userImg : ''
+              userImg : '',
+              comment : []
           }
         },
         methods : {
@@ -169,19 +172,50 @@
                         console.log(error);
                     });
           },
-          get_friends_comments() {
-              let _this = this; 
-              let params = { posts: _this.posts }
-                
-                 axios.post('/get_friends_comments' , params)
+            addComment(p_id , index) {
+
+                let _this = this;
+                let comm  = this.comment[index];
+
+                if (comm != "")
+                {
+                    let params = { post_id: p_id , comment : comm };
+
+                    axios.post('/add_comments' , params)
+                        .then(function (response) {
+
+                            console.log(response.data);
+                            let comm  = '';
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                }
+            },
+            get_newsfeed_comments(){
+                axios.get('/get_newsfeed_comments' , {'posts' : 'eee'})
                     .then(function (response) {
 
                         console.log(response.data);
+
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
-          }
+            },
+          // get_friends_comments() {
+          //     let _this = this;
+          //     let params = { posts: _this.posts }
+          //
+          //        axios.post('/get_friends_comments' , params)
+          //           .then(function (response) {
+          //
+          //               console.log(response.data);
+          //           })
+          //           .catch(function (error) {
+          //               console.log(error);
+          //           });
+          // }
         }, 
         components : {
            newsfeedsimilar

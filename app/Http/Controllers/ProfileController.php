@@ -177,6 +177,7 @@ class ProfileController extends Controller
     }
      public function get_friend_info($id)
      {
+
             $user = User::where('id' , $id)->first();
 
             $profile =Profile::where('user_id' , $id)->first();
@@ -197,94 +198,66 @@ class ProfileController extends Controller
      public function addFriend($id)
      {
          $sender_id = auth()->user()->id;
-         $friend_id = $id; 
+         $friend_id = $id;
 
-            // $sender_id->befriend($friend_id);
-        
-            // $a = $this->assertCount(1, $recipient->getFriendRequests());
+         $isFriend1 = $sender_id."_".$friend_id;
 
-            // dd($a);
-         $find = Friends::where(['sender_id' => $sender_id , 'receiver_id' => $friend_id])->first();
-
-    /*    if ($find) {
-
-            $sender_id->befriend($friend_id);
-        
-            $this->assertCount(1, $recipient->getFriendRequests());
-        }*/
-
-         if ($find) {
-
-             $already_request = Friends::where(['sender_id' => $sender_id , 'receiver_id' => $friend_id , 'status' => 0])->first();
-            
-             if ($already_request) {
-
-                $sendRequest = Friends::where('sender_id', $sender_id)
-                  ->where('receiver_id', $friend_id)
-                  ->update(['status' => 2]);
-
-                  $getStatus = Friends::where(['sender_id' => $sender_id , 'receiver_id' => $friend_id])->first();
-            
-            }
-            else
-            {
-                $sendRequest = Friends::where('sender_id', $sender_id)
-                  ->where('receiver_id', $friend_id)
-                  ->update(['status' => 0]);
-
-              $getStatus = Friends::where(['sender_id' => $sender_id , 'receiver_id' => $friend_id])->first();
-            }
-
-        }
-        else
-        {
-            /*==========Create user and send notification */
-
-                $sendRequest = Friends::create(['sender_id' => $sender_id , 'receiver_id' => $friend_id , 'status' =>2
-                     ]);  
-
-                $getStatus = Friends::where(['sender_id' => $sender_id , 'receiver_id' => $friend_id])->first();
-
-                 $sender_data = User::find($sender_id);
-
-                 $friend = User::find($friend_id); 
-            
-                  Notification::send($friend, new NotifyAddFriend($sender_data));
+         $isFriend2 = $friend_id."_".$sender_id;
 
 
-        //     /*===========End===============================*/
+         $find = Friends::where('sender_id' , $sender_id)->orWhere('isFriends' , $isFriend1)->where('status' , 0)->first();
 
-       }
+         if ($find > 0)
+         {
+                return response()->json(['sent' => $find]);
+         }
+         else{
+             return response()->json('asd');
+         }
 
-        //dd($getStatus);
- 
          return response()->json($getStatus);
+     }
+     public function accept_Request($id)
+     {
+         $auth = auth()->user()->id;
+         $accept = Friends::orWhere('sender_id' , $id)->orWhere('receiver_id' , $auth)->get();
+         dd($accept);
      }
      public function get_add_friend($id) 
      {
-        $auth = auth()->user()->id;
-
-        // Request Send
-
-        // $f = Friends::where(['sender_id'=> $auth , 'receiver_id'=> $id])->first();
+         $auth = auth()->user()->id;
+         $url_id = $id;
 
 
-        $f = Friends::whereIn('sender_id' , [$auth, $id])->WhereIn('receiver_id', [$id,$auth])->first();
+         $isFriend1 = $auth."_".$url_id;
 
-        if($f->sender_id == $auth){
+         $isFriend2 = $url_id."_".$auth;
 
-            $addStatus = ($f->status == 2 ? 2 : 3);
+         $sent = Friends::where('sender_id' , $auth)->where('isFriends' , $isFriend1)->where('status' , 0)->first();
 
-        } elseif($f->receiver_id == $auth){
+         if ($sent != null)
+         {
+             return response()->json(0);
+         }
 
-            $addStatus = ($f->status == 2 ? 3 : 2);
-        } 
+         $accept = Friends::where('receiver_id' , $auth)->where('isFriends' , $isFriend2)->where('status' , 0)->first();
 
-        if ($f == null) {
-            $addStatus = 0;
-        }
+         if ($accept != null )
+         {
 
-        return response()->json($addStatus); 
+             return response()->json(2);
+         }
+
+         $friend = Friends::where('isFriends' , $isFriend1)->orWhere('isFriends' , $isFriend2)->where('status' , 1)->first();
+
+         if ($friend != null)
+         {
+
+             return response()->json(1);
+         }
+
+         //dd($sent);
+        return response()->json(3);
      }
      public function get_user_notification_info($id)
      {
@@ -312,36 +285,36 @@ class ProfileController extends Controller
      public function all_friends()
      {
 
-        $id = auth()->user()->id; 
- 
-         $resIdsArr2 = auth()->user()->friends->where('status' , 1)->pluck('receiver_id')->toArray();
-          
-            $allFriends = User::whereIn('id', $resIdsArr2)->get();
+         $id = auth()->user()->id;
 
-           //  $a = $allFriends->profile;
+         $sender = Friends::where('sender_id' , $id)->where('status' , 1)->pluck('receiver_id')->toArray();
+
+         $receiver = Friends::where('receiver_id' , $id)->where('status' , 1)->pluck('sender_id')->toArray();
+
+         $merge = array_merge($sender , $receiver);
+
+
+//         $resIdsArr2 = auth()->user()->friends->where('status' , 1)->pluck('receiver_id')->toArray();
+//
+            $allFriends = User::whereIn('id', $merge)->get();
+
+
             $arr = array();
             foreach ($allFriends as $name) {
                 $n = $name->f_name;
                 $arr[] .= $name->id;
-          
+
             }
+
        $profile =    Profile::whereIn('user_id' , $arr)->get();
 
-       //  $imgs = UserImage::where('user_id' , $arr)->orderBy('created_at','desc')->get();
+        // $imgs = UserImage::whereIn('user_id' , $merge)->OrderBy('created_at' , 'desc')->first();
 
-         //dd($imgs);
-
-        // dd($imgs);
-        $imgs = UserImage::whereIn('user_id' , $arr)->get();
-
-
-         // $imgs = UserImage::whereIn('user_id' , $arr)->pluck('user_id')->toArray();
-
-       //     $new = UserImage::whereIn('user_id' , $imgs)->get();
-
-          // dd($imgs);
-         return json_encode(['all_friends' => $allFriends , 'Profiles'=>$profile ,
-                            'images'=>$imgs]);
+      //   $imgs = UserImages::with('user_images')->whereIn('id', $merge)->get();
+//          dd($imgs);
+        //  return response()->json($imgs);
+         //'images'=>$imgs
+         return json_encode(['all_friends' => $allFriends, 'Profiles'=>$profile ]);
     
      }
 

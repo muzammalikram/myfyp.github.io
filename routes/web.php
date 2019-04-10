@@ -78,4 +78,11 @@ Route::post('get_user-notification_info/{id}' , 'ProfileController@get_user_noti
 Route::post('friend_request' , 'ProfileController@friend_request');
 Route::get('get_add_friend/{id}' , 'ProfileController@get_add_friend');
 Route::get('get_newsFeed' , 'PostController@get_newsFeed');
-Route::post('get_friends_comments' , 'PostController@get_friends_comments');
+Route::post('add_comments' , 'PostController@add_comments');
+Route::post('accept_Request/{id}' , 'ProfileController@accept_Request');
+Route::get('send' , 'ChatController@chat');
+Route::post('send_message' , 'ChatController@send_message');
+Route::get('get_user' , 'ChatController@get_user');
+Route::get('get_friends' , 'ChatController@get_friends');
+Route::get('getUserMessages/{id}' , 'ChatController@getUserMessages');
+Route::get('get_newsfeed_comments' , 'PostController@get_newsfeed_comments');

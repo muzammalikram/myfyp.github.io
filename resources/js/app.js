@@ -10,6 +10,8 @@ require('./bootstrap');
 window.Vue = require('vue');
 Vue.use(require('vue-resource'));
 
+
+
 import CxltToastr from 'cxlt-vue2-toastr'
 
 import 'cxlt-vue2-toastr/dist/css/cxlt-vue2-toastr.css'
@@ -24,7 +26,10 @@ Vue.use(CxltToastr, toastrConfigs)
 import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
-  
+
+Vue.use(require('vue-chat-scroll'))
+
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -63,10 +68,12 @@ import newsfeedsimilar from './components/newsfeedSimilar'
 
 
 Vue.use(VueProgressBar, {
-    color: '#149AC9',
-    failedColor: 'red',
-    height: '10px'
+        color: '#149AC9',
+        failedColor: 'red',
+        height: '10px'
 })
+
+
 
 const router = new VueRouter({
   routes // short for `routes: routes`

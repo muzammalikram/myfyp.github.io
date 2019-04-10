@@ -230,16 +230,24 @@ class PostController extends Controller
         return response()->json(['posts'=> $posts , 'post_action'=>$post_action , 'userName'=>$userName , 'userImg'=>$userImg]);
        
     }
-    public function get_friends_comments(Request $request) 
+    public function add_comments(Request $request)
     {
-         $get_posts = $request->posts;
-
         $id = auth()->user()->id;
-          $friends = Friends::where(['sender_id'=>$id , 'status'=>1])->pluck('receiver_id')->toArray();
-         $posts = Post::with('post_action')->whereIn('user_id' , $friends)->get()->toArray();
-         
-         dd($posts);
 
+            $add_comment = PostActions::create([
+                'action_perform_user_id' => $id ,
+                'model_name' => 'App/PostActions',
+                'model_id' => $request->post_id,
+                'details' => $request->comment,
+                'action' => 3
+            ]);
+
+         $get_comment = PostActions::where(['action_perform_user_id' => $id , 'model_id' => $request->post_id])->OrderBy('created_at' , 'desc')->first();
+         return response()->json($get_comment);
+    }
+    public function get_newsfeed_comments(Request $request)
+    {
+        dd($request->all());
     }
 
     /**

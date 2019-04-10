@@ -2378,6 +2378,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 // import profileHeader from './ProfileHeader.vue'
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2388,6 +2389,7 @@ __webpack_require__.r(__webpack_exports__);
     //  this.get_edu_information();
     //this.get_auth();
 
+    this.url_id = this.$route.params.userId;
     this.auth_id = document.head.querySelector('meta[name="userId"]').content;
   },
   data: function data() {
@@ -2404,7 +2406,7 @@ __webpack_require__.r(__webpack_exports__);
       profile: {},
       profileImg: {},
       request_status: '',
-      url_id: this.$route.params.userId,
+      url_id: '',
       auth_id: '',
       sender_id: '',
       receiver_id: ''
@@ -2427,7 +2429,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.profile = response.data.profile;
         _this.userInterests = response.data.userInterest;
         _this.profileImg = response.data.profileImg;
-        console.log(_this.user);
+        console.log(response.data);
       }).catch(function (error) {
         console.log(error);
       });
@@ -2466,9 +2468,18 @@ __webpack_require__.r(__webpack_exports__);
 
       var userId = id;
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/addFriend/' + userId).then(function (response) {
-        _this.request_status = response.data.status;
-        _this.sender_id = response.data.sender_id;
-        _this.receiver_id = response.data.receiver_id;
+        // _this.request_status = response.data.status;
+        // _this.sender_id = response.data.sender_id;
+        // _this.receiver_id = response.data.receiver_id;
+        console.log(response.data);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+    accept_request: function accept_request(id) {
+      var _this = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('accept_Request/' + userId).then(function (response) {
         console.log(response.data);
       }).catch(function (error) {
         console.log(error);
@@ -2477,19 +2488,12 @@ __webpack_require__.r(__webpack_exports__);
     get_add_friend: function get_add_friend() {
       var _this = this;
 
-      var userId = _this.url_id; //               alert(_this.url_id);
+      var userId = _this.$route.params.userId; //  alert(userId);
 
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/get_add_friend/' + userId).then(function (response) {
-        if (response.data == 0) {
-          console.log('asdasd');
-        } else {
-          _this.request_status = response.data; // console.log('asdasdasdasdadsadsadsd');
-          // _this.sender_id = response.data.sender_id;
-          // _this.receiver_id = response.data.receiver_id;
-          // console.log(response.data);
-        } //   _this.request_status = response.data.status;   
-        //      console.log(response.data);
-
+        _this.request_status = response.data;
+        console.log('hello 123');
+        console.log(_this.request_status);
       }).catch(function (error) {
         console.log(error);
       });
@@ -2787,18 +2791,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Component mounted.');
     this.ClickedFn();
+    this.get_newsfeed_comments();
   },
   data: function data() {
     return {
       posts: [],
       comments: [],
       userName: '',
-      userImg: ''
+      userImg: '',
+      comment: []
     };
   },
   methods: {
@@ -2815,13 +2822,28 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
-    get_friends_comments: function get_friends_comments() {
+    addComment: function addComment(p_id, index) {
       var _this = this;
 
-      var params = {
-        posts: _this.posts
-      };
-      axios.post('/get_friends_comments', params).then(function (response) {
+      var comm = this.comment[index];
+
+      if (comm != "") {
+        var params = {
+          post_id: p_id,
+          comment: comm
+        };
+        axios.post('/add_comments', params).then(function (response) {
+          console.log(response.data);
+          var comm = '';
+        }).catch(function (error) {
+          console.log(error);
+        });
+      }
+    },
+    get_newsfeed_comments: function get_newsfeed_comments() {
+      axios.get('/get_newsfeed_comments', {
+        'posts': 'eee'
+      }).then(function (response) {
         console.log(response.data);
       }).catch(function (error) {
         console.log(error);
@@ -2910,7 +2932,8 @@ __webpack_require__.r(__webpack_exports__);
 
     var userId = document.head.querySelector('meta[name="userId"]').content;
     Echo.private('App.User.' + userId).notification(function (notification) {
-      //{'notification_count':notification.count, 'sender_name':notification.user.f_name}
+      //  {'notification_count':notification.count, 'sender_name':notification.user.f_name}
+      //_this.$emit('')
       //   _this.sender_data = notification;
       _this.sender_data.push(notification); //                           _this.count = notification.count;
 
@@ -3261,7 +3284,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
  // import infiniteScroll from 'vue-infinite-scroll'
 // import { statics } from '../static_variable'
 
@@ -3347,6 +3369,18 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
+
+    /* get_friends_comments() {
+         let _this = this;
+         let params = {posts: _this.posts}
+          axios.post('/get_friends_comments', params)
+             .then(function (response) {
+                  console.log(response.data);
+             })
+             .catch(function (error) {
+                 console.log(error);
+             });
+      },*/
     ImageSaved: function ImageSaved(e) {
       //console.log(e.target.files[0]);
       var _this = this;
@@ -4667,8 +4701,8 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('/all_friends').then(function (response) {
         _this.users = response.data.all_friends; //   _this.users.push(response.data.Profiles);
 
-        _this.profile = response.data.Profiles;
-        _this.imgs = response.data.images; //    _this.imgs[_this.imgs.length - 1];
+        _this.profile = response.data.Profiles; //  _this.imgs = response.data.images;
+        //    _this.imgs[_this.imgs.length - 1];
 
         _this.$toast.success({
           title: 'as',
@@ -5070,132 +5104,119 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Component mounted.');
+    this.get_friends();
+    var userId = document.head.querySelector('meta[name="userId"]').content;
+    this.auth_id = userId;
+  },
+  data: function data() {
+    return {
+      message: '',
+      friends: {},
+      typing: '',
+      auth_id: '',
+      user_id: '',
+      input_show: false,
+      isActive: false,
+      chat: {
+        message_all: [],
+        user: [],
+        time: []
+      }
+    };
+  },
+  watch: {
+    message: function message() {
+      Echo.private('Chat').whisper('typing', {
+        name: this.message
+      });
+    }
+  },
+  methods: {
+    send: function send() {
+      //    alert(id);
+      if (this.message.length != 0) {
+        var _this = this;
+
+        this.chat.message_all.push(this.message);
+
+        _this.chat.user.push('you');
+
+        _this.chat.time.push(_this.getTime()); //    console.log(this.message);
+
+
+        axios.post('send_message', {
+          'message': _this.message,
+          'user_id': _this.user_id
+        }).then(function (response) {
+          _this.message = '';
+
+          _this.sender_div(_this.user_id);
+
+          console.log(response.data);
+        }).catch(function (error) {
+          console.log(error);
+        });
+      }
+    },
+    sender_div: function sender_div(id) {
+      //alert(id);
+      var _this = this;
+
+      _this.user_id = id;
+      axios.get('getUserMessages/' + id).then(function (response) {
+        _this.chat.message_all = response.data;
+        console.log(_this.chat.message_all);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+    getTime: function getTime() {
+      var time = new Date();
+      return time.getHours() + ':' + time.getMinutes();
+    },
+    message_sent: function message_sent() {
+      var _this = this;
+
+      axios.get('send').then(function (response) {
+        console.log(response.data);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+    get_friends: function get_friends() {
+      var _this = this;
+
+      axios.get('get_friends').then(function (response) {
+        _this.friends = response.data;
+        console.log(response.data);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    }
+  },
+  created: function created() {
+    var _this2 = this;
+
+    Echo.private('Chat').listen('ChatEvent', function (e) {
+      _this2.chat.message_all.push(e);
+
+      _this2.chat.user.push(e.user.f_name);
+
+      _this2.chat.time.push(_this2.getTime());
+
+      console.log(e);
+    }).listenForWhisper('typing', function (e) {
+      if (e.name != '') {
+        _this2.typing = 'typing';
+        console.log('typing');
+      } else {
+        _this2.typing = '';
+        console.log('');
+      }
+    });
   }
 });
 
@@ -9715,6 +9736,25 @@ exports = module.exports = __webpack_require__(/*! ../../../css-loader/lib/css-b
 
 // module
 exports.push([module.i, ".toast-title{font-weight:700}.toast-message{-ms-word-wrap:break-word;word-wrap:break-word}.toast-message a,.toast-message label{color:#fff}.toast-message a:hover{color:#ccc;text-decoration:none}.toast-close-button{position:relative;right:-.3em;top:-.3em;float:right;font-size:20px;font-weight:700;color:#fff;-webkit-text-shadow:0 1px 0 #fff;text-shadow:0 1px 0 #fff;opacity:.8;-ms-filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=80);filter:alpha(opacity=80)}.toast-close-button:focus,.toast-close-button:hover{color:#000;text-decoration:none;cursor:pointer;opacity:.4;-ms-filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=40);filter:alpha(opacity=40)}button.toast-close-button{padding:0;cursor:pointer;background:transparent;border:0;-webkit-appearance:none}.toast-icon{position:absolute;left:10px;top:25px}.toast-icon,.toast-icon img{width:30px;height:30px}.toast-top-center{top:0;right:0;width:100%}.toast-bottom-center{bottom:0;right:0;width:100%}.toast-top-full-width{top:0;right:0;width:100%}.toast-bottom-full-width{bottom:0;right:0;width:100%}.toast-top-left{top:12px;left:12px}.toast-top-right{top:12px;right:12px}.toast-bottom-right{right:12px;bottom:12px}.toast-bottom-left{bottom:12px;left:12px}.cxlt-toastr-container{position:fixed;z-index:999999;pointer-events:none}.cxlt-toastr-container *{-webkit-box-sizing:border-box;box-sizing:border-box}.cxlt-toastr-container>div{position:relative;pointer-events:auto;overflow:hidden;margin:0 0 6px;padding:15px 15px 15px 50px;width:300px;border-radius:3px 3px 3px 3px;background-position:15px;background-repeat:no-repeat;-webkit-box-shadow:0 0 12px #999;box-shadow:0 0 12px #999;color:#fff;opacity:.8;-ms-filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=80);filter:alpha(opacity=80)}.cxlt-toastr-container>:hover{-webkit-box-shadow:0 0 12px #000;box-shadow:0 0 12px #000;opacity:1;-ms-filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=100);filter:alpha(opacity=100);cursor:pointer}.cxlt-toastr-container.toast-bottom-center>div,.cxlt-toastr-container.toast-top-center>div{width:300px;margin-left:auto;margin-right:auto}.cxlt-toastr-container.toast-bottom-full-width>div,.cxlt-toastr-container.toast-top-full-width>div{width:96%;margin-left:auto;margin-right:auto}.toast{background-color:#030303}.toast-success{background-color:#51a351}.toast-error{background-color:#bd362f}.toast-info{background-color:#2f96b4}.toast-warning{background-color:#f89406}.toast-progress{position:absolute;left:0;bottom:0;height:4px;background-color:#000;opacity:.4;-ms-filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=40);filter:alpha(opacity=40)}@media (max-width:240px){.cxlt-toastr-container>div{padding:8px 8px 8px 50px;width:11em}.cxlt-toastr-container .toast-close-button{right:-.2em;top:-.2em}}@media (min-width:241px) and (max-width:480px){.cxlt-toastr-container>div{padding:8px 8px 8px 50px;width:18em}.cxlt-toastr-container .toast-close-button{right:-.2em;top:-.2em}}@media (min-width:481px) and (max-width:768px){.cxlt-toastr-container>div{padding:15px 15px 15px 50px;width:25em}}/*!\n * animate.css -http://daneden.me/animate\n * Version - 3.5.1\n * Licensed under the MIT license - http://opensource.org/licenses/MIT\n *\n * Copyright (c) 2016 Daniel Eden\n */.animated{-webkit-animation-duration:1s;animation-duration:1s;-webkit-animation-fill-mode:both;animation-fill-mode:both}.animated.infinite{-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite}.animated.hinge{-webkit-animation-duration:2s;animation-duration:2s}.animated.bounceIn,.animated.bounceOut,.animated.flipOutX,.animated.flipOutY{-webkit-animation-duration:.75s;animation-duration:.75s}@-webkit-keyframes bounce{0%,20%,53%,80%,to{-webkit-animation-timing-function:cubic-bezier(.215,.61,.355,1);animation-timing-function:cubic-bezier(.215,.61,.355,1);-webkit-transform:translateZ(0);transform:translateZ(0)}40%,43%{-webkit-animation-timing-function:cubic-bezier(.755,.05,.855,.06);animation-timing-function:cubic-bezier(.755,.05,.855,.06);-webkit-transform:translate3d(0,-30px,0);transform:translate3d(0,-30px,0)}70%{-webkit-animation-timing-function:cubic-bezier(.755,.05,.855,.06);animation-timing-function:cubic-bezier(.755,.05,.855,.06);-webkit-transform:translate3d(0,-15px,0);transform:translate3d(0,-15px,0)}90%{-webkit-transform:translate3d(0,-4px,0);transform:translate3d(0,-4px,0)}}@keyframes bounce{0%,20%,53%,80%,to{-webkit-animation-timing-function:cubic-bezier(.215,.61,.355,1);animation-timing-function:cubic-bezier(.215,.61,.355,1);-webkit-transform:translateZ(0);transform:translateZ(0)}40%,43%{-webkit-animation-timing-function:cubic-bezier(.755,.05,.855,.06);animation-timing-function:cubic-bezier(.755,.05,.855,.06);-webkit-transform:translate3d(0,-30px,0);transform:translate3d(0,-30px,0)}70%{-webkit-animation-timing-function:cubic-bezier(.755,.05,.855,.06);animation-timing-function:cubic-bezier(.755,.05,.855,.06);-webkit-transform:translate3d(0,-15px,0);transform:translate3d(0,-15px,0)}90%{-webkit-transform:translate3d(0,-4px,0);transform:translate3d(0,-4px,0)}}.bounce{-webkit-animation-name:bounce;animation-name:bounce;-webkit-transform-origin:center bottom;transform-origin:center bottom}@-webkit-keyframes flash{0%,50%,to{opacity:1}25%,75%{opacity:0}}@keyframes flash{0%,50%,to{opacity:1}25%,75%{opacity:0}}.flash{-webkit-animation-name:flash;animation-name:flash}@-webkit-keyframes pulse{0%{-webkit-transform:scaleX(1);transform:scaleX(1)}50%{-webkit-transform:scale3d(1.05,1.05,1.05);transform:scale3d(1.05,1.05,1.05)}to{-webkit-transform:scaleX(1);transform:scaleX(1)}}@keyframes pulse{0%{-webkit-transform:scaleX(1);transform:scaleX(1)}50%{-webkit-transform:scale3d(1.05,1.05,1.05);transform:scale3d(1.05,1.05,1.05)}to{-webkit-transform:scaleX(1);transform:scaleX(1)}}.pulse{-webkit-animation-name:pulse;animation-name:pulse}@-webkit-keyframes rubberBand{0%{-webkit-transform:scaleX(1);transform:scaleX(1)}30%{-webkit-transform:scale3d(1.25,.75,1);transform:scale3d(1.25,.75,1)}40%{-webkit-transform:scale3d(.75,1.25,1);transform:scale3d(.75,1.25,1)}50%{-webkit-transform:scale3d(1.15,.85,1);transform:scale3d(1.15,.85,1)}65%{-webkit-transform:scale3d(.95,1.05,1);transform:scale3d(.95,1.05,1)}75%{-webkit-transform:scale3d(1.05,.95,1);transform:scale3d(1.05,.95,1)}to{-webkit-transform:scaleX(1);transform:scaleX(1)}}@keyframes rubberBand{0%{-webkit-transform:scaleX(1);transform:scaleX(1)}30%{-webkit-transform:scale3d(1.25,.75,1);transform:scale3d(1.25,.75,1)}40%{-webkit-transform:scale3d(.75,1.25,1);transform:scale3d(.75,1.25,1)}50%{-webkit-transform:scale3d(1.15,.85,1);transform:scale3d(1.15,.85,1)}65%{-webkit-transform:scale3d(.95,1.05,1);transform:scale3d(.95,1.05,1)}75%{-webkit-transform:scale3d(1.05,.95,1);transform:scale3d(1.05,.95,1)}to{-webkit-transform:scaleX(1);transform:scaleX(1)}}.rubberBand{-webkit-animation-name:rubberBand;animation-name:rubberBand}@-webkit-keyframes shake{0%,to{-webkit-transform:translateZ(0);transform:translateZ(0)}10%,30%,50%,70%,90%{-webkit-transform:translate3d(-10px,0,0);transform:translate3d(-10px,0,0)}20%,40%,60%,80%{-webkit-transform:translate3d(10px,0,0);transform:translate3d(10px,0,0)}}@keyframes shake{0%,to{-webkit-transform:translateZ(0);transform:translateZ(0)}10%,30%,50%,70%,90%{-webkit-transform:translate3d(-10px,0,0);transform:translate3d(-10px,0,0)}20%,40%,60%,80%{-webkit-transform:translate3d(10px,0,0);transform:translate3d(10px,0,0)}}.shake{-webkit-animation-name:shake;animation-name:shake}@-webkit-keyframes headShake{0%{-webkit-transform:translateX(0);transform:translateX(0)}6.5%{-webkit-transform:translateX(-6px) rotateY(-9deg);transform:translateX(-6px) rotateY(-9deg)}18.5%{-webkit-transform:translateX(5px) rotateY(7deg);transform:translateX(5px) rotateY(7deg)}31.5%{-webkit-transform:translateX(-3px) rotateY(-5deg);transform:translateX(-3px) rotateY(-5deg)}43.5%{-webkit-transform:translateX(2px) rotateY(3deg);transform:translateX(2px) rotateY(3deg)}50%{-webkit-transform:translateX(0);transform:translateX(0)}}@keyframes headShake{0%{-webkit-transform:translateX(0);transform:translateX(0)}6.5%{-webkit-transform:translateX(-6px) rotateY(-9deg);transform:translateX(-6px) rotateY(-9deg)}18.5%{-webkit-transform:translateX(5px) rotateY(7deg);transform:translateX(5px) rotateY(7deg)}31.5%{-webkit-transform:translateX(-3px) rotateY(-5deg);transform:translateX(-3px) rotateY(-5deg)}43.5%{-webkit-transform:translateX(2px) rotateY(3deg);transform:translateX(2px) rotateY(3deg)}50%{-webkit-transform:translateX(0);transform:translateX(0)}}.headShake{-webkit-animation-timing-function:ease-in-out;animation-timing-function:ease-in-out;-webkit-animation-name:headShake;animation-name:headShake}@-webkit-keyframes swing{20%{-webkit-transform:rotate(15deg);transform:rotate(15deg)}40%{-webkit-transform:rotate(-10deg);transform:rotate(-10deg)}60%{-webkit-transform:rotate(5deg);transform:rotate(5deg)}80%{-webkit-transform:rotate(-5deg);transform:rotate(-5deg)}to{-webkit-transform:rotate(0deg);transform:rotate(0deg)}}@keyframes swing{20%{-webkit-transform:rotate(15deg);transform:rotate(15deg)}40%{-webkit-transform:rotate(-10deg);transform:rotate(-10deg)}60%{-webkit-transform:rotate(5deg);transform:rotate(5deg)}80%{-webkit-transform:rotate(-5deg);transform:rotate(-5deg)}to{-webkit-transform:rotate(0deg);transform:rotate(0deg)}}.swing{-webkit-transform-origin:top center;transform-origin:top center;-webkit-animation-name:swing;animation-name:swing}@-webkit-keyframes tada{0%{-webkit-transform:scaleX(1);transform:scaleX(1)}10%,20%{-webkit-transform:scale3d(.9,.9,.9) rotate(-3deg);transform:scale3d(.9,.9,.9) rotate(-3deg)}30%,50%,70%,90%{-webkit-transform:scale3d(1.1,1.1,1.1) rotate(3deg);transform:scale3d(1.1,1.1,1.1) rotate(3deg)}40%,60%,80%{-webkit-transform:scale3d(1.1,1.1,1.1) rotate(-3deg);transform:scale3d(1.1,1.1,1.1) rotate(-3deg)}to{-webkit-transform:scaleX(1);transform:scaleX(1)}}@keyframes tada{0%{-webkit-transform:scaleX(1);transform:scaleX(1)}10%,20%{-webkit-transform:scale3d(.9,.9,.9) rotate(-3deg);transform:scale3d(.9,.9,.9) rotate(-3deg)}30%,50%,70%,90%{-webkit-transform:scale3d(1.1,1.1,1.1) rotate(3deg);transform:scale3d(1.1,1.1,1.1) rotate(3deg)}40%,60%,80%{-webkit-transform:scale3d(1.1,1.1,1.1) rotate(-3deg);transform:scale3d(1.1,1.1,1.1) rotate(-3deg)}to{-webkit-transform:scaleX(1);transform:scaleX(1)}}.tada{-webkit-animation-name:tada;animation-name:tada}@-webkit-keyframes wobble{0%{-webkit-transform:none;transform:none}15%{-webkit-transform:translate3d(-25%,0,0) rotate(-5deg);transform:translate3d(-25%,0,0) rotate(-5deg)}30%{-webkit-transform:translate3d(20%,0,0) rotate(3deg);transform:translate3d(20%,0,0) rotate(3deg)}45%{-webkit-transform:translate3d(-15%,0,0) rotate(-3deg);transform:translate3d(-15%,0,0) rotate(-3deg)}60%{-webkit-transform:translate3d(10%,0,0) rotate(2deg);transform:translate3d(10%,0,0) rotate(2deg)}75%{-webkit-transform:translate3d(-5%,0,0) rotate(-1deg);transform:translate3d(-5%,0,0) rotate(-1deg)}to{-webkit-transform:none;transform:none}}@keyframes wobble{0%{-webkit-transform:none;transform:none}15%{-webkit-transform:translate3d(-25%,0,0) rotate(-5deg);transform:translate3d(-25%,0,0) rotate(-5deg)}30%{-webkit-transform:translate3d(20%,0,0) rotate(3deg);transform:translate3d(20%,0,0) rotate(3deg)}45%{-webkit-transform:translate3d(-15%,0,0) rotate(-3deg);transform:translate3d(-15%,0,0) rotate(-3deg)}60%{-webkit-transform:translate3d(10%,0,0) rotate(2deg);transform:translate3d(10%,0,0) rotate(2deg)}75%{-webkit-transform:translate3d(-5%,0,0) rotate(-1deg);transform:translate3d(-5%,0,0) rotate(-1deg)}to{-webkit-transform:none;transform:none}}.wobble{-webkit-animation-name:wobble;animation-name:wobble}@-webkit-keyframes jello{0%,11.1%,to{-webkit-transform:none;transform:none}22.2%{-webkit-transform:skewX(-12.5deg) skewY(-12.5deg);transform:skewX(-12.5deg) skewY(-12.5deg)}33.3%{-webkit-transform:skewX(6.25deg) skewY(6.25deg);transform:skewX(6.25deg) skewY(6.25deg)}44.4%{-webkit-transform:skewX(-3.125deg) skewY(-3.125deg);transform:skewX(-3.125deg) skewY(-3.125deg)}55.5%{-webkit-transform:skewX(1.5625deg) skewY(1.5625deg);transform:skewX(1.5625deg) skewY(1.5625deg)}66.6%{-webkit-transform:skewX(-.78125deg) skewY(-.78125deg);transform:skewX(-.78125deg) skewY(-.78125deg)}77.7%{-webkit-transform:skewX(.390625deg) skewY(.390625deg);transform:skewX(.390625deg) skewY(.390625deg)}88.8%{-webkit-transform:skewX(-.1953125deg) skewY(-.1953125deg);transform:skewX(-.1953125deg) skewY(-.1953125deg)}}@keyframes jello{0%,11.1%,to{-webkit-transform:none;transform:none}22.2%{-webkit-transform:skewX(-12.5deg) skewY(-12.5deg);transform:skewX(-12.5deg) skewY(-12.5deg)}33.3%{-webkit-transform:skewX(6.25deg) skewY(6.25deg);transform:skewX(6.25deg) skewY(6.25deg)}44.4%{-webkit-transform:skewX(-3.125deg) skewY(-3.125deg);transform:skewX(-3.125deg) skewY(-3.125deg)}55.5%{-webkit-transform:skewX(1.5625deg) skewY(1.5625deg);transform:skewX(1.5625deg) skewY(1.5625deg)}66.6%{-webkit-transform:skewX(-.78125deg) skewY(-.78125deg);transform:skewX(-.78125deg) skewY(-.78125deg)}77.7%{-webkit-transform:skewX(.390625deg) skewY(.390625deg);transform:skewX(.390625deg) skewY(.390625deg)}88.8%{-webkit-transform:skewX(-.1953125deg) skewY(-.1953125deg);transform:skewX(-.1953125deg) skewY(-.1953125deg)}}.jello{-webkit-animation-name:jello;animation-name:jello;-webkit-transform-origin:center;transform-origin:center}@-webkit-keyframes bounceIn{0%,20%,40%,60%,80%,to{-webkit-animation-timing-function:cubic-bezier(.215,.61,.355,1);animation-timing-function:cubic-bezier(.215,.61,.355,1)}0%{opacity:0;-webkit-transform:scale3d(.3,.3,.3);transform:scale3d(.3,.3,.3)}20%{-webkit-transform:scale3d(1.1,1.1,1.1);transform:scale3d(1.1,1.1,1.1)}40%{-webkit-transform:scale3d(.9,.9,.9);transform:scale3d(.9,.9,.9)}60%{opacity:1;-webkit-transform:scale3d(1.03,1.03,1.03);transform:scale3d(1.03,1.03,1.03)}80%{-webkit-transform:scale3d(.97,.97,.97);transform:scale3d(.97,.97,.97)}to{opacity:1;-webkit-transform:scaleX(1);transform:scaleX(1)}}@keyframes bounceIn{0%,20%,40%,60%,80%,to{-webkit-animation-timing-function:cubic-bezier(.215,.61,.355,1);animation-timing-function:cubic-bezier(.215,.61,.355,1)}0%{opacity:0;-webkit-transform:scale3d(.3,.3,.3);transform:scale3d(.3,.3,.3)}20%{-webkit-transform:scale3d(1.1,1.1,1.1);transform:scale3d(1.1,1.1,1.1)}40%{-webkit-transform:scale3d(.9,.9,.9);transform:scale3d(.9,.9,.9)}60%{opacity:1;-webkit-transform:scale3d(1.03,1.03,1.03);transform:scale3d(1.03,1.03,1.03)}80%{-webkit-transform:scale3d(.97,.97,.97);transform:scale3d(.97,.97,.97)}to{opacity:1;-webkit-transform:scaleX(1);transform:scaleX(1)}}.bounceIn{-webkit-animation-name:bounceIn;animation-name:bounceIn}@-webkit-keyframes bounceInDown{0%,60%,75%,90%,to{-webkit-animation-timing-function:cubic-bezier(.215,.61,.355,1);animation-timing-function:cubic-bezier(.215,.61,.355,1)}0%{opacity:0;-webkit-transform:translate3d(0,-3000px,0);transform:translate3d(0,-3000px,0)}60%{opacity:1;-webkit-transform:translate3d(0,25px,0);transform:translate3d(0,25px,0)}75%{-webkit-transform:translate3d(0,-10px,0);transform:translate3d(0,-10px,0)}90%{-webkit-transform:translate3d(0,5px,0);transform:translate3d(0,5px,0)}to{-webkit-transform:none;transform:none}}@keyframes bounceInDown{0%,60%,75%,90%,to{-webkit-animation-timing-function:cubic-bezier(.215,.61,.355,1);animation-timing-function:cubic-bezier(.215,.61,.355,1)}0%{opacity:0;-webkit-transform:translate3d(0,-3000px,0);transform:translate3d(0,-3000px,0)}60%{opacity:1;-webkit-transform:translate3d(0,25px,0);transform:translate3d(0,25px,0)}75%{-webkit-transform:translate3d(0,-10px,0);transform:translate3d(0,-10px,0)}90%{-webkit-transform:translate3d(0,5px,0);transform:translate3d(0,5px,0)}to{-webkit-transform:none;transform:none}}.bounceInDown{-webkit-animation-name:bounceInDown;animation-name:bounceInDown}@-webkit-keyframes bounceInLeft{0%,60%,75%,90%,to{-webkit-animation-timing-function:cubic-bezier(.215,.61,.355,1);animation-timing-function:cubic-bezier(.215,.61,.355,1)}0%{opacity:0;-webkit-transform:translate3d(-3000px,0,0);transform:translate3d(-3000px,0,0)}60%{opacity:1;-webkit-transform:translate3d(25px,0,0);transform:translate3d(25px,0,0)}75%{-webkit-transform:translate3d(-10px,0,0);transform:translate3d(-10px,0,0)}90%{-webkit-transform:translate3d(5px,0,0);transform:translate3d(5px,0,0)}to{-webkit-transform:none;transform:none}}@keyframes bounceInLeft{0%,60%,75%,90%,to{-webkit-animation-timing-function:cubic-bezier(.215,.61,.355,1);animation-timing-function:cubic-bezier(.215,.61,.355,1)}0%{opacity:0;-webkit-transform:translate3d(-3000px,0,0);transform:translate3d(-3000px,0,0)}60%{opacity:1;-webkit-transform:translate3d(25px,0,0);transform:translate3d(25px,0,0)}75%{-webkit-transform:translate3d(-10px,0,0);transform:translate3d(-10px,0,0)}90%{-webkit-transform:translate3d(5px,0,0);transform:translate3d(5px,0,0)}to{-webkit-transform:none;transform:none}}.bounceInLeft{-webkit-animation-name:bounceInLeft;animation-name:bounceInLeft}@-webkit-keyframes bounceInRight{0%,60%,75%,90%,to{-webkit-animation-timing-function:cubic-bezier(.215,.61,.355,1);animation-timing-function:cubic-bezier(.215,.61,.355,1)}0%{opacity:0;-webkit-transform:translate3d(3000px,0,0);transform:translate3d(3000px,0,0)}60%{opacity:1;-webkit-transform:translate3d(-25px,0,0);transform:translate3d(-25px,0,0)}75%{-webkit-transform:translate3d(10px,0,0);transform:translate3d(10px,0,0)}90%{-webkit-transform:translate3d(-5px,0,0);transform:translate3d(-5px,0,0)}to{-webkit-transform:none;transform:none}}@keyframes bounceInRight{0%,60%,75%,90%,to{-webkit-animation-timing-function:cubic-bezier(.215,.61,.355,1);animation-timing-function:cubic-bezier(.215,.61,.355,1)}0%{opacity:0;-webkit-transform:translate3d(3000px,0,0);transform:translate3d(3000px,0,0)}60%{opacity:1;-webkit-transform:translate3d(-25px,0,0);transform:translate3d(-25px,0,0)}75%{-webkit-transform:translate3d(10px,0,0);transform:translate3d(10px,0,0)}90%{-webkit-transform:translate3d(-5px,0,0);transform:translate3d(-5px,0,0)}to{-webkit-transform:none;transform:none}}.bounceInRight{-webkit-animation-name:bounceInRight;animation-name:bounceInRight}@-webkit-keyframes bounceInUp{0%,60%,75%,90%,to{-webkit-animation-timing-function:cubic-bezier(.215,.61,.355,1);animation-timing-function:cubic-bezier(.215,.61,.355,1)}0%{opacity:0;-webkit-transform:translate3d(0,3000px,0);transform:translate3d(0,3000px,0)}60%{opacity:1;-webkit-transform:translate3d(0,-20px,0);transform:translate3d(0,-20px,0)}75%{-webkit-transform:translate3d(0,10px,0);transform:translate3d(0,10px,0)}90%{-webkit-transform:translate3d(0,-5px,0);transform:translate3d(0,-5px,0)}to{-webkit-transform:translateZ(0);transform:translateZ(0)}}@keyframes bounceInUp{0%,60%,75%,90%,to{-webkit-animation-timing-function:cubic-bezier(.215,.61,.355,1);animation-timing-function:cubic-bezier(.215,.61,.355,1)}0%{opacity:0;-webkit-transform:translate3d(0,3000px,0);transform:translate3d(0,3000px,0)}60%{opacity:1;-webkit-transform:translate3d(0,-20px,0);transform:translate3d(0,-20px,0)}75%{-webkit-transform:translate3d(0,10px,0);transform:translate3d(0,10px,0)}90%{-webkit-transform:translate3d(0,-5px,0);transform:translate3d(0,-5px,0)}to{-webkit-transform:translateZ(0);transform:translateZ(0)}}.bounceInUp{-webkit-animation-name:bounceInUp;animation-name:bounceInUp}@-webkit-keyframes bounceOut{20%{-webkit-transform:scale3d(.9,.9,.9);transform:scale3d(.9,.9,.9)}50%,55%{opacity:1;-webkit-transform:scale3d(1.1,1.1,1.1);transform:scale3d(1.1,1.1,1.1)}to{opacity:0;-webkit-transform:scale3d(.3,.3,.3);transform:scale3d(.3,.3,.3)}}@keyframes bounceOut{20%{-webkit-transform:scale3d(.9,.9,.9);transform:scale3d(.9,.9,.9)}50%,55%{opacity:1;-webkit-transform:scale3d(1.1,1.1,1.1);transform:scale3d(1.1,1.1,1.1)}to{opacity:0;-webkit-transform:scale3d(.3,.3,.3);transform:scale3d(.3,.3,.3)}}.bounceOut{-webkit-animation-name:bounceOut;animation-name:bounceOut}@-webkit-keyframes bounceOutDown{20%{-webkit-transform:translate3d(0,10px,0);transform:translate3d(0,10px,0)}40%,45%{opacity:1;-webkit-transform:translate3d(0,-20px,0);transform:translate3d(0,-20px,0)}to{opacity:0;-webkit-transform:translate3d(0,2000px,0);transform:translate3d(0,2000px,0)}}@keyframes bounceOutDown{20%{-webkit-transform:translate3d(0,10px,0);transform:translate3d(0,10px,0)}40%,45%{opacity:1;-webkit-transform:translate3d(0,-20px,0);transform:translate3d(0,-20px,0)}to{opacity:0;-webkit-transform:translate3d(0,2000px,0);transform:translate3d(0,2000px,0)}}.bounceOutDown{-webkit-animation-name:bounceOutDown;animation-name:bounceOutDown}@-webkit-keyframes bounceOutLeft{20%{opacity:1;-webkit-transform:translate3d(20px,0,0);transform:translate3d(20px,0,0)}to{opacity:0;-webkit-transform:translate3d(-2000px,0,0);transform:translate3d(-2000px,0,0)}}@keyframes bounceOutLeft{20%{opacity:1;-webkit-transform:translate3d(20px,0,0);transform:translate3d(20px,0,0)}to{opacity:0;-webkit-transform:translate3d(-2000px,0,0);transform:translate3d(-2000px,0,0)}}.bounceOutLeft{-webkit-animation-name:bounceOutLeft;animation-name:bounceOutLeft}@-webkit-keyframes bounceOutRight{20%{opacity:1;-webkit-transform:translate3d(-20px,0,0);transform:translate3d(-20px,0,0)}to{opacity:0;-webkit-transform:translate3d(2000px,0,0);transform:translate3d(2000px,0,0)}}@keyframes bounceOutRight{20%{opacity:1;-webkit-transform:translate3d(-20px,0,0);transform:translate3d(-20px,0,0)}to{opacity:0;-webkit-transform:translate3d(2000px,0,0);transform:translate3d(2000px,0,0)}}.bounceOutRight{-webkit-animation-name:bounceOutRight;animation-name:bounceOutRight}@-webkit-keyframes bounceOutUp{20%{-webkit-transform:translate3d(0,-10px,0);transform:translate3d(0,-10px,0)}40%,45%{opacity:1;-webkit-transform:translate3d(0,20px,0);transform:translate3d(0,20px,0)}to{opacity:0;-webkit-transform:translate3d(0,-2000px,0);transform:translate3d(0,-2000px,0)}}@keyframes bounceOutUp{20%{-webkit-transform:translate3d(0,-10px,0);transform:translate3d(0,-10px,0)}40%,45%{opacity:1;-webkit-transform:translate3d(0,20px,0);transform:translate3d(0,20px,0)}to{opacity:0;-webkit-transform:translate3d(0,-2000px,0);transform:translate3d(0,-2000px,0)}}.bounceOutUp{-webkit-animation-name:bounceOutUp;animation-name:bounceOutUp}@-webkit-keyframes fadeIn{0%{opacity:0}to{opacity:1}}@keyframes fadeIn{0%{opacity:0}to{opacity:1}}.fadeIn{-webkit-animation-name:fadeIn;animation-name:fadeIn}@-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}to{opacity:1;-webkit-transform:none;transform:none}}@keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}to{opacity:1;-webkit-transform:none;transform:none}}.fadeInDown{-webkit-animation-name:fadeInDown;animation-name:fadeInDown}@-webkit-keyframes fadeInDownBig{0%{opacity:0;-webkit-transform:translate3d(0,-2000px,0);transform:translate3d(0,-2000px,0)}to{opacity:1;-webkit-transform:none;transform:none}}@keyframes fadeInDownBig{0%{opacity:0;-webkit-transform:translate3d(0,-2000px,0);transform:translate3d(0,-2000px,0)}to{opacity:1;-webkit-transform:none;transform:none}}.fadeInDownBig{-webkit-animation-name:fadeInDownBig;animation-name:fadeInDownBig}@-webkit-keyframes fadeInLeft{0%{opacity:0;-webkit-transform:translate3d(-100%,0,0);transform:translate3d(-100%,0,0)}to{opacity:1;-webkit-transform:none;transform:none}}@keyframes fadeInLeft{0%{opacity:0;-webkit-transform:translate3d(-100%,0,0);transform:translate3d(-100%,0,0)}to{opacity:1;-webkit-transform:none;transform:none}}.fadeInLeft{-webkit-animation-name:fadeInLeft;animation-name:fadeInLeft}@-webkit-keyframes fadeInLeftBig{0%{opacity:0;-webkit-transform:translate3d(-2000px,0,0);transform:translate3d(-2000px,0,0)}to{opacity:1;-webkit-transform:none;transform:none}}@keyframes fadeInLeftBig{0%{opacity:0;-webkit-transform:translate3d(-2000px,0,0);transform:translate3d(-2000px,0,0)}to{opacity:1;-webkit-transform:none;transform:none}}.fadeInLeftBig{-webkit-animation-name:fadeInLeftBig;animation-name:fadeInLeftBig}@-webkit-keyframes fadeInRight{0%{opacity:0;-webkit-transform:translate3d(100%,0,0);transform:translate3d(100%,0,0)}to{opacity:1;-webkit-transform:none;transform:none}}@keyframes fadeInRight{0%{opacity:0;-webkit-transform:translate3d(100%,0,0);transform:translate3d(100%,0,0)}to{opacity:1;-webkit-transform:none;transform:none}}.fadeInRight{-webkit-animation-name:fadeInRight;animation-name:fadeInRight}@-webkit-keyframes fadeInRightBig{0%{opacity:0;-webkit-transform:translate3d(2000px,0,0);transform:translate3d(2000px,0,0)}to{opacity:1;-webkit-transform:none;transform:none}}@keyframes fadeInRightBig{0%{opacity:0;-webkit-transform:translate3d(2000px,0,0);transform:translate3d(2000px,0,0)}to{opacity:1;-webkit-transform:none;transform:none}}.fadeInRightBig{-webkit-animation-name:fadeInRightBig;animation-name:fadeInRightBig}@-webkit-keyframes fadeInUp{0%{opacity:0;-webkit-transform:translate3d(0,100%,0);transform:translate3d(0,100%,0)}to{opacity:1;-webkit-transform:none;transform:none}}@keyframes fadeInUp{0%{opacity:0;-webkit-transform:translate3d(0,100%,0);transform:translate3d(0,100%,0)}to{opacity:1;-webkit-transform:none;transform:none}}.fadeInUp{-webkit-animation-name:fadeInUp;animation-name:fadeInUp}@-webkit-keyframes fadeInUpBig{0%{opacity:0;-webkit-transform:translate3d(0,2000px,0);transform:translate3d(0,2000px,0)}to{opacity:1;-webkit-transform:none;transform:none}}@keyframes fadeInUpBig{0%{opacity:0;-webkit-transform:translate3d(0,2000px,0);transform:translate3d(0,2000px,0)}to{opacity:1;-webkit-transform:none;transform:none}}.fadeInUpBig{-webkit-animation-name:fadeInUpBig;animation-name:fadeInUpBig}@-webkit-keyframes fadeOut{0%{opacity:1}to{opacity:0}}@keyframes fadeOut{0%{opacity:1}to{opacity:0}}.fadeOut{-webkit-animation-name:fadeOut;animation-name:fadeOut}@-webkit-keyframes fadeOutDown{0%{opacity:1}to{opacity:0;-webkit-transform:translate3d(0,100%,0);transform:translate3d(0,100%,0)}}@keyframes fadeOutDown{0%{opacity:1}to{opacity:0;-webkit-transform:translate3d(0,100%,0);transform:translate3d(0,100%,0)}}.fadeOutDown{-webkit-animation-name:fadeOutDown;animation-name:fadeOutDown}@-webkit-keyframes fadeOutDownBig{0%{opacity:1}to{opacity:0;-webkit-transform:translate3d(0,2000px,0);transform:translate3d(0,2000px,0)}}@keyframes fadeOutDownBig{0%{opacity:1}to{opacity:0;-webkit-transform:translate3d(0,2000px,0);transform:translate3d(0,2000px,0)}}.fadeOutDownBig{-webkit-animation-name:fadeOutDownBig;animation-name:fadeOutDownBig}@-webkit-keyframes fadeOutLeft{0%{opacity:1}to{opacity:0;-webkit-transform:translate3d(-100%,0,0);transform:translate3d(-100%,0,0)}}@keyframes fadeOutLeft{0%{opacity:1}to{opacity:0;-webkit-transform:translate3d(-100%,0,0);transform:translate3d(-100%,0,0)}}.fadeOutLeft{-webkit-animation-name:fadeOutLeft;animation-name:fadeOutLeft}@-webkit-keyframes fadeOutLeftBig{0%{opacity:1}to{opacity:0;-webkit-transform:translate3d(-2000px,0,0);transform:translate3d(-2000px,0,0)}}@keyframes fadeOutLeftBig{0%{opacity:1}to{opacity:0;-webkit-transform:translate3d(-2000px,0,0);transform:translate3d(-2000px,0,0)}}.fadeOutLeftBig{-webkit-animation-name:fadeOutLeftBig;animation-name:fadeOutLeftBig}@-webkit-keyframes fadeOutRight{0%{opacity:1}to{opacity:0;-webkit-transform:translate3d(100%,0,0);transform:translate3d(100%,0,0)}}@keyframes fadeOutRight{0%{opacity:1}to{opacity:0;-webkit-transform:translate3d(100%,0,0);transform:translate3d(100%,0,0)}}.fadeOutRight{-webkit-animation-name:fadeOutRight;animation-name:fadeOutRight}@-webkit-keyframes fadeOutRightBig{0%{opacity:1}to{opacity:0;-webkit-transform:translate3d(2000px,0,0);transform:translate3d(2000px,0,0)}}@keyframes fadeOutRightBig{0%{opacity:1}to{opacity:0;-webkit-transform:translate3d(2000px,0,0);transform:translate3d(2000px,0,0)}}.fadeOutRightBig{-webkit-animation-name:fadeOutRightBig;animation-name:fadeOutRightBig}@-webkit-keyframes fadeOutUp{0%{opacity:1}to{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}}@keyframes fadeOutUp{0%{opacity:1}to{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}}.fadeOutUp{-webkit-animation-name:fadeOutUp;animation-name:fadeOutUp}@-webkit-keyframes fadeOutUpBig{0%{opacity:1}to{opacity:0;-webkit-transform:translate3d(0,-2000px,0);transform:translate3d(0,-2000px,0)}}@keyframes fadeOutUpBig{0%{opacity:1}to{opacity:0;-webkit-transform:translate3d(0,-2000px,0);transform:translate3d(0,-2000px,0)}}.fadeOutUpBig{-webkit-animation-name:fadeOutUpBig;animation-name:fadeOutUpBig}@-webkit-keyframes flip{0%{-webkit-transform:perspective(400px) rotateY(-1turn);transform:perspective(400px) rotateY(-1turn);-webkit-animation-timing-function:ease-out;animation-timing-function:ease-out}40%{-webkit-transform:perspective(400px) translateZ(150px) rotateY(-190deg);transform:perspective(400px) translateZ(150px) rotateY(-190deg);-webkit-animation-timing-function:ease-out;animation-timing-function:ease-out}50%{-webkit-transform:perspective(400px) translateZ(150px) rotateY(-170deg);transform:perspective(400px) translateZ(150px) rotateY(-170deg);-webkit-animation-timing-function:ease-in;animation-timing-function:ease-in}80%{-webkit-transform:perspective(400px) scale3d(.95,.95,.95);transform:perspective(400px) scale3d(.95,.95,.95);-webkit-animation-timing-function:ease-in;animation-timing-function:ease-in}to{-webkit-transform:perspective(400px);transform:perspective(400px);-webkit-animation-timing-function:ease-in;animation-timing-function:ease-in}}@keyframes flip{0%{-webkit-transform:perspective(400px) rotateY(-1turn);transform:perspective(400px) rotateY(-1turn);-webkit-animation-timing-function:ease-out;animation-timing-function:ease-out}40%{-webkit-transform:perspective(400px) translateZ(150px) rotateY(-190deg);transform:perspective(400px) translateZ(150px) rotateY(-190deg);-webkit-animation-timing-function:ease-out;animation-timing-function:ease-out}50%{-webkit-transform:perspective(400px) translateZ(150px) rotateY(-170deg);transform:perspective(400px) translateZ(150px) rotateY(-170deg);-webkit-animation-timing-function:ease-in;animation-timing-function:ease-in}80%{-webkit-transform:perspective(400px) scale3d(.95,.95,.95);transform:perspective(400px) scale3d(.95,.95,.95);-webkit-animation-timing-function:ease-in;animation-timing-function:ease-in}to{-webkit-transform:perspective(400px);transform:perspective(400px);-webkit-animation-timing-function:ease-in;animation-timing-function:ease-in}}.animated.flip{-webkit-backface-visibility:visible;backface-visibility:visible;-webkit-animation-name:flip;animation-name:flip}@-webkit-keyframes flipInX{0%{-webkit-transform:perspective(400px) rotateX(90deg);transform:perspective(400px) rotateX(90deg);-webkit-animation-timing-function:ease-in;animation-timing-function:ease-in;opacity:0}40%{-webkit-transform:perspective(400px) rotateX(-20deg);transform:perspective(400px) rotateX(-20deg);-webkit-animation-timing-function:ease-in;animation-timing-function:ease-in}60%{-webkit-transform:perspective(400px) rotateX(10deg);transform:perspective(400px) rotateX(10deg);opacity:1}80%{-webkit-transform:perspective(400px) rotateX(-5deg);transform:perspective(400px) rotateX(-5deg)}to{-webkit-transform:perspective(400px);transform:perspective(400px)}}@keyframes flipInX{0%{-webkit-transform:perspective(400px) rotateX(90deg);transform:perspective(400px) rotateX(90deg);-webkit-animation-timing-function:ease-in;animation-timing-function:ease-in;opacity:0}40%{-webkit-transform:perspective(400px) rotateX(-20deg);transform:perspective(400px) rotateX(-20deg);-webkit-animation-timing-function:ease-in;animation-timing-function:ease-in}60%{-webkit-transform:perspective(400px) rotateX(10deg);transform:perspective(400px) rotateX(10deg);opacity:1}80%{-webkit-transform:perspective(400px) rotateX(-5deg);transform:perspective(400px) rotateX(-5deg)}to{-webkit-transform:perspective(400px);transform:perspective(400px)}}.flipInX{-webkit-backface-visibility:visible!important;backface-visibility:visible!important;-webkit-animation-name:flipInX;animation-name:flipInX}@-webkit-keyframes flipInY{0%{-webkit-transform:perspective(400px) rotateY(90deg);transform:perspective(400px) rotateY(90deg);-webkit-animation-timing-function:ease-in;animation-timing-function:ease-in;opacity:0}40%{-webkit-transform:perspective(400px) rotateY(-20deg);transform:perspective(400px) rotateY(-20deg);-webkit-animation-timing-function:ease-in;animation-timing-function:ease-in}60%{-webkit-transform:perspective(400px) rotateY(10deg);transform:perspective(400px) rotateY(10deg);opacity:1}80%{-webkit-transform:perspective(400px) rotateY(-5deg);transform:perspective(400px) rotateY(-5deg)}to{-webkit-transform:perspective(400px);transform:perspective(400px)}}@keyframes flipInY{0%{-webkit-transform:perspective(400px) rotateY(90deg);transform:perspective(400px) rotateY(90deg);-webkit-animation-timing-function:ease-in;animation-timing-function:ease-in;opacity:0}40%{-webkit-transform:perspective(400px) rotateY(-20deg);transform:perspective(400px) rotateY(-20deg);-webkit-animation-timing-function:ease-in;animation-timing-function:ease-in}60%{-webkit-transform:perspective(400px) rotateY(10deg);transform:perspective(400px) rotateY(10deg);opacity:1}80%{-webkit-transform:perspective(400px) rotateY(-5deg);transform:perspective(400px) rotateY(-5deg)}to{-webkit-transform:perspective(400px);transform:perspective(400px)}}.flipInY{-webkit-backface-visibility:visible!important;backface-visibility:visible!important;-webkit-animation-name:flipInY;animation-name:flipInY}@-webkit-keyframes flipOutX{0%{-webkit-transform:perspective(400px);transform:perspective(400px)}30%{-webkit-transform:perspective(400px) rotateX(-20deg);transform:perspective(400px) rotateX(-20deg);opacity:1}to{-webkit-transform:perspective(400px) rotateX(90deg);transform:perspective(400px) rotateX(90deg);opacity:0}}@keyframes flipOutX{0%{-webkit-transform:perspective(400px);transform:perspective(400px)}30%{-webkit-transform:perspective(400px) rotateX(-20deg);transform:perspective(400px) rotateX(-20deg);opacity:1}to{-webkit-transform:perspective(400px) rotateX(90deg);transform:perspective(400px) rotateX(90deg);opacity:0}}.flipOutX{-webkit-animation-name:flipOutX;animation-name:flipOutX;-webkit-backface-visibility:visible!important;backface-visibility:visible!important}@-webkit-keyframes flipOutY{0%{-webkit-transform:perspective(400px);transform:perspective(400px)}30%{-webkit-transform:perspective(400px) rotateY(-15deg);transform:perspective(400px) rotateY(-15deg);opacity:1}to{-webkit-transform:perspective(400px) rotateY(90deg);transform:perspective(400px) rotateY(90deg);opacity:0}}@keyframes flipOutY{0%{-webkit-transform:perspective(400px);transform:perspective(400px)}30%{-webkit-transform:perspective(400px) rotateY(-15deg);transform:perspective(400px) rotateY(-15deg);opacity:1}to{-webkit-transform:perspective(400px) rotateY(90deg);transform:perspective(400px) rotateY(90deg);opacity:0}}.flipOutY{-webkit-backface-visibility:visible!important;backface-visibility:visible!important;-webkit-animation-name:flipOutY;animation-name:flipOutY}@-webkit-keyframes lightSpeedIn{0%{-webkit-transform:translate3d(100%,0,0) skewX(-30deg);transform:translate3d(100%,0,0) skewX(-30deg);opacity:0}60%{-webkit-transform:skewX(20deg);transform:skewX(20deg);opacity:1}80%{-webkit-transform:skewX(-5deg);transform:skewX(-5deg);opacity:1}to{-webkit-transform:none;transform:none;opacity:1}}@keyframes lightSpeedIn{0%{-webkit-transform:translate3d(100%,0,0) skewX(-30deg);transform:translate3d(100%,0,0) skewX(-30deg);opacity:0}60%{-webkit-transform:skewX(20deg);transform:skewX(20deg);opacity:1}80%{-webkit-transform:skewX(-5deg);transform:skewX(-5deg);opacity:1}to{-webkit-transform:none;transform:none;opacity:1}}.lightSpeedIn{-webkit-animation-name:lightSpeedIn;animation-name:lightSpeedIn;-webkit-animation-timing-function:ease-out;animation-timing-function:ease-out}@-webkit-keyframes lightSpeedOut{0%{opacity:1}to{-webkit-transform:translate3d(100%,0,0) skewX(30deg);transform:translate3d(100%,0,0) skewX(30deg);opacity:0}}@keyframes lightSpeedOut{0%{opacity:1}to{-webkit-transform:translate3d(100%,0,0) skewX(30deg);transform:translate3d(100%,0,0) skewX(30deg);opacity:0}}.lightSpeedOut{-webkit-animation-name:lightSpeedOut;animation-name:lightSpeedOut;-webkit-animation-timing-function:ease-in;animation-timing-function:ease-in}@-webkit-keyframes rotateIn{0%{-webkit-transform-origin:center;transform-origin:center;-webkit-transform:rotate(-200deg);transform:rotate(-200deg);opacity:0}to{-webkit-transform-origin:center;transform-origin:center;-webkit-transform:none;transform:none;opacity:1}}@keyframes rotateIn{0%{-webkit-transform-origin:center;transform-origin:center;-webkit-transform:rotate(-200deg);transform:rotate(-200deg);opacity:0}to{-webkit-transform-origin:center;transform-origin:center;-webkit-transform:none;transform:none;opacity:1}}.rotateIn{-webkit-animation-name:rotateIn;animation-name:rotateIn}@-webkit-keyframes rotateInDownLeft{0%{-webkit-transform-origin:left bottom;transform-origin:left bottom;-webkit-transform:rotate(-45deg);transform:rotate(-45deg);opacity:0}to{-webkit-transform-origin:left bottom;transform-origin:left bottom;-webkit-transform:none;transform:none;opacity:1}}@keyframes rotateInDownLeft{0%{-webkit-transform-origin:left bottom;transform-origin:left bottom;-webkit-transform:rotate(-45deg);transform:rotate(-45deg);opacity:0}to{-webkit-transform-origin:left bottom;transform-origin:left bottom;-webkit-transform:none;transform:none;opacity:1}}.rotateInDownLeft{-webkit-animation-name:rotateInDownLeft;animation-name:rotateInDownLeft}@-webkit-keyframes rotateInDownRight{0%{-webkit-transform-origin:right bottom;transform-origin:right bottom;-webkit-transform:rotate(45deg);transform:rotate(45deg);opacity:0}to{-webkit-transform-origin:right bottom;transform-origin:right bottom;-webkit-transform:none;transform:none;opacity:1}}@keyframes rotateInDownRight{0%{-webkit-transform-origin:right bottom;transform-origin:right bottom;-webkit-transform:rotate(45deg);transform:rotate(45deg);opacity:0}to{-webkit-transform-origin:right bottom;transform-origin:right bottom;-webkit-transform:none;transform:none;opacity:1}}.rotateInDownRight{-webkit-animation-name:rotateInDownRight;animation-name:rotateInDownRight}@-webkit-keyframes rotateInUpLeft{0%{-webkit-transform-origin:left bottom;transform-origin:left bottom;-webkit-transform:rotate(45deg);transform:rotate(45deg);opacity:0}to{-webkit-transform-origin:left bottom;transform-origin:left bottom;-webkit-transform:none;transform:none;opacity:1}}@keyframes rotateInUpLeft{0%{-webkit-transform-origin:left bottom;transform-origin:left bottom;-webkit-transform:rotate(45deg);transform:rotate(45deg);opacity:0}to{-webkit-transform-origin:left bottom;transform-origin:left bottom;-webkit-transform:none;transform:none;opacity:1}}.rotateInUpLeft{-webkit-animation-name:rotateInUpLeft;animation-name:rotateInUpLeft}@-webkit-keyframes rotateInUpRight{0%{-webkit-transform-origin:right bottom;transform-origin:right bottom;-webkit-transform:rotate(-90deg);transform:rotate(-90deg);opacity:0}to{-webkit-transform-origin:right bottom;transform-origin:right bottom;-webkit-transform:none;transform:none;opacity:1}}@keyframes rotateInUpRight{0%{-webkit-transform-origin:right bottom;transform-origin:right bottom;-webkit-transform:rotate(-90deg);transform:rotate(-90deg);opacity:0}to{-webkit-transform-origin:right bottom;transform-origin:right bottom;-webkit-transform:none;transform:none;opacity:1}}.rotateInUpRight{-webkit-animation-name:rotateInUpRight;animation-name:rotateInUpRight}@-webkit-keyframes rotateOut{0%{-webkit-transform-origin:center;transform-origin:center;opacity:1}to{-webkit-transform-origin:center;transform-origin:center;-webkit-transform:rotate(200deg);transform:rotate(200deg);opacity:0}}@keyframes rotateOut{0%{-webkit-transform-origin:center;transform-origin:center;opacity:1}to{-webkit-transform-origin:center;transform-origin:center;-webkit-transform:rotate(200deg);transform:rotate(200deg);opacity:0}}.rotateOut{-webkit-animation-name:rotateOut;animation-name:rotateOut}@-webkit-keyframes rotateOutDownLeft{0%{-webkit-transform-origin:left bottom;transform-origin:left bottom;opacity:1}to{-webkit-transform-origin:left bottom;transform-origin:left bottom;-webkit-transform:rotate(45deg);transform:rotate(45deg);opacity:0}}@keyframes rotateOutDownLeft{0%{-webkit-transform-origin:left bottom;transform-origin:left bottom;opacity:1}to{-webkit-transform-origin:left bottom;transform-origin:left bottom;-webkit-transform:rotate(45deg);transform:rotate(45deg);opacity:0}}.rotateOutDownLeft{-webkit-animation-name:rotateOutDownLeft;animation-name:rotateOutDownLeft}@-webkit-keyframes rotateOutDownRight{0%{-webkit-transform-origin:right bottom;transform-origin:right bottom;opacity:1}to{-webkit-transform-origin:right bottom;transform-origin:right bottom;-webkit-transform:rotate(-45deg);transform:rotate(-45deg);opacity:0}}@keyframes rotateOutDownRight{0%{-webkit-transform-origin:right bottom;transform-origin:right bottom;opacity:1}to{-webkit-transform-origin:right bottom;transform-origin:right bottom;-webkit-transform:rotate(-45deg);transform:rotate(-45deg);opacity:0}}.rotateOutDownRight{-webkit-animation-name:rotateOutDownRight;animation-name:rotateOutDownRight}@-webkit-keyframes rotateOutUpLeft{0%{-webkit-transform-origin:left bottom;transform-origin:left bottom;opacity:1}to{-webkit-transform-origin:left bottom;transform-origin:left bottom;-webkit-transform:rotate(-45deg);transform:rotate(-45deg);opacity:0}}@keyframes rotateOutUpLeft{0%{-webkit-transform-origin:left bottom;transform-origin:left bottom;opacity:1}to{-webkit-transform-origin:left bottom;transform-origin:left bottom;-webkit-transform:rotate(-45deg);transform:rotate(-45deg);opacity:0}}.rotateOutUpLeft{-webkit-animation-name:rotateOutUpLeft;animation-name:rotateOutUpLeft}@-webkit-keyframes rotateOutUpRight{0%{-webkit-transform-origin:right bottom;transform-origin:right bottom;opacity:1}to{-webkit-transform-origin:right bottom;transform-origin:right bottom;-webkit-transform:rotate(90deg);transform:rotate(90deg);opacity:0}}@keyframes rotateOutUpRight{0%{-webkit-transform-origin:right bottom;transform-origin:right bottom;opacity:1}to{-webkit-transform-origin:right bottom;transform-origin:right bottom;-webkit-transform:rotate(90deg);transform:rotate(90deg);opacity:0}}.rotateOutUpRight{-webkit-animation-name:rotateOutUpRight;animation-name:rotateOutUpRight}@-webkit-keyframes hinge{0%{-webkit-transform-origin:top left;transform-origin:top left;-webkit-animation-timing-function:ease-in-out;animation-timing-function:ease-in-out}20%,60%{-webkit-transform:rotate(80deg);transform:rotate(80deg);-webkit-transform-origin:top left;transform-origin:top left;-webkit-animation-timing-function:ease-in-out;animation-timing-function:ease-in-out}40%,80%{-webkit-transform:rotate(60deg);transform:rotate(60deg);-webkit-transform-origin:top left;transform-origin:top left;-webkit-animation-timing-function:ease-in-out;animation-timing-function:ease-in-out;opacity:1}to{-webkit-transform:translate3d(0,700px,0);transform:translate3d(0,700px,0);opacity:0}}@keyframes hinge{0%{-webkit-transform-origin:top left;transform-origin:top left;-webkit-animation-timing-function:ease-in-out;animation-timing-function:ease-in-out}20%,60%{-webkit-transform:rotate(80deg);transform:rotate(80deg);-webkit-transform-origin:top left;transform-origin:top left;-webkit-animation-timing-function:ease-in-out;animation-timing-function:ease-in-out}40%,80%{-webkit-transform:rotate(60deg);transform:rotate(60deg);-webkit-transform-origin:top left;transform-origin:top left;-webkit-animation-timing-function:ease-in-out;animation-timing-function:ease-in-out;opacity:1}to{-webkit-transform:translate3d(0,700px,0);transform:translate3d(0,700px,0);opacity:0}}.hinge{-webkit-animation-name:hinge;animation-name:hinge}@-webkit-keyframes rollIn{0%{opacity:0;-webkit-transform:translate3d(-100%,0,0) rotate(-120deg);transform:translate3d(-100%,0,0) rotate(-120deg)}to{opacity:1;-webkit-transform:none;transform:none}}@keyframes rollIn{0%{opacity:0;-webkit-transform:translate3d(-100%,0,0) rotate(-120deg);transform:translate3d(-100%,0,0) rotate(-120deg)}to{opacity:1;-webkit-transform:none;transform:none}}.rollIn{-webkit-animation-name:rollIn;animation-name:rollIn}@-webkit-keyframes rollOut{0%{opacity:1}to{opacity:0;-webkit-transform:translate3d(100%,0,0) rotate(120deg);transform:translate3d(100%,0,0) rotate(120deg)}}@keyframes rollOut{0%{opacity:1}to{opacity:0;-webkit-transform:translate3d(100%,0,0) rotate(120deg);transform:translate3d(100%,0,0) rotate(120deg)}}.rollOut{-webkit-animation-name:rollOut;animation-name:rollOut}@-webkit-keyframes zoomIn{0%{opacity:0;-webkit-transform:scale3d(.3,.3,.3);transform:scale3d(.3,.3,.3)}50%{opacity:1}}@keyframes zoomIn{0%{opacity:0;-webkit-transform:scale3d(.3,.3,.3);transform:scale3d(.3,.3,.3)}50%{opacity:1}}.zoomIn{-webkit-animation-name:zoomIn;animation-name:zoomIn}@-webkit-keyframes zoomInDown{0%{opacity:0;-webkit-transform:scale3d(.1,.1,.1) translate3d(0,-1000px,0);transform:scale3d(.1,.1,.1) translate3d(0,-1000px,0);-webkit-animation-timing-function:cubic-bezier(.55,.055,.675,.19);animation-timing-function:cubic-bezier(.55,.055,.675,.19)}60%{opacity:1;-webkit-transform:scale3d(.475,.475,.475) translate3d(0,60px,0);transform:scale3d(.475,.475,.475) translate3d(0,60px,0);-webkit-animation-timing-function:cubic-bezier(.175,.885,.32,1);animation-timing-function:cubic-bezier(.175,.885,.32,1)}}@keyframes zoomInDown{0%{opacity:0;-webkit-transform:scale3d(.1,.1,.1) translate3d(0,-1000px,0);transform:scale3d(.1,.1,.1) translate3d(0,-1000px,0);-webkit-animation-timing-function:cubic-bezier(.55,.055,.675,.19);animation-timing-function:cubic-bezier(.55,.055,.675,.19)}60%{opacity:1;-webkit-transform:scale3d(.475,.475,.475) translate3d(0,60px,0);transform:scale3d(.475,.475,.475) translate3d(0,60px,0);-webkit-animation-timing-function:cubic-bezier(.175,.885,.32,1);animation-timing-function:cubic-bezier(.175,.885,.32,1)}}.zoomInDown{-webkit-animation-name:zoomInDown;animation-name:zoomInDown}@-webkit-keyframes zoomInLeft{0%{opacity:0;-webkit-transform:scale3d(.1,.1,.1) translate3d(-1000px,0,0);transform:scale3d(.1,.1,.1) translate3d(-1000px,0,0);-webkit-animation-timing-function:cubic-bezier(.55,.055,.675,.19);animation-timing-function:cubic-bezier(.55,.055,.675,.19)}60%{opacity:1;-webkit-transform:scale3d(.475,.475,.475) translate3d(10px,0,0);transform:scale3d(.475,.475,.475) translate3d(10px,0,0);-webkit-animation-timing-function:cubic-bezier(.175,.885,.32,1);animation-timing-function:cubic-bezier(.175,.885,.32,1)}}@keyframes zoomInLeft{0%{opacity:0;-webkit-transform:scale3d(.1,.1,.1) translate3d(-1000px,0,0);transform:scale3d(.1,.1,.1) translate3d(-1000px,0,0);-webkit-animation-timing-function:cubic-bezier(.55,.055,.675,.19);animation-timing-function:cubic-bezier(.55,.055,.675,.19)}60%{opacity:1;-webkit-transform:scale3d(.475,.475,.475) translate3d(10px,0,0);transform:scale3d(.475,.475,.475) translate3d(10px,0,0);-webkit-animation-timing-function:cubic-bezier(.175,.885,.32,1);animation-timing-function:cubic-bezier(.175,.885,.32,1)}}.zoomInLeft{-webkit-animation-name:zoomInLeft;animation-name:zoomInLeft}@-webkit-keyframes zoomInRight{0%{opacity:0;-webkit-transform:scale3d(.1,.1,.1) translate3d(1000px,0,0);transform:scale3d(.1,.1,.1) translate3d(1000px,0,0);-webkit-animation-timing-function:cubic-bezier(.55,.055,.675,.19);animation-timing-function:cubic-bezier(.55,.055,.675,.19)}60%{opacity:1;-webkit-transform:scale3d(.475,.475,.475) translate3d(-10px,0,0);transform:scale3d(.475,.475,.475) translate3d(-10px,0,0);-webkit-animation-timing-function:cubic-bezier(.175,.885,.32,1);animation-timing-function:cubic-bezier(.175,.885,.32,1)}}@keyframes zoomInRight{0%{opacity:0;-webkit-transform:scale3d(.1,.1,.1) translate3d(1000px,0,0);transform:scale3d(.1,.1,.1) translate3d(1000px,0,0);-webkit-animation-timing-function:cubic-bezier(.55,.055,.675,.19);animation-timing-function:cubic-bezier(.55,.055,.675,.19)}60%{opacity:1;-webkit-transform:scale3d(.475,.475,.475) translate3d(-10px,0,0);transform:scale3d(.475,.475,.475) translate3d(-10px,0,0);-webkit-animation-timing-function:cubic-bezier(.175,.885,.32,1);animation-timing-function:cubic-bezier(.175,.885,.32,1)}}.zoomInRight{-webkit-animation-name:zoomInRight;animation-name:zoomInRight}@-webkit-keyframes zoomInUp{0%{opacity:0;-webkit-transform:scale3d(.1,.1,.1) translate3d(0,1000px,0);transform:scale3d(.1,.1,.1) translate3d(0,1000px,0);-webkit-animation-timing-function:cubic-bezier(.55,.055,.675,.19);animation-timing-function:cubic-bezier(.55,.055,.675,.19)}60%{opacity:1;-webkit-transform:scale3d(.475,.475,.475) translate3d(0,-60px,0);transform:scale3d(.475,.475,.475) translate3d(0,-60px,0);-webkit-animation-timing-function:cubic-bezier(.175,.885,.32,1);animation-timing-function:cubic-bezier(.175,.885,.32,1)}}@keyframes zoomInUp{0%{opacity:0;-webkit-transform:scale3d(.1,.1,.1) translate3d(0,1000px,0);transform:scale3d(.1,.1,.1) translate3d(0,1000px,0);-webkit-animation-timing-function:cubic-bezier(.55,.055,.675,.19);animation-timing-function:cubic-bezier(.55,.055,.675,.19)}60%{opacity:1;-webkit-transform:scale3d(.475,.475,.475) translate3d(0,-60px,0);transform:scale3d(.475,.475,.475) translate3d(0,-60px,0);-webkit-animation-timing-function:cubic-bezier(.175,.885,.32,1);animation-timing-function:cubic-bezier(.175,.885,.32,1)}}.zoomInUp{-webkit-animation-name:zoomInUp;animation-name:zoomInUp}@-webkit-keyframes zoomOut{0%{opacity:1}50%{opacity:0;-webkit-transform:scale3d(.3,.3,.3);transform:scale3d(.3,.3,.3)}to{opacity:0}}@keyframes zoomOut{0%{opacity:1}50%{opacity:0;-webkit-transform:scale3d(.3,.3,.3);transform:scale3d(.3,.3,.3)}to{opacity:0}}.zoomOut{-webkit-animation-name:zoomOut;animation-name:zoomOut}@-webkit-keyframes zoomOutDown{40%{opacity:1;-webkit-transform:scale3d(.475,.475,.475) translate3d(0,-60px,0);transform:scale3d(.475,.475,.475) translate3d(0,-60px,0);-webkit-animation-timing-function:cubic-bezier(.55,.055,.675,.19);animation-timing-function:cubic-bezier(.55,.055,.675,.19)}to{opacity:0;-webkit-transform:scale3d(.1,.1,.1) translate3d(0,2000px,0);transform:scale3d(.1,.1,.1) translate3d(0,2000px,0);-webkit-transform-origin:center bottom;transform-origin:center bottom;-webkit-animation-timing-function:cubic-bezier(.175,.885,.32,1);animation-timing-function:cubic-bezier(.175,.885,.32,1)}}@keyframes zoomOutDown{40%{opacity:1;-webkit-transform:scale3d(.475,.475,.475) translate3d(0,-60px,0);transform:scale3d(.475,.475,.475) translate3d(0,-60px,0);-webkit-animation-timing-function:cubic-bezier(.55,.055,.675,.19);animation-timing-function:cubic-bezier(.55,.055,.675,.19)}to{opacity:0;-webkit-transform:scale3d(.1,.1,.1) translate3d(0,2000px,0);transform:scale3d(.1,.1,.1) translate3d(0,2000px,0);-webkit-transform-origin:center bottom;transform-origin:center bottom;-webkit-animation-timing-function:cubic-bezier(.175,.885,.32,1);animation-timing-function:cubic-bezier(.175,.885,.32,1)}}.zoomOutDown{-webkit-animation-name:zoomOutDown;animation-name:zoomOutDown}@-webkit-keyframes zoomOutLeft{40%{opacity:1;-webkit-transform:scale3d(.475,.475,.475) translate3d(42px,0,0);transform:scale3d(.475,.475,.475) translate3d(42px,0,0)}to{opacity:0;-webkit-transform:scale(.1) translate3d(-2000px,0,0);transform:scale(.1) translate3d(-2000px,0,0);-webkit-transform-origin:left center;transform-origin:left center}}@keyframes zoomOutLeft{40%{opacity:1;-webkit-transform:scale3d(.475,.475,.475) translate3d(42px,0,0);transform:scale3d(.475,.475,.475) translate3d(42px,0,0)}to{opacity:0;-webkit-transform:scale(.1) translate3d(-2000px,0,0);transform:scale(.1) translate3d(-2000px,0,0);-webkit-transform-origin:left center;transform-origin:left center}}.zoomOutLeft{-webkit-animation-name:zoomOutLeft;animation-name:zoomOutLeft}@-webkit-keyframes zoomOutRight{40%{opacity:1;-webkit-transform:scale3d(.475,.475,.475) translate3d(-42px,0,0);transform:scale3d(.475,.475,.475) translate3d(-42px,0,0)}to{opacity:0;-webkit-transform:scale(.1) translate3d(2000px,0,0);transform:scale(.1) translate3d(2000px,0,0);-webkit-transform-origin:right center;transform-origin:right center}}@keyframes zoomOutRight{40%{opacity:1;-webkit-transform:scale3d(.475,.475,.475) translate3d(-42px,0,0);transform:scale3d(.475,.475,.475) translate3d(-42px,0,0)}to{opacity:0;-webkit-transform:scale(.1) translate3d(2000px,0,0);transform:scale(.1) translate3d(2000px,0,0);-webkit-transform-origin:right center;transform-origin:right center}}.zoomOutRight{-webkit-animation-name:zoomOutRight;animation-name:zoomOutRight}@-webkit-keyframes zoomOutUp{40%{opacity:1;-webkit-transform:scale3d(.475,.475,.475) translate3d(0,60px,0);transform:scale3d(.475,.475,.475) translate3d(0,60px,0);-webkit-animation-timing-function:cubic-bezier(.55,.055,.675,.19);animation-timing-function:cubic-bezier(.55,.055,.675,.19)}to{opacity:0;-webkit-transform:scale3d(.1,.1,.1) translate3d(0,-2000px,0);transform:scale3d(.1,.1,.1) translate3d(0,-2000px,0);-webkit-transform-origin:center bottom;transform-origin:center bottom;-webkit-animation-timing-function:cubic-bezier(.175,.885,.32,1);animation-timing-function:cubic-bezier(.175,.885,.32,1)}}@keyframes zoomOutUp{40%{opacity:1;-webkit-transform:scale3d(.475,.475,.475) translate3d(0,60px,0);transform:scale3d(.475,.475,.475) translate3d(0,60px,0);-webkit-animation-timing-function:cubic-bezier(.55,.055,.675,.19);animation-timing-function:cubic-bezier(.55,.055,.675,.19)}to{opacity:0;-webkit-transform:scale3d(.1,.1,.1) translate3d(0,-2000px,0);transform:scale3d(.1,.1,.1) translate3d(0,-2000px,0);-webkit-transform-origin:center bottom;transform-origin:center bottom;-webkit-animation-timing-function:cubic-bezier(.175,.885,.32,1);animation-timing-function:cubic-bezier(.175,.885,.32,1)}}.zoomOutUp{-webkit-animation-name:zoomOutUp;animation-name:zoomOutUp}@-webkit-keyframes slideInDown{0%{-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0);visibility:visible}to{-webkit-transform:translateZ(0);transform:translateZ(0)}}@keyframes slideInDown{0%{-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0);visibility:visible}to{-webkit-transform:translateZ(0);transform:translateZ(0)}}.slideInDown{-webkit-animation-name:slideInDown;animation-name:slideInDown}@-webkit-keyframes slideInLeft{0%{-webkit-transform:translate3d(-100%,0,0);transform:translate3d(-100%,0,0);visibility:visible}to{-webkit-transform:translateZ(0);transform:translateZ(0)}}@keyframes slideInLeft{0%{-webkit-transform:translate3d(-100%,0,0);transform:translate3d(-100%,0,0);visibility:visible}to{-webkit-transform:translateZ(0);transform:translateZ(0)}}.slideInLeft{-webkit-animation-name:slideInLeft;animation-name:slideInLeft}@-webkit-keyframes slideInRight{0%{-webkit-transform:translate3d(100%,0,0);transform:translate3d(100%,0,0);visibility:visible}to{-webkit-transform:translateZ(0);transform:translateZ(0)}}@keyframes slideInRight{0%{-webkit-transform:translate3d(100%,0,0);transform:translate3d(100%,0,0);visibility:visible}to{-webkit-transform:translateZ(0);transform:translateZ(0)}}.slideInRight{-webkit-animation-name:slideInRight;animation-name:slideInRight}@-webkit-keyframes slideInUp{0%{-webkit-transform:translate3d(0,100%,0);transform:translate3d(0,100%,0);visibility:visible}to{-webkit-transform:translateZ(0);transform:translateZ(0)}}@keyframes slideInUp{0%{-webkit-transform:translate3d(0,100%,0);transform:translate3d(0,100%,0);visibility:visible}to{-webkit-transform:translateZ(0);transform:translateZ(0)}}.slideInUp{-webkit-animation-name:slideInUp;animation-name:slideInUp}@-webkit-keyframes slideOutDown{0%{-webkit-transform:translateZ(0);transform:translateZ(0)}to{visibility:hidden;-webkit-transform:translate3d(0,100%,0);transform:translate3d(0,100%,0)}}@keyframes slideOutDown{0%{-webkit-transform:translateZ(0);transform:translateZ(0)}to{visibility:hidden;-webkit-transform:translate3d(0,100%,0);transform:translate3d(0,100%,0)}}.slideOutDown{-webkit-animation-name:slideOutDown;animation-name:slideOutDown}@-webkit-keyframes slideOutLeft{0%{-webkit-transform:translateZ(0);transform:translateZ(0)}to{visibility:hidden;-webkit-transform:translate3d(-100%,0,0);transform:translate3d(-100%,0,0)}}@keyframes slideOutLeft{0%{-webkit-transform:translateZ(0);transform:translateZ(0)}to{visibility:hidden;-webkit-transform:translate3d(-100%,0,0);transform:translate3d(-100%,0,0)}}.slideOutLeft{-webkit-animation-name:slideOutLeft;animation-name:slideOutLeft}@-webkit-keyframes slideOutRight{0%{-webkit-transform:translateZ(0);transform:translateZ(0)}to{visibility:hidden;-webkit-transform:translate3d(100%,0,0);transform:translate3d(100%,0,0)}}@keyframes slideOutRight{0%{-webkit-transform:translateZ(0);transform:translateZ(0)}to{visibility:hidden;-webkit-transform:translate3d(100%,0,0);transform:translate3d(100%,0,0)}}.slideOutRight{-webkit-animation-name:slideOutRight;animation-name:slideOutRight}@-webkit-keyframes slideOutUp{0%{-webkit-transform:translateZ(0);transform:translateZ(0)}to{visibility:hidden;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}}@keyframes slideOutUp{0%{-webkit-transform:translateZ(0);transform:translateZ(0)}to{visibility:hidden;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}}.slideOutUp{-webkit-animation-name:slideOutUp;animation-name:slideOutUp}", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/messegeComponent.vue?vue&type=style&index=0&id=5af1df7d&scoped=true&lang=css&":
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/messegeComponent.vue?vue&type=style&index=0&id=5af1df7d&scoped=true&lang=css& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.active[data-v-5af1df7d]{\n    border: 1px solid #8dc63f;\n}\n", ""]);
 
 // exports
 
@@ -50506,6 +50546,36 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/messegeComponent.vue?vue&type=style&index=0&id=5af1df7d&scoped=true&lang=css&":
+/*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/messegeComponent.vue?vue&type=style&index=0&id=5af1df7d&scoped=true&lang=css& ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./messegeComponent.vue?vue&type=style&index=0&id=5af1df7d&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/messegeComponent.vue?vue&type=style&index=0&id=5af1df7d&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/lib/addStyles.js":
 /*!****************************************************!*\
   !*** ./node_modules/style-loader/lib/addStyles.js ***!
@@ -51087,6 +51157,82 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
                          (this && this.clearImmediate);
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "./node_modules/vue-chat-scroll/dist/vue-chat-scroll.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/vue-chat-scroll/dist/vue-chat-scroll.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function (global, factory) {
+	 true ? module.exports = factory() :
+	undefined;
+}(this, (function () { 'use strict';
+
+/**
+* @name VueJS vChatScroll (vue-chat-scroll)
+* @description Monitors an element and scrolls to the bottom if a new child is added
+* @author Theodore Messinezis <theo@theomessin.com>
+* @file v-chat-scroll  directive definition
+*/
+
+var scrollToBottom = function scrollToBottom(el, smooth) {
+  if (typeof el.scroll === "function") {
+    el.scroll({
+      top: el.scrollHeight,
+      behavior: smooth ? 'smooth' : 'instant'
+    });
+  } else {
+    el.scrollTop = el.scrollHeight;
+  }
+};
+
+var vChatScroll = {
+  bind: function bind(el, binding) {
+    var scrolled = false;
+
+    el.addEventListener('scroll', function (e) {
+      scrolled = el.scrollTop + el.clientHeight + 1 < el.scrollHeight;
+    });
+
+    new MutationObserver(function (e) {
+      var config = binding.value || {};
+      var pause = config.always === false && scrolled;
+      if (config.scrollonremoved) {
+        if (pause || e[e.length - 1].addedNodes.length != 1 && e[e.length - 1].removedNodes.length != 1) return;
+      } else {
+        if (pause || e[e.length - 1].addedNodes.length != 1) return;
+      }
+      scrollToBottom(el, config.smooth);
+    }).observe(el, { childList: true, subtree: true });
+  },
+  inserted: scrollToBottom
+};
+
+/**
+* @name VueJS vChatScroll (vue-chat-scroll)
+* @description Monitors an element and scrolls to the bottom if a new child is added
+* @author Theodore Messinezis <theo@theomessin.com>
+* @file vue-chat-scroll plugin definition
+*/
+
+var VueChatScroll = {
+  install: function install(Vue, options) {
+    Vue.directive('chat-scroll', vChatScroll);
+  }
+};
+
+if (typeof window !== 'undefined' && window.Vue) {
+  window.Vue.use(VueChatScroll);
+}
+
+return VueChatScroll;
+
+})));
+
 
 /***/ }),
 
@@ -51720,30 +51866,12 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._v("Add Friend")]
-                      )
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                _vm.request_status == 2
-                  ? _c("li", [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn-primary",
-                          on: {
-                            click: function($event) {
-                              $event.preventDefault()
-                              return _vm.add_friend(_vm.$route.params.userId)
-                            }
-                          }
-                        },
                         [_vm._v("Request Sent")]
                       )
                     ])
                   : _vm._e(),
                 _vm._v(" "),
-                _vm.request_status == 3
+                _vm.request_status == 2
                   ? _c("li", [
                       _c(
                         "button",
@@ -51763,10 +51891,26 @@ var render = function() {
                 _vm._v(" "),
                 _vm.request_status == 1
                   ? _c("li", [
+                      _c("button", { staticClass: "btn-success btn-primary" }, [
+                        _vm._v("Friend")
+                      ])
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.request_status == 3
+                  ? _c("li", [
                       _c(
                         "button",
-                        { staticClass: "btn-success btn-primary " },
-                        [_vm._v("Friend")]
+                        {
+                          staticClass: "btn-success btn-primary",
+                          on: {
+                            click: function($event) {
+                              $event.preventDefault()
+                              return _vm.add_friend(_vm.$route.params.userId)
+                            }
+                          }
+                        },
+                        [_vm._v("Add Friend")]
                       )
                     ])
                   : _vm._e()
@@ -52722,10 +52866,10 @@ var render = function() {
                 _vm._v(" "),
                 _vm._m(0),
                 _vm._v(" "),
-                _vm._l(_vm.posts, function(post) {
+                _vm._l(_vm.posts, function(post, index) {
                   return _c("div", { staticClass: "post-content" }, [
                     _vm._v(
-                      "\n\n             " + _vm._s(post.id) + "\n             "
+                      "\n\n           " + _vm._s(post.id) + "\n\n             "
                     ),
                     post.image != null
                       ? _c("img", {
@@ -52826,10 +52970,46 @@ var render = function() {
                             }),
                             _vm._v(" "),
                             _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.comment[index],
+                                  expression: "comment[index]"
+                                }
+                              ],
                               staticClass: "form-control",
                               attrs: {
                                 type: "text",
                                 placeholder: "Post a comment"
+                              },
+                              domProps: { value: _vm.comment[index] },
+                              on: {
+                                keyup: function($event) {
+                                  if (
+                                    !$event.type.indexOf("key") &&
+                                    _vm._k(
+                                      $event.keyCode,
+                                      "enter",
+                                      13,
+                                      $event.key,
+                                      "Enter"
+                                    )
+                                  ) {
+                                    return null
+                                  }
+                                  return _vm.addComment(post.id, index)
+                                },
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.comment,
+                                    index,
+                                    $event.target.value
+                                  )
+                                }
                               }
                             })
                           ])
@@ -57594,10 +57774,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/messegeComponent.vue?vue&type=template&id=5af1df7d&":
-/*!*******************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/messegeComponent.vue?vue&type=template&id=5af1df7d& ***!
-  \*******************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/messegeComponent.vue?vue&type=template&id=5af1df7d&scoped=true&":
+/*!*******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/messegeComponent.vue?vue&type=template&id=5af1df7d&scoped=true& ***!
+  \*******************************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -57609,389 +57789,76 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-3 static" }, [
-      _c("div", { attrs: { id: "page-contents" } }, [
-        _c("div", { staticClass: "container" }, [
-          _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col-md-3 static" }, [
-              _c("div", { staticClass: "profile-card" }, [
-                _c("img", {
-                  staticClass: "profile-photo",
-                  attrs: { src: "assets/images/users/user-1.jpg", alt: "user" }
-                }),
-                _vm._v(" "),
-                _c("h5", [
-                  _c(
-                    "a",
-                    {
-                      staticClass: "text-white",
-                      attrs: { href: "timeline.html" }
-                    },
-                    [_vm._v("Sarah Cruiz")]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("a", { staticClass: "text-white", attrs: { href: "#" } }, [
-                  _c("i", { staticClass: "ion ion-android-person-add" }),
-                  _vm._v(" 1,299 followers")
-                ])
-              ]),
+  return _c("div", [
+    _c("div", { attrs: { id: "page-contents" } }, [
+      _c("div", { staticClass: "container" }, [
+        _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col-md-3 static" }, [
+            _c("div", { staticClass: "profile-card" }, [
+              _c("img", {
+                staticClass: "profile-photo",
+                attrs: { src: "assets/images/users/user-1.jpg", alt: "user" }
+              }),
               _vm._v(" "),
-              _c("ul", { staticClass: "nav-news-feed" }, [
-                _c("li", [
-                  _c("i", { staticClass: "icon ion-ios-paper" }),
-                  _c("div", [
-                    _c("a", { attrs: { href: "newsfeed.html" } }, [
-                      _vm._v("My Newsfeed")
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("li", [
-                  _c("i", { staticClass: "icon ion-ios-people" }),
-                  _c("div", [
-                    _c(
-                      "a",
-                      { attrs: { href: "newsfeed-people-nearby.html" } },
-                      [_vm._v("People Nearby")]
-                    )
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("li", [
-                  _c("i", { staticClass: "icon ion-ios-people-outline" }),
-                  _c("div", [
-                    _c("a", { attrs: { href: "newsfeed-friends.html" } }, [
-                      _vm._v("Friends")
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("li", [
-                  _c("i", { staticClass: "icon ion-chatboxes" }),
-                  _c("div", [
-                    _c("a", { attrs: { href: "newsfeed-messages.html" } }, [
-                      _vm._v("Messages")
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("li", [
-                  _c("i", { staticClass: "icon ion-images" }),
-                  _c("div", [
-                    _c("a", { attrs: { href: "newsfeed-images.html" } }, [
-                      _vm._v("Images")
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("li", [
-                  _c("i", { staticClass: "icon ion-ios-videocam" }),
-                  _c("div", [
-                    _c("a", { attrs: { href: "newsfeed-videos.html" } }, [
-                      _vm._v("Videos")
-                    ])
-                  ])
-                ])
-              ]),
+              _vm._m(0),
               _vm._v(" "),
-              _c("div", { attrs: { id: "chat-block" } }, [
-                _c("div", { staticClass: "title" }, [_vm._v("Chat online")]),
-                _vm._v(" "),
-                _c("ul", { staticClass: "online-users list-inline" }, [
-                  _c("li", [
-                    _c(
-                      "a",
-                      {
-                        attrs: {
-                          href: "newsfeed-messages.html",
-                          title: "Linda Lohan"
-                        }
-                      },
-                      [
-                        _c("img", {
-                          staticClass: "img-responsive profile-photo",
-                          attrs: {
-                            src: "assets/images/users/user-2.jpg",
-                            alt: "user"
-                          }
-                        }),
-                        _c("span", { staticClass: "online-dot" })
-                      ]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c(
-                      "a",
-                      {
-                        attrs: {
-                          href: "newsfeed-messages.html",
-                          title: "Sophia Lee"
-                        }
-                      },
-                      [
-                        _c("img", {
-                          staticClass: "img-responsive profile-photo",
-                          attrs: {
-                            src: "assets/images/users/user-3.jpg",
-                            alt: "user"
-                          }
-                        }),
-                        _c("span", { staticClass: "online-dot" })
-                      ]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c(
-                      "a",
-                      {
-                        attrs: {
-                          href: "newsfeed-messages.html",
-                          title: "John Doe"
-                        }
-                      },
-                      [
-                        _c("img", {
-                          staticClass: "img-responsive profile-photo",
-                          attrs: {
-                            src: "assets/images/users/user-4.jpg",
-                            alt: "user"
-                          }
-                        }),
-                        _c("span", { staticClass: "online-dot" })
-                      ]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c(
-                      "a",
-                      {
-                        attrs: {
-                          href: "newsfeed-messages.html",
-                          title: "Alexis Clark"
-                        }
-                      },
-                      [
-                        _c("img", {
-                          staticClass: "img-responsive profile-photo",
-                          attrs: {
-                            src: "assets/images/users/user-5.jpg",
-                            alt: "user"
-                          }
-                        }),
-                        _c("span", { staticClass: "online-dot" })
-                      ]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c(
-                      "a",
-                      {
-                        attrs: {
-                          href: "newsfeed-messages.html",
-                          title: "James Carter"
-                        }
-                      },
-                      [
-                        _c("img", {
-                          staticClass: "img-responsive profile-photo",
-                          attrs: {
-                            src: "assets/images/users/user-6.jpg",
-                            alt: "user"
-                          }
-                        }),
-                        _c("span", { staticClass: "online-dot" })
-                      ]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c(
-                      "a",
-                      {
-                        attrs: {
-                          href: "newsfeed-messages.html",
-                          title: "Robert Cook"
-                        }
-                      },
-                      [
-                        _c("img", {
-                          staticClass: "img-responsive profile-photo",
-                          attrs: {
-                            src: "assets/images/users/user-7.jpg",
-                            alt: "user"
-                          }
-                        }),
-                        _c("span", { staticClass: "online-dot" })
-                      ]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c(
-                      "a",
-                      {
-                        attrs: {
-                          href: "newsfeed-messages.html",
-                          title: "Richard Bell"
-                        }
-                      },
-                      [
-                        _c("img", {
-                          staticClass: "img-responsive profile-photo",
-                          attrs: {
-                            src: "assets/images/users/user-8.jpg",
-                            alt: "user"
-                          }
-                        }),
-                        _c("span", { staticClass: "online-dot" })
-                      ]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c(
-                      "a",
-                      {
-                        attrs: {
-                          href: "newsfeed-messages.html",
-                          title: "Anna Young"
-                        }
-                      },
-                      [
-                        _c("img", {
-                          staticClass: "img-responsive profile-photo",
-                          attrs: {
-                            src: "assets/images/users/user-9.jpg",
-                            alt: "user"
-                          }
-                        }),
-                        _c("span", { staticClass: "online-dot" })
-                      ]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c(
-                      "a",
-                      {
-                        attrs: {
-                          href: "newsfeed-messages.html",
-                          title: "Julia Cox"
-                        }
-                      },
-                      [
-                        _c("img", {
-                          staticClass: "img-responsive profile-photo",
-                          attrs: {
-                            src: "assets/images/users/user-10.jpg",
-                            alt: "user"
-                          }
-                        }),
-                        _c("span", { staticClass: "online-dot" })
-                      ]
-                    )
-                  ])
-                ])
-              ])
+              _c(
+                "button",
+                {
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.message_sent()
+                    }
+                  }
+                },
+                [_vm._v("Click to sent")]
+              ),
+              _vm._v(" "),
+              _vm._m(1)
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "col-md-7" }, [
-              _c("div", { staticClass: "create-post" }, [
-                _c("div", { staticClass: "row" }, [
-                  _c("div", { staticClass: "col-md-7 col-sm-7" }, [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("img", {
-                        staticClass: "profile-photo-md",
-                        attrs: {
-                          src: "assets/images/users/user-1.jpg",
-                          alt: ""
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("textarea", {
-                        staticClass: "form-control",
-                        attrs: {
-                          name: "texts",
-                          id: "exampleTextarea",
-                          cols: "30",
-                          rows: "1",
-                          placeholder: "Write what you wish"
-                        }
-                      })
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-md-5 col-sm-5" }, [
-                    _c("div", { staticClass: "tools" }, [
-                      _c(
-                        "ul",
-                        { staticClass: "publishing-tools list-inline" },
+            _vm._m(2),
+            _vm._v(" "),
+            _vm._m(3)
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-7" }, [
+            _vm._m(4),
+            _vm._v(" "),
+            _c("div", { staticClass: "chat-room" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-md-5" }, [
+                  _c(
+                    "ul",
+                    {
+                      staticClass:
+                        "nav nav-tabs contact-list scrollbar-wrapper scrollbar-outer"
+                    },
+                    _vm._l(_vm.friends, function(friend) {
+                      return _c(
+                        "li",
+                        {
+                          class: { active: _vm.isActive },
+                          on: {
+                            click: function($event) {
+                              _vm.input_show = true
+                            }
+                          }
+                        },
                         [
-                          _c("li", [
-                            _c("a", { attrs: { href: "#" } }, [
-                              _c("i", { staticClass: "ion-compose" })
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("li", [
-                            _c("a", { attrs: { href: "#" } }, [
-                              _c("i", { staticClass: "ion-images" })
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("li", [
-                            _c("a", { attrs: { href: "#" } }, [
-                              _c("i", { staticClass: "ion-ios-videocam" })
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("li", [
-                            _c("a", { attrs: { href: "#" } }, [
-                              _c("i", { staticClass: "ion-map" })
-                            ])
-                          ])
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "button",
-                        { staticClass: "btn btn-primary pull-right" },
-                        [_vm._v("Publish")]
-                      )
-                    ])
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "chat-room" }, [
-                _c("div", { staticClass: "row" }, [
-                  _c("div", { staticClass: "col-md-5" }, [
-                    _c(
-                      "ul",
-                      {
-                        staticClass:
-                          "nav nav-tabs contact-list scrollbar-wrapper scrollbar-outer"
-                      },
-                      [
-                        _c("li", { staticClass: "active" }, [
                           _c(
                             "a",
                             {
                               attrs: {
-                                href: "#contact-1",
+                                href: "#content" + friend.id,
                                 "data-toggle": "tab"
+                              },
+                              on: {
+                                click: function($event) {
+                                  return _vm.sender_div(friend.id)
+                                }
                               }
                             },
                             [
@@ -58005,10 +57872,10 @@ var staticRenderFns = [
                                 }),
                                 _vm._v(" "),
                                 _c("div", { staticClass: "msg-preview" }, [
-                                  _c("h6", [_vm._v("Linda Lohan")]),
+                                  _c("h6", [_vm._v(_vm._s(friend.f_name))]),
                                   _vm._v(" "),
                                   _c("p", { staticClass: "text-muted" }, [
-                                    _vm._v("Hi there, how are you")
+                                    _vm._v("hello")
                                   ]),
                                   _vm._v(" "),
                                   _c("small", { staticClass: "text-muted" }, [
@@ -58022,1286 +57889,762 @@ var staticRenderFns = [
                               ])
                             ]
                           )
-                        ]),
-                        _vm._v(" "),
-                        _c("li", [
+                        ]
+                      )
+                    }),
+                    0
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-7" }, [
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        { name: "chat-scroll", rawName: "v-chat-scroll" }
+                      ],
+                      staticClass:
+                        "tab-content scrollbar-wrapper wrapper scrollbar-outer"
+                    },
+                    [
+                      _c("div", { staticClass: " " }, [
+                        _c("div", { staticClass: "chat-body" }, [
                           _c(
-                            "a",
+                            "ul",
                             {
-                              attrs: {
-                                href: "#contact-2",
-                                "data-toggle": "tab"
-                              }
+                              directives: [
+                                {
+                                  name: "chat-scroll",
+                                  rawName: "v-chat-scroll"
+                                }
+                              ],
+                              staticClass: "chat-message"
                             },
-                            [
-                              _c("div", { staticClass: "contact" }, [
-                                _c("img", {
-                                  staticClass: "profile-photo-sm pull-left",
-                                  attrs: {
-                                    src: "assets/images/users/user-10.jpg",
-                                    alt: ""
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("div", { staticClass: "msg-preview" }, [
-                                  _c("h6", [_vm._v("Julia Cox")]),
-                                  _vm._v(" "),
-                                  _c("p", { staticClass: "text-muted" }, [
-                                    _vm._v("see you soon")
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("small", { staticClass: "text-muted" }, [
-                                    _vm._v("an hour ago")
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "seen" }, [
-                                    _c("i", {
-                                      staticClass: "icon ion-checkmark-round"
-                                    })
-                                  ])
-                                ])
+                            _vm._l(_vm.chat.message_all, function(
+                              message,
+                              index
+                            ) {
+                              return _c("div", [
+                                message.sender_id == _vm.auth_id
+                                  ? _c("div", [
+                                      _c("li", { staticClass: "right" }, [
+                                        _c(
+                                          "div",
+                                          { staticClass: "chat-item" },
+                                          [
+                                            _c("p", [
+                                              _vm._v(
+                                                _vm._s(message.message) +
+                                                  "\n                                                                "
+                                              ),
+                                              _c("small", [
+                                                _vm._v(
+                                                  _vm._s(_vm.chat.time[index])
+                                                )
+                                              ])
+                                            ])
+                                          ]
+                                        )
+                                      ])
+                                    ])
+                                  : _c("div", [
+                                      _c("li", { staticClass: "left" }, [
+                                        _c(
+                                          "div",
+                                          { staticClass: "chat-item" },
+                                          [
+                                            _c("p", [
+                                              _c("i", {
+                                                staticClass: "em em-hand"
+                                              }),
+                                              _vm._v(
+                                                _vm._s(message.message) +
+                                                  "\n                                                                "
+                                              ),
+                                              _c("small", [
+                                                _vm._v(
+                                                  _vm._s(_vm.chat.time[index])
+                                                )
+                                              ])
+                                            ])
+                                          ]
+                                        )
+                                      ])
+                                    ])
                               ])
-                            ]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("li", [
-                          _c(
-                            "a",
-                            {
-                              attrs: {
-                                href: "#contact-3",
-                                "data-toggle": "tab"
-                              }
-                            },
-                            [
-                              _c("div", { staticClass: "contact" }, [
-                                _c("img", {
-                                  staticClass: "profile-photo-sm pull-left",
-                                  attrs: {
-                                    src: "assets/images/users/user-3.jpg",
-                                    alt: ""
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("div", { staticClass: "msg-preview" }, [
-                                  _c("h6", [_vm._v("Sophia Lee")]),
-                                  _vm._v(" "),
-                                  _c("p", { staticClass: "text-muted" }, [
-                                    _vm._v("Okay fine. thank you")
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("small", { staticClass: "text-muted" }, [
-                                    _vm._v("13 hour ago")
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "replied" }, [
-                                    _c("i", { staticClass: "icon ion-reply" })
-                                  ])
-                                ])
-                              ])
-                            ]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("li", [
-                          _c(
-                            "a",
-                            {
-                              attrs: {
-                                href: "#contact-4",
-                                "data-toggle": "tab"
-                              }
-                            },
-                            [
-                              _c("div", { staticClass: "contact" }, [
-                                _c("img", {
-                                  staticClass: "profile-photo-sm pull-left",
-                                  attrs: {
-                                    src: "assets/images/users/user-4.jpg",
-                                    alt: ""
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("div", { staticClass: "msg-preview" }, [
-                                  _c("h6", [_vm._v("John Doe")]),
-                                  _vm._v(" "),
-                                  _c("p", { staticClass: "text-muted" }, [
-                                    _vm._v("hey anybody there")
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("small", { staticClass: "text-muted" }, [
-                                    _vm._v("Yesterday")
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-alert" }, [
-                                    _vm._v("1")
-                                  ])
-                                ])
-                              ])
-                            ]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("li", [
-                          _c(
-                            "a",
-                            {
-                              attrs: {
-                                href: "#contact-5",
-                                "data-toggle": "tab"
-                              }
-                            },
-                            [
-                              _c("div", { staticClass: "contact" }, [
-                                _c("img", {
-                                  staticClass: "profile-photo-sm pull-left",
-                                  attrs: {
-                                    src: "assets/images/users/user-9.jpg",
-                                    alt: ""
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("div", { staticClass: "msg-preview" }, [
-                                  _c("h6", [_vm._v("Anna Young")]),
-                                  _vm._v(" "),
-                                  _c("p", { staticClass: "text-muted" }, [
-                                    _vm._v("I gotta go")
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("small", { staticClass: "text-muted" }, [
-                                    _vm._v("2 days ago")
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "seen" }, [
-                                    _c("i", {
-                                      staticClass: "icon ion-checkmark-round"
-                                    })
-                                  ])
-                                ])
-                              ])
-                            ]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("li", [
-                          _c(
-                            "a",
-                            {
-                              attrs: {
-                                href: "#contact-6",
-                                "data-toggle": "tab"
-                              }
-                            },
-                            [
-                              _c("div", { staticClass: "contact" }, [
-                                _c("img", {
-                                  staticClass: "profile-photo-sm pull-left",
-                                  attrs: {
-                                    src: "assets/images/users/user-8.jpg",
-                                    alt: ""
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("div", { staticClass: "msg-preview" }, [
-                                  _c("h6", [_vm._v("Richard Bell")]),
-                                  _vm._v(" "),
-                                  _c("p", { staticClass: "text-muted" }, [
-                                    _vm._v("Hey there?")
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("small", { staticClass: "text-muted" }, [
-                                    _vm._v("2 days ago")
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-alert" }, [
-                                    _vm._v("1")
-                                  ])
-                                ])
-                              ])
-                            ]
+                            }),
+                            0
                           )
                         ])
-                      ]
-                    )
-                  ]),
+                      ]),
+                      _vm._v(" "),
+                      _vm._m(5)
+                    ]
+                  ),
                   _vm._v(" "),
-                  _c("div", { staticClass: "col-md-7" }, [
-                    _c(
-                      "div",
-                      {
-                        staticClass:
-                          "tab-content scrollbar-wrapper wrapper scrollbar-outer"
-                      },
-                      [
-                        _c(
-                          "div",
-                          {
-                            staticClass: "tab-pane active",
-                            attrs: { id: "contact-1" }
-                          },
-                          [
-                            _c("div", { staticClass: "chat-body" }, [
-                              _c("ul", { staticClass: "chat-message" }, [
-                                _c("li", { staticClass: "left" }, [
-                                  _c("img", {
-                                    staticClass: "profile-photo-sm pull-left",
-                                    attrs: {
-                                      src: "assets/images/users/user-2.jpg",
-                                      alt: ""
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-item" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "chat-item-header" },
-                                      [
-                                        _c("h5", [_vm._v("Linda Lohan")]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "small",
-                                          { staticClass: "text-muted" },
-                                          [_vm._v("3 days ago")]
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("p", [
-                                      _vm._v(
-                                        "Hi honey, how are you doing???? Long time no see. Where have you been?"
-                                      )
-                                    ])
-                                  ])
-                                ]),
-                                _vm._v(" "),
-                                _c("li", { staticClass: "right" }, [
-                                  _c("img", {
-                                    staticClass: "profile-photo-sm pull-right",
-                                    attrs: {
-                                      src: "assets/images/users/user-1.jpg",
-                                      alt: ""
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-item" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "chat-item-header" },
-                                      [
-                                        _c("h5", [_vm._v("Sarah Cruiz")]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "small",
-                                          { staticClass: "text-muted" },
-                                          [_vm._v("3 days ago")]
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("p", [_vm._v("I have been on vacation")])
-                                  ])
-                                ]),
-                                _vm._v(" "),
-                                _c("li", { staticClass: "right" }, [
-                                  _c("img", {
-                                    staticClass: "profile-photo-sm pull-right",
-                                    attrs: {
-                                      src: "assets/images/users/user-1.jpg",
-                                      alt: ""
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-item" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "chat-item-header" },
-                                      [
-                                        _c("h5", [_vm._v("Sarah Cruiz")]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "small",
-                                          { staticClass: "text-muted" },
-                                          [_vm._v("3 days ago")]
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("p", [
-                                      _vm._v(
-                                        "it was a great time for me. we had a lot of fun "
-                                      ),
-                                      _c("i", { staticClass: "em em-blush" })
-                                    ])
-                                  ])
-                                ]),
-                                _vm._v(" "),
-                                _c("li", { staticClass: "left" }, [
-                                  _c("img", {
-                                    staticClass: "profile-photo-sm pull-left",
-                                    attrs: {
-                                      src: "assets/images/users/user-2.jpg",
-                                      alt: ""
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-item" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "chat-item-header" },
-                                      [
-                                        _c("h5", [_vm._v("Linda Lohan")]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "small",
-                                          { staticClass: "text-muted" },
-                                          [_vm._v("3 days ago")]
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("p", [
-                                      _vm._v("that's cool I wish I were you "),
-                                      _c("i", {
-                                        staticClass: "em em-expressionless"
-                                      })
-                                    ])
-                                  ])
-                                ]),
-                                _vm._v(" "),
-                                _c("li", { staticClass: "right" }, [
-                                  _c("img", {
-                                    staticClass: "profile-photo-sm pull-right",
-                                    attrs: {
-                                      src: "assets/images/users/user-1.jpg",
-                                      alt: ""
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-item" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "chat-item-header" },
-                                      [
-                                        _c("h5", [_vm._v("Sarah Cruiz")]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "small",
-                                          { staticClass: "text-muted" },
-                                          [_vm._v("3 days ago")]
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("p", [
-                                      _c("i", { staticClass: "em em-hand" })
-                                    ])
-                                  ])
-                                ]),
-                                _vm._v(" "),
-                                _c("li", { staticClass: "left" }, [
-                                  _c("img", {
-                                    staticClass: "profile-photo-sm pull-left",
-                                    attrs: {
-                                      src: "assets/images/users/user-2.jpg",
-                                      alt: ""
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-item" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "chat-item-header" },
-                                      [
-                                        _c("h5", [_vm._v("Linda Lohan")]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "small",
-                                          { staticClass: "text-muted" },
-                                          [_vm._v("a min ago")]
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("p", [_vm._v("Hi there, how are you")])
-                                  ])
-                                ])
-                              ])
-                            ])
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          {
-                            staticClass: "tab-pane",
-                            attrs: { id: "contact-2" }
-                          },
-                          [
-                            _c("div", { staticClass: "chat-body" }, [
-                              _c("ul", { staticClass: "chat-message" }, [
-                                _c("li", { staticClass: "left" }, [
-                                  _c("img", {
-                                    staticClass: "profile-photo-sm pull-left",
-                                    attrs: {
-                                      src: "assets/images/users/user-10.jpg",
-                                      alt: ""
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-item" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "chat-item-header" },
-                                      [
-                                        _c("h5", [_vm._v("Julia Cox")]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "small",
-                                          { staticClass: "text-muted" },
-                                          [_vm._v("a day ago")]
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("p", [_vm._v("Hi")])
-                                  ])
-                                ]),
-                                _vm._v(" "),
-                                _c("li", { staticClass: "right" }, [
-                                  _c("img", {
-                                    staticClass: "profile-photo-sm pull-right",
-                                    attrs: {
-                                      src: "assets/images/users/user-1.jpg",
-                                      alt: ""
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-item" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "chat-item-header" },
-                                      [
-                                        _c("h5", [_vm._v("Sarah Cruiz")]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "small",
-                                          { staticClass: "text-muted" },
-                                          [_vm._v("a day ago")]
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("p", [_vm._v("hellow")])
-                                  ])
-                                ]),
-                                _vm._v(" "),
-                                _c("li", { staticClass: "left" }, [
-                                  _c("img", {
-                                    staticClass: "profile-photo-sm pull-left",
-                                    attrs: {
-                                      src: "assets/images/users/user-10.jpg",
-                                      alt: ""
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-item" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "chat-item-header" },
-                                      [
-                                        _c("h5", [_vm._v("Julia Cox")]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "small",
-                                          { staticClass: "text-muted" },
-                                          [_vm._v("an hour ago")]
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("p", [_vm._v("good")])
-                                  ])
-                                ]),
-                                _vm._v(" "),
-                                _c("li", { staticClass: "right" }, [
-                                  _c("img", {
-                                    staticClass: "profile-photo-sm pull-right",
-                                    attrs: {
-                                      src: "assets/images/users/user-1.jpg",
-                                      alt: ""
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-item" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "chat-item-header" },
-                                      [
-                                        _c("h5", [_vm._v("Sarah Cruiz")]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "small",
-                                          { staticClass: "text-muted" },
-                                          [_vm._v("an hour ago")]
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("p", [_vm._v("see you soon")])
-                                  ])
-                                ])
-                              ])
-                            ])
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          {
-                            staticClass: "tab-pane",
-                            attrs: { id: "contact-3" }
-                          },
-                          [
-                            _c("div", { staticClass: "chat-body" }, [
-                              _c("ul", { staticClass: "chat-message" }, [
-                                _c("li", { staticClass: "right" }, [
-                                  _c("img", {
-                                    staticClass: "profile-photo-sm pull-right",
-                                    attrs: {
-                                      src: "assets/images/users/user-1.jpg",
-                                      alt: ""
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-item" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "chat-item-header" },
-                                      [
-                                        _c("h5", [_vm._v("Sarah")]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "small",
-                                          { staticClass: "text-muted" },
-                                          [_vm._v("2 days ago")]
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("p", [
-                                      _vm._v(
-                                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. "
-                                      )
-                                    ])
-                                  ])
-                                ]),
-                                _vm._v(" "),
-                                _c("li", { staticClass: "left" }, [
-                                  _c("img", {
-                                    staticClass: "profile-photo-sm pull-left",
-                                    attrs: {
-                                      src: "assets/images/users/user-3.jpg",
-                                      alt: ""
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-item" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "chat-item-header" },
-                                      [
-                                        _c("h5", [_vm._v("Sophia Lee")]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "small",
-                                          { staticClass: "text-muted" },
-                                          [_vm._v("a day ago")]
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("p", [
-                                      _vm._v(
-                                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt"
-                                      )
-                                    ])
-                                  ])
-                                ]),
-                                _vm._v(" "),
-                                _c("li", { staticClass: "right" }, [
-                                  _c("img", {
-                                    staticClass: "profile-photo-sm pull-right",
-                                    attrs: {
-                                      src: "assets/images/users/user-1.jpg",
-                                      alt: ""
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-item" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "chat-item-header" },
-                                      [
-                                        _c("h5", [_vm._v("Sarah  Cruiz")]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "small",
-                                          { staticClass: "text-muted" },
-                                          [_vm._v("13 hours ago")]
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("p", [_vm._v("Okay fine. thank you")])
-                                  ])
-                                ])
-                              ])
-                            ])
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          {
-                            staticClass: "tab-pane",
-                            attrs: { id: "contact-4" }
-                          },
-                          [
-                            _c("div", { staticClass: "chat-body" }, [
-                              _c("ul", { staticClass: "chat-message" }, [
-                                _c("li", { staticClass: "left" }, [
-                                  _c("img", {
-                                    staticClass: "profile-photo-sm pull-left",
-                                    attrs: {
-                                      src: "assets/images/users/user-4.jpg",
-                                      alt: ""
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-item" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "chat-item-header" },
-                                      [
-                                        _c("h5", [_vm._v("John Doe")]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "small",
-                                          { staticClass: "text-muted" },
-                                          [_vm._v("a day ago")]
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("p", [
-                                      _vm._v(
-                                        "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae."
-                                      )
-                                    ])
-                                  ])
-                                ]),
-                                _vm._v(" "),
-                                _c("li", { staticClass: "left" }, [
-                                  _c("img", {
-                                    staticClass: "profile-photo-sm pull-left",
-                                    attrs: {
-                                      src: "assets/images/users/user-4.jpg",
-                                      alt: ""
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-item" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "chat-item-header" },
-                                      [
-                                        _c("h5", [_vm._v("John Doe")]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "small",
-                                          { staticClass: "text-muted" },
-                                          [_vm._v("a day ago")]
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("p", [_vm._v("hey anybody there")])
-                                  ])
-                                ])
-                              ])
-                            ])
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          {
-                            staticClass: "tab-pane",
-                            attrs: { id: "contact-5" }
-                          },
-                          [
-                            _c("div", { staticClass: "chat-body" }, [
-                              _c("ul", { staticClass: "chat-message" }, [
-                                _c("li", { staticClass: "left" }, [
-                                  _c("img", {
-                                    staticClass: "profile-photo-sm pull-left",
-                                    attrs: {
-                                      src: "assets/images/users/user-9.jpg",
-                                      alt: ""
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-item" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "chat-item-header" },
-                                      [
-                                        _c("h5", [_vm._v("Anna Young")]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "small",
-                                          { staticClass: "text-muted" },
-                                          [_vm._v("2 days ago")]
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("p", [
-                                      _vm._v(
-                                        "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores"
-                                      )
-                                    ])
-                                  ])
-                                ]),
-                                _vm._v(" "),
-                                _c("li", { staticClass: "left" }, [
-                                  _c("img", {
-                                    staticClass: "profile-photo-sm pull-left",
-                                    attrs: {
-                                      src: "assets/images/users/user-9.jpg",
-                                      alt: ""
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-item" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "chat-item-header" },
-                                      [
-                                        _c("h5", [_vm._v("Anna Young")]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "small",
-                                          { staticClass: "text-muted" },
-                                          [_vm._v("2 days ago")]
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("p", [
-                                      _vm._v(
-                                        "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo."
-                                      )
-                                    ])
-                                  ])
-                                ]),
-                                _vm._v(" "),
-                                _c("li", { staticClass: "right" }, [
-                                  _c("img", {
-                                    staticClass: "profile-photo-sm pull-right",
-                                    attrs: {
-                                      src: "assets/images/users/user-1.jpg",
-                                      alt: ""
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-item" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "chat-item-header" },
-                                      [
-                                        _c("h5", [_vm._v("Sarah Cruiz")]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "small",
-                                          { staticClass: "text-muted" },
-                                          [_vm._v("2 days ago")]
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("p", [_vm._v("I gotta go")])
-                                  ])
-                                ])
-                              ])
-                            ])
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          {
-                            staticClass: "tab-pane",
-                            attrs: { id: "contact-6" }
-                          },
-                          [
-                            _c("div", { staticClass: "chat-body" }, [
-                              _c("ul", { staticClass: "chat-message" }, [
-                                _c("li", { staticClass: "left" }, [
-                                  _c("img", {
-                                    staticClass: "profile-photo-sm pull-left",
-                                    attrs: {
-                                      src: "assets/images/users/user-8.jpg",
-                                      alt: ""
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-item" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "chat-item-header" },
-                                      [
-                                        _c("h5", [_vm._v("Richard Bell")]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "small",
-                                          { staticClass: "text-muted" },
-                                          [_vm._v("2 days ago")]
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("p", [_vm._v("Hello")])
-                                  ])
-                                ]),
-                                _vm._v(" "),
-                                _c("li", { staticClass: "left" }, [
-                                  _c("img", {
-                                    staticClass: "profile-photo-sm pull-left",
-                                    attrs: {
-                                      src: "assets/images/users/user-8.jpg",
-                                      alt: ""
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-item" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "chat-item-header" },
-                                      [
-                                        _c("h5", [_vm._v("Richard Bell")]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "small",
-                                          { staticClass: "text-muted" },
-                                          [_vm._v("2 days ago")]
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("p", [_vm._v("Hi")])
-                                  ])
-                                ]),
-                                _vm._v(" "),
-                                _c("li", { staticClass: "left" }, [
-                                  _c("img", {
-                                    staticClass: "profile-photo-sm pull-left",
-                                    attrs: {
-                                      src: "assets/images/users/user-8.jpg",
-                                      alt: ""
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-item" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "chat-item-header" },
-                                      [
-                                        _c("h5", [_vm._v("Richard Bell")]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "small",
-                                          { staticClass: "text-muted" },
-                                          [_vm._v("2 days ago")]
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("p", [_vm._v("Hey")])
-                                  ])
-                                ]),
-                                _vm._v(" "),
-                                _c("li", { staticClass: "left" }, [
-                                  _c("img", {
-                                    staticClass: "profile-photo-sm pull-left",
-                                    attrs: {
-                                      src: "assets/images/users/user-8.jpg",
-                                      alt: ""
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "chat-item" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "chat-item-header" },
-                                      [
-                                        _c("h5", [_vm._v("Richard Bell")]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "small",
-                                          { staticClass: "text-muted" },
-                                          [_vm._v("2 days ago")]
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("p", [_vm._v("Hey there")])
-                                  ])
-                                ])
-                              ])
-                            ])
-                          ]
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "send-message" }, [
-                      _c("div", { staticClass: "input-group" }, [
-                        _c("input", {
-                          staticClass: "form-control",
-                          attrs: {
-                            type: "text",
-                            placeholder: "Type your message"
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "input-group-btn" }, [
-                          _c(
-                            "button",
-                            {
-                              staticClass: "btn btn-default",
-                              attrs: { type: "button" }
+                  _vm.input_show
+                    ? _c("div", { staticClass: "send-message" }, [
+                        _c("div", { staticClass: "input-group" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.message,
+                                expression: "message"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              type: "text",
+                              placeholder: "Type your message",
+                              id: _vm.user_id
                             },
-                            [_vm._v("Send")]
-                          )
+                            domProps: { value: _vm.message },
+                            on: {
+                              keyup: function($event) {
+                                if (
+                                  !$event.type.indexOf("key") &&
+                                  _vm._k(
+                                    $event.keyCode,
+                                    "enter",
+                                    13,
+                                    $event.key,
+                                    "Enter"
+                                  )
+                                ) {
+                                  return null
+                                }
+                                return _vm.send()
+                              },
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.message = $event.target.value
+                              }
+                            }
+                          })
                         ])
                       ])
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "clearfix" })
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "clearfix" })
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _vm._m(6)
+        ])
+      ]),
+      _vm._v(" "),
+      _vm._m(7)
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h5", [
+      _c("a", { staticClass: "text-white", attrs: { href: "timeline.html" } }, [
+        _vm._v("Sarah Cruiz")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("a", { staticClass: "text-white", attrs: { href: "#" } }, [
+      _c("i", { staticClass: "ion ion-android-person-add" }),
+      _vm._v(" 1,299\n                            followers")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("ul", { staticClass: "nav-news-feed" }, [
+      _c("li", [
+        _c("i", { staticClass: "icon ion-ios-paper" }),
+        _vm._v(" "),
+        _c("div", [
+          _c("a", { attrs: { href: "newsfeed.html" } }, [_vm._v("My Newsfeed")])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("li", [
+        _c("i", { staticClass: "icon ion-ios-people" }),
+        _vm._v(" "),
+        _c("div", [
+          _c("a", { attrs: { href: "newsfeed-people-nearby.html" } }, [
+            _vm._v("People Nearby")
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("li", [
+        _c("i", { staticClass: "icon ion-ios-people-outline" }),
+        _vm._v(" "),
+        _c("div", [
+          _c("a", { attrs: { href: "newsfeed-friends.html" } }, [
+            _vm._v("Friends")
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("li", [
+        _c("i", { staticClass: "icon ion-chatboxes" }),
+        _vm._v(" "),
+        _c("div", [
+          _c("a", { attrs: { href: "newsfeed-messages.html" } }, [
+            _vm._v("Messages")
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("li", [
+        _c("i", { staticClass: "icon ion-images" }),
+        _vm._v(" "),
+        _c("div", [
+          _c("a", { attrs: { href: "newsfeed-images.html" } }, [
+            _vm._v("Images")
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("li", [
+        _c("i", { staticClass: "icon ion-ios-videocam" }),
+        _vm._v(" "),
+        _c("div", [
+          _c("a", { attrs: { href: "newsfeed-videos.html" } }, [
+            _vm._v("Videos")
+          ])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { attrs: { id: "chat-block" } }, [
+      _c("div", { staticClass: "title" }, [_vm._v("Chat online")]),
+      _vm._v(" "),
+      _c("ul", { staticClass: "online-users list-inline" }, [
+        _c("li", [
+          _c(
+            "a",
+            { attrs: { href: "newsfeed-messages.html", title: "Linda Lohan" } },
+            [
+              _c("img", {
+                staticClass: "img-responsive profile-photo",
+                attrs: { src: "assets/images/users/user-2.jpg", alt: "user" }
+              }),
+              _c("span", { staticClass: "online-dot" })
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", [
+          _c(
+            "a",
+            { attrs: { href: "newsfeed-messages.html", title: "Sophia Lee" } },
+            [
+              _c("img", {
+                staticClass: "img-responsive profile-photo",
+                attrs: { src: "assets/images/users/user-3.jpg", alt: "user" }
+              }),
+              _c("span", { staticClass: "online-dot" })
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", [
+          _c(
+            "a",
+            { attrs: { href: "newsfeed-messages.html", title: "John Doe" } },
+            [
+              _c("img", {
+                staticClass: "img-responsive profile-photo",
+                attrs: { src: "assets/images/users/user-4.jpg", alt: "user" }
+              }),
+              _c("span", { staticClass: "online-dot" })
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", [
+          _c(
+            "a",
+            {
+              attrs: { href: "newsfeed-messages.html", title: "Alexis Clark" }
+            },
+            [
+              _c("img", {
+                staticClass: "img-responsive profile-photo",
+                attrs: { src: "assets/images/users/user-5.jpg", alt: "user" }
+              }),
+              _c("span", { staticClass: "online-dot" })
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", [
+          _c(
+            "a",
+            {
+              attrs: { href: "newsfeed-messages.html", title: "James Carter" }
+            },
+            [
+              _c("img", {
+                staticClass: "img-responsive profile-photo",
+                attrs: { src: "assets/images/users/user-6.jpg", alt: "user" }
+              }),
+              _c("span", { staticClass: "online-dot" })
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", [
+          _c(
+            "a",
+            { attrs: { href: "newsfeed-messages.html", title: "Robert Cook" } },
+            [
+              _c("img", {
+                staticClass: "img-responsive profile-photo",
+                attrs: { src: "assets/images/users/user-7.jpg", alt: "user" }
+              }),
+              _c("span", { staticClass: "online-dot" })
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", [
+          _c(
+            "a",
+            {
+              attrs: { href: "newsfeed-messages.html", title: "Richard Bell" }
+            },
+            [
+              _c("img", {
+                staticClass: "img-responsive profile-photo",
+                attrs: { src: "assets/images/users/user-8.jpg", alt: "user" }
+              }),
+              _c("span", { staticClass: "online-dot" })
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", [
+          _c(
+            "a",
+            { attrs: { href: "newsfeed-messages.html", title: "Anna Young" } },
+            [
+              _c("img", {
+                staticClass: "img-responsive profile-photo",
+                attrs: { src: "assets/images/users/user-9.jpg", alt: "user" }
+              }),
+              _c("span", { staticClass: "online-dot" })
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", [
+          _c(
+            "a",
+            { attrs: { href: "newsfeed-messages.html", title: "Julia Cox" } },
+            [
+              _c("img", {
+                staticClass: "img-responsive profile-photo",
+                attrs: { src: "assets/images/users/user-10.jpg", alt: "user" }
+              }),
+              _c("span", { staticClass: "online-dot" })
+            ]
+          )
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "create-post" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-md-7 col-sm-7" }, [
+          _c("div", { staticClass: "form-group" }, [
+            _c("img", {
+              staticClass: "profile-photo-md",
+              attrs: { src: "assets/images/users/user-1.jpg", alt: "" }
+            }),
+            _vm._v(" "),
+            _c("textarea", {
+              staticClass: "form-control",
+              attrs: {
+                name: "texts",
+                id: "exampleTextarea",
+                cols: "30",
+                rows: "1",
+                placeholder: "Write what you wish"
+              }
+            })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-5 col-sm-5" }, [
+          _c("div", { staticClass: "tools" }, [
+            _c("ul", { staticClass: "publishing-tools list-inline" }, [
+              _c("li", [
+                _c("a", { attrs: { href: "#" } }, [
+                  _c("i", { staticClass: "ion-compose" })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("li", [
+                _c("a", { attrs: { href: "#" } }, [
+                  _c("i", { staticClass: "ion-images" })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("li", [
+                _c("a", { attrs: { href: "#" } }, [
+                  _c("i", { staticClass: "ion-ios-videocam" })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("li", [
+                _c("a", { attrs: { href: "#" } }, [
+                  _c("i", { staticClass: "ion-map" })
                 ])
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "col-md-2 static" }, [
-              _c(
-                "div",
-                { staticClass: "suggestions", attrs: { id: "sticky-sidebar" } },
-                [
-                  _c("h4", { staticClass: "grey" }, [_vm._v("Who to Follow")]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "follow-user" }, [
-                    _c("img", {
-                      staticClass: "profile-photo-sm pull-left",
-                      attrs: { src: "assets/images/users/user-11.jpg", alt: "" }
-                    }),
-                    _vm._v(" "),
-                    _c("div", [
-                      _c("h5", [
-                        _c("a", { attrs: { href: "timeline.html" } }, [
-                          _vm._v("Diana Amber")
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "a",
-                        { staticClass: "text-green", attrs: { href: "#" } },
-                        [_vm._v("Add friend")]
-                      )
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "follow-user" }, [
-                    _c("img", {
-                      staticClass: "profile-photo-sm pull-left",
-                      attrs: { src: "assets/images/users/user-12.jpg", alt: "" }
-                    }),
-                    _vm._v(" "),
-                    _c("div", [
-                      _c("h5", [
-                        _c("a", { attrs: { href: "timeline.html" } }, [
-                          _vm._v("Cris Haris")
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "a",
-                        { staticClass: "text-green", attrs: { href: "#" } },
-                        [_vm._v("Add friend")]
-                      )
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "follow-user" }, [
-                    _c("img", {
-                      staticClass: "profile-photo-sm pull-left",
-                      attrs: { src: "assets/images/users/user-13.jpg", alt: "" }
-                    }),
-                    _vm._v(" "),
-                    _c("div", [
-                      _c("h5", [
-                        _c("a", { attrs: { href: "timeline.html" } }, [
-                          _vm._v("Brian Walton")
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "a",
-                        { staticClass: "text-green", attrs: { href: "#" } },
-                        [_vm._v("Add friend")]
-                      )
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "follow-user" }, [
-                    _c("img", {
-                      staticClass: "profile-photo-sm pull-left",
-                      attrs: { src: "assets/images/users/user-14.jpg", alt: "" }
-                    }),
-                    _vm._v(" "),
-                    _c("div", [
-                      _c("h5", [
-                        _c("a", { attrs: { href: "timeline.html" } }, [
-                          _vm._v("Olivia Steward")
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "a",
-                        { staticClass: "text-green", attrs: { href: "#" } },
-                        [_vm._v("Add friend")]
-                      )
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "follow-user" }, [
-                    _c("img", {
-                      staticClass: "profile-photo-sm pull-left",
-                      attrs: { src: "assets/images/users/user-15.jpg", alt: "" }
-                    }),
-                    _vm._v(" "),
-                    _c("div", [
-                      _c("h5", [
-                        _c("a", { attrs: { href: "timeline.html" } }, [
-                          _vm._v("Sophia Page")
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "a",
-                        { staticClass: "text-green", attrs: { href: "#" } },
-                        [_vm._v("Add friend")]
-                      )
-                    ])
-                  ])
-                ]
-              )
+            _c("button", { staticClass: "btn btn-primary pull-right" }, [
+              _vm._v("Publish")
             ])
           ])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "tab-pane", attrs: { id: "contact-6" } }, [
+      _c("div", { staticClass: "chat-body" }, [
+        _c("ul", { staticClass: "chat-message" }, [
+          _c("li", { staticClass: "left" }, [
+            _c("img", {
+              staticClass: "profile-photo-sm pull-left",
+              attrs: { src: "assets/images/users/user-8.jpg", alt: "" }
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "chat-item" }, [
+              _c("div", { staticClass: "chat-item-header" }, [
+                _c("h5", [_vm._v("Richard Bell")]),
+                _vm._v(" "),
+                _c("small", { staticClass: "text-muted" }, [
+                  _vm._v("2 days ago")
+                ])
+              ]),
+              _vm._v(" "),
+              _c("p", [_vm._v("Hello")])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "left" }, [
+            _c("img", {
+              staticClass: "profile-photo-sm pull-left",
+              attrs: { src: "assets/images/users/user-8.jpg", alt: "" }
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "chat-item" }, [
+              _c("div", { staticClass: "chat-item-header" }, [
+                _c("h5", [_vm._v("Richard Bell")]),
+                _vm._v(" "),
+                _c("small", { staticClass: "text-muted" }, [
+                  _vm._v("2 days ago")
+                ])
+              ]),
+              _vm._v(" "),
+              _c("p", [_vm._v("Hi")])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "left" }, [
+            _c("img", {
+              staticClass: "profile-photo-sm pull-left",
+              attrs: { src: "assets/images/users/user-8.jpg", alt: "" }
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "chat-item" }, [
+              _c("div", { staticClass: "chat-item-header" }, [
+                _c("h5", [_vm._v("Richard Bell")]),
+                _vm._v(" "),
+                _c("small", { staticClass: "text-muted" }, [
+                  _vm._v("2 days ago")
+                ])
+              ]),
+              _vm._v(" "),
+              _c("p", [_vm._v("Hey")])
+            ])
+          ])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-2 static" }, [
+      _c(
+        "div",
+        { staticClass: "suggestions", attrs: { id: "sticky-sidebar" } },
+        [
+          _c("h4", { staticClass: "grey" }, [_vm._v("Who to Follow")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "follow-user" }, [
+            _c("img", {
+              staticClass: "profile-photo-sm pull-left",
+              attrs: { src: "assets/images/users/user-11.jpg", alt: "" }
+            }),
+            _vm._v(" "),
+            _c("div", [
+              _c("h5", [
+                _c("a", { attrs: { href: "timeline.html" } }, [
+                  _vm._v("Diana Amber")
+                ])
+              ]),
+              _vm._v(" "),
+              _c("a", { staticClass: "text-green", attrs: { href: "#" } }, [
+                _vm._v("Add friend")
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "follow-user" }, [
+            _c("img", {
+              staticClass: "profile-photo-sm pull-left",
+              attrs: { src: "assets/images/users/user-12.jpg", alt: "" }
+            }),
+            _vm._v(" "),
+            _c("div", [
+              _c("h5", [
+                _c("a", { attrs: { href: "timeline.html" } }, [
+                  _vm._v("Cris Haris")
+                ])
+              ]),
+              _vm._v(" "),
+              _c("a", { staticClass: "text-green", attrs: { href: "#" } }, [
+                _vm._v("Add friend")
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "follow-user" }, [
+            _c("img", {
+              staticClass: "profile-photo-sm pull-left",
+              attrs: { src: "assets/images/users/user-13.jpg", alt: "" }
+            }),
+            _vm._v(" "),
+            _c("div", [
+              _c("h5", [
+                _c("a", { attrs: { href: "timeline.html" } }, [
+                  _vm._v("Brian Walton")
+                ])
+              ]),
+              _vm._v(" "),
+              _c("a", { staticClass: "text-green", attrs: { href: "#" } }, [
+                _vm._v("Add friend")
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "follow-user" }, [
+            _c("img", {
+              staticClass: "profile-photo-sm pull-left",
+              attrs: { src: "assets/images/users/user-14.jpg", alt: "" }
+            }),
+            _vm._v(" "),
+            _c("div", [
+              _c("h5", [
+                _c("a", { attrs: { href: "timeline.html" } }, [
+                  _vm._v("Olivia Steward")
+                ])
+              ]),
+              _vm._v(" "),
+              _c("a", { staticClass: "text-green", attrs: { href: "#" } }, [
+                _vm._v("Add friend")
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "follow-user" }, [
+            _c("img", {
+              staticClass: "profile-photo-sm pull-left",
+              attrs: { src: "assets/images/users/user-15.jpg", alt: "" }
+            }),
+            _vm._v(" "),
+            _c("div", [
+              _c("h5", [
+                _c("a", { attrs: { href: "timeline.html" } }, [
+                  _vm._v("Sophia Page")
+                ])
+              ]),
+              _vm._v(" "),
+              _c("a", { staticClass: "text-green", attrs: { href: "#" } }, [
+                _vm._v("Add friend")
+              ])
+            ])
+          ])
+        ]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { attrs: { id: "chat-block" } }, [
+      _c("div", { staticClass: "title" }, [_vm._v("Chat online")]),
+      _vm._v(" "),
+      _c("ul", { staticClass: "online-users list-inline" }, [
+        _c("li", [
+          _c(
+            "a",
+            { attrs: { href: "newsfeed-messages.html", title: "Linda Lohan" } },
+            [
+              _c("img", {
+                staticClass: "img-responsive profile-photo",
+                attrs: { src: "assets/images/users/user-2.jpg", alt: "user" }
+              }),
+              _c("span", { staticClass: "online-dot" })
+            ]
+          )
         ]),
         _vm._v(" "),
-        _c("div", { attrs: { id: "chat-block" } }, [
-          _c("div", { staticClass: "title" }, [_vm._v("Chat online")]),
-          _vm._v(" "),
-          _c("ul", { staticClass: "online-users list-inline" }, [
-            _c("li", [
-              _c(
-                "a",
-                {
-                  attrs: {
-                    href: "newsfeed-messages.html",
-                    title: "Linda Lohan"
-                  }
-                },
-                [
-                  _c("img", {
-                    staticClass: "img-responsive profile-photo",
-                    attrs: {
-                      src: "assets/images/users/user-2.jpg",
-                      alt: "user"
-                    }
-                  }),
-                  _c("span", { staticClass: "online-dot" })
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _c("li", [
-              _c(
-                "a",
-                {
-                  attrs: { href: "newsfeed-messages.html", title: "Sophia Lee" }
-                },
-                [
-                  _c("img", {
-                    staticClass: "img-responsive profile-photo",
-                    attrs: {
-                      src: "assets/images/users/user-3.jpg",
-                      alt: "user"
-                    }
-                  }),
-                  _c("span", { staticClass: "online-dot" })
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _c("li", [
-              _c(
-                "a",
-                {
-                  attrs: { href: "newsfeed-messages.html", title: "John Doe" }
-                },
-                [
-                  _c("img", {
-                    staticClass: "img-responsive profile-photo",
-                    attrs: {
-                      src: "assets/images/users/user-4.jpg",
-                      alt: "user"
-                    }
-                  }),
-                  _c("span", { staticClass: "online-dot" })
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _c("li", [
-              _c(
-                "a",
-                {
-                  attrs: {
-                    href: "newsfeed-messages.html",
-                    title: "Alexis Clark"
-                  }
-                },
-                [
-                  _c("img", {
-                    staticClass: "img-responsive profile-photo",
-                    attrs: {
-                      src: "assets/images/users/user-5.jpg",
-                      alt: "user"
-                    }
-                  }),
-                  _c("span", { staticClass: "online-dot" })
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _c("li", [
-              _c(
-                "a",
-                {
-                  attrs: {
-                    href: "newsfeed-messages.html",
-                    title: "James Carter"
-                  }
-                },
-                [
-                  _c("img", {
-                    staticClass: "img-responsive profile-photo",
-                    attrs: {
-                      src: "assets/images/users/user-6.jpg",
-                      alt: "user"
-                    }
-                  }),
-                  _c("span", { staticClass: "online-dot" })
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _c("li", [
-              _c(
-                "a",
-                {
-                  attrs: {
-                    href: "newsfeed-messages.html",
-                    title: "Robert Cook"
-                  }
-                },
-                [
-                  _c("img", {
-                    staticClass: "img-responsive profile-photo",
-                    attrs: {
-                      src: "assets/images/users/user-7.jpg",
-                      alt: "user"
-                    }
-                  }),
-                  _c("span", { staticClass: "online-dot" })
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _c("li", [
-              _c(
-                "a",
-                {
-                  attrs: {
-                    href: "newsfeed-messages.html",
-                    title: "Richard Bell"
-                  }
-                },
-                [
-                  _c("img", {
-                    staticClass: "img-responsive profile-photo",
-                    attrs: {
-                      src: "assets/images/users/user-8.jpg",
-                      alt: "user"
-                    }
-                  }),
-                  _c("span", { staticClass: "online-dot" })
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _c("li", [
-              _c(
-                "a",
-                {
-                  attrs: { href: "newsfeed-messages.html", title: "Anna Young" }
-                },
-                [
-                  _c("img", {
-                    staticClass: "img-responsive profile-photo",
-                    attrs: {
-                      src: "assets/images/users/user-9.jpg",
-                      alt: "user"
-                    }
-                  }),
-                  _c("span", { staticClass: "online-dot" })
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _c("li", [
-              _c(
-                "a",
-                {
-                  attrs: { href: "newsfeed-messages.html", title: "Julia Cox" }
-                },
-                [
-                  _c("img", {
-                    staticClass: "img-responsive profile-photo",
-                    attrs: {
-                      src: "assets/images/users/user-10.jpg",
-                      alt: "user"
-                    }
-                  }),
-                  _c("span", { staticClass: "online-dot" })
-                ]
-              )
-            ])
-          ])
+        _c("li", [
+          _c(
+            "a",
+            { attrs: { href: "newsfeed-messages.html", title: "Sophia Lee" } },
+            [
+              _c("img", {
+                staticClass: "img-responsive profile-photo",
+                attrs: { src: "assets/images/users/user-3.jpg", alt: "user" }
+              }),
+              _c("span", { staticClass: "online-dot" })
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", [
+          _c(
+            "a",
+            { attrs: { href: "newsfeed-messages.html", title: "John Doe" } },
+            [
+              _c("img", {
+                staticClass: "img-responsive profile-photo",
+                attrs: { src: "assets/images/users/user-4.jpg", alt: "user" }
+              }),
+              _c("span", { staticClass: "online-dot" })
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", [
+          _c(
+            "a",
+            {
+              attrs: { href: "newsfeed-messages.html", title: "Alexis Clark" }
+            },
+            [
+              _c("img", {
+                staticClass: "img-responsive profile-photo",
+                attrs: { src: "assets/images/users/user-5.jpg", alt: "user" }
+              }),
+              _c("span", { staticClass: "online-dot" })
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", [
+          _c(
+            "a",
+            {
+              attrs: { href: "newsfeed-messages.html", title: "James Carter" }
+            },
+            [
+              _c("img", {
+                staticClass: "img-responsive profile-photo",
+                attrs: { src: "assets/images/users/user-6.jpg", alt: "user" }
+              }),
+              _c("span", { staticClass: "online-dot" })
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", [
+          _c(
+            "a",
+            { attrs: { href: "newsfeed-messages.html", title: "Robert Cook" } },
+            [
+              _c("img", {
+                staticClass: "img-responsive profile-photo",
+                attrs: { src: "assets/images/users/user-7.jpg", alt: "user" }
+              }),
+              _c("span", { staticClass: "online-dot" })
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", [
+          _c(
+            "a",
+            {
+              attrs: { href: "newsfeed-messages.html", title: "Richard Bell" }
+            },
+            [
+              _c("img", {
+                staticClass: "img-responsive profile-photo",
+                attrs: { src: "assets/images/users/user-8.jpg", alt: "user" }
+              }),
+              _c("span", { staticClass: "online-dot" })
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", [
+          _c(
+            "a",
+            { attrs: { href: "newsfeed-messages.html", title: "Anna Young" } },
+            [
+              _c("img", {
+                staticClass: "img-responsive profile-photo",
+                attrs: { src: "assets/images/users/user-9.jpg", alt: "user" }
+              }),
+              _c("span", { staticClass: "online-dot" })
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", [
+          _c(
+            "a",
+            { attrs: { href: "newsfeed-messages.html", title: "Julia Cox" } },
+            [
+              _c("img", {
+                staticClass: "img-responsive profile-photo",
+                attrs: { src: "assets/images/users/user-10.jpg", alt: "user" }
+              }),
+              _c("span", { staticClass: "online-dot" })
+            ]
+          )
         ])
       ])
     ])
@@ -75944,6 +75287,7 @@ var toastrConfigs = {
 Vue.use(cxlt_vue2_toastr__WEBPACK_IMPORTED_MODULE_0___default.a, toastrConfigs);
 
 Vue.use(vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]);
+Vue.use(__webpack_require__(/*! vue-chat-scroll */ "./node_modules/vue-chat-scroll/dist/vue-chat-scroll.js"));
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -76854,9 +76198,11 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _messegeComponent_vue_vue_type_template_id_5af1df7d___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./messegeComponent.vue?vue&type=template&id=5af1df7d& */ "./resources/js/components/messegeComponent.vue?vue&type=template&id=5af1df7d&");
+/* harmony import */ var _messegeComponent_vue_vue_type_template_id_5af1df7d_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./messegeComponent.vue?vue&type=template&id=5af1df7d&scoped=true& */ "./resources/js/components/messegeComponent.vue?vue&type=template&id=5af1df7d&scoped=true&");
 /* harmony import */ var _messegeComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./messegeComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/messegeComponent.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _messegeComponent_vue_vue_type_style_index_0_id_5af1df7d_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./messegeComponent.vue?vue&type=style&index=0&id=5af1df7d&scoped=true&lang=css& */ "./resources/js/components/messegeComponent.vue?vue&type=style&index=0&id=5af1df7d&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
 
 
 
@@ -76864,13 +76210,13 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _messegeComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _messegeComponent_vue_vue_type_template_id_5af1df7d___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _messegeComponent_vue_vue_type_template_id_5af1df7d___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _messegeComponent_vue_vue_type_template_id_5af1df7d_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _messegeComponent_vue_vue_type_template_id_5af1df7d_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
-  null,
+  "5af1df7d",
   null
   
 )
@@ -76896,19 +76242,35 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/messegeComponent.vue?vue&type=template&id=5af1df7d&":
-/*!*************************************************************************************!*\
-  !*** ./resources/js/components/messegeComponent.vue?vue&type=template&id=5af1df7d& ***!
-  \*************************************************************************************/
+/***/ "./resources/js/components/messegeComponent.vue?vue&type=style&index=0&id=5af1df7d&scoped=true&lang=css&":
+/*!***************************************************************************************************************!*\
+  !*** ./resources/js/components/messegeComponent.vue?vue&type=style&index=0&id=5af1df7d&scoped=true&lang=css& ***!
+  \***************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_messegeComponent_vue_vue_type_style_index_0_id_5af1df7d_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./messegeComponent.vue?vue&type=style&index=0&id=5af1df7d&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/messegeComponent.vue?vue&type=style&index=0&id=5af1df7d&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_messegeComponent_vue_vue_type_style_index_0_id_5af1df7d_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_messegeComponent_vue_vue_type_style_index_0_id_5af1df7d_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_messegeComponent_vue_vue_type_style_index_0_id_5af1df7d_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_messegeComponent_vue_vue_type_style_index_0_id_5af1df7d_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_messegeComponent_vue_vue_type_style_index_0_id_5af1df7d_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/messegeComponent.vue?vue&type=template&id=5af1df7d&scoped=true&":
+/*!*************************************************************************************************!*\
+  !*** ./resources/js/components/messegeComponent.vue?vue&type=template&id=5af1df7d&scoped=true& ***!
+  \*************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_messegeComponent_vue_vue_type_template_id_5af1df7d___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./messegeComponent.vue?vue&type=template&id=5af1df7d& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/messegeComponent.vue?vue&type=template&id=5af1df7d&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_messegeComponent_vue_vue_type_template_id_5af1df7d___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_messegeComponent_vue_vue_type_template_id_5af1df7d_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./messegeComponent.vue?vue&type=template&id=5af1df7d&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/messegeComponent.vue?vue&type=template&id=5af1df7d&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_messegeComponent_vue_vue_type_template_id_5af1df7d_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_messegeComponent_vue_vue_type_template_id_5af1df7d___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_messegeComponent_vue_vue_type_template_id_5af1df7d_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

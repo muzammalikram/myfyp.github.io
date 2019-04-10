@@ -4,11 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Friends extends Model
+class Chat extends Model
 {
-    //
-    
-    protected $fillable = ['sender_id' , 'receiver_id' ,'isFriends',  'status'];
+
+    protected $fillable = ['sender_id' , 'receiver_id' , 'conversation_id', 'message'];
 
     public function user()
     {

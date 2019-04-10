@@ -9,7 +9,6 @@
             
  <profileHeader @added="get_posts"></profileHeader>
 
-  
         <div id="page-contents">
           <div class="row">
             <div class="col-md-3"></div>
@@ -18,8 +17,8 @@
                 <!-- <button @click.prevent="loadMore()">ABCDFGH</button> -->
               <!--{{ postProfile.image }}-->
 
-              <!-- Post Create Box
-              ================================================= -->
+              <!-- Post Create Box ================================================= -->
+
               <div class="create-post">
                 <div class="row">
                     <form>
@@ -284,7 +283,7 @@
 
           },
 
-            get_comments(){
+             get_comments(){
                let  _this = this;
                 axios.post('/all_comments/')
                     .then(function (response) {
@@ -302,6 +301,20 @@
 
             },
 
+           /* get_friends_comments() {
+                let _this = this;
+                let params = {posts: _this.posts}
+
+                axios.post('/get_friends_comments', params)
+                    .then(function (response) {
+
+                        console.log(response.data);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+            },*/
 
             ImageSaved (e) {
                 //console.log(e.target.files[0]);

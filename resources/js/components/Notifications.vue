@@ -74,7 +74,7 @@
 
             Echo.private('App.User.'+userId).notification((notification) => {
 
-                            {'notification_count':notification.count, 'sender_name':notification.user.f_name}
+                          //  {'notification_count':notification.count, 'sender_name':notification.user.f_name}
                            //_this.$emit('')
                        //   _this.sender_data = notification;
                            _this.sender_data.push(notification);

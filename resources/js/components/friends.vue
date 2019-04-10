@@ -212,7 +212,7 @@
                          _this.users = response.data.all_friends;
                       //   _this.users.push(response.data.Profiles);
                         _this.profile = response.data.Profiles;
-                        _this.imgs = response.data.images;
+                      //  _this.imgs = response.data.images;
 
                     //    _this.imgs[_this.imgs.length - 1];
 

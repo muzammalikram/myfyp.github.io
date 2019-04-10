@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Chat;
 
 class UserImageSeeder extends Seeder
 {
@@ -11,6 +12,13 @@ class UserImageSeeder extends Seeder
      */
     public function run()
     {
-        //
+
+        return Chat::create([
+            'sender_id' => 1,
+            'receiver_id' => 2,
+            'conversation_id' => '1_2',
+            'message'=>'I am Securing my Degree of BS(SE) from GCUF',
+        ]);
+
     }
 }
