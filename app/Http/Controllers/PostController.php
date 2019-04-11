@@ -8,6 +8,7 @@ use App\Post;
 use App\User;
 use App\PostActions;
 use App\Friends;
+use App\Events\CommentEvent;
 
 class PostController extends Controller
 {
@@ -144,18 +145,21 @@ class PostController extends Controller
         if ($addComment)
         {
             // $result = PostActions::where('model_id' , $id)->get();
-            $result = PostActions::where(['action'=>3, 'action_perform_user_id'=>$user_id])->get();
+           //  $result = PostActions::where(['action'=>3, 'action_perform_user_id'=>$user_id])->get();
 
+            $result = PostActions::where(['action_perform_user_id' => $user_id , 'model_id' => $id])->get();
+
+            $get_comment = PostActions::where(['action_perform_user_id' => $user_id, 'model_id' => $id])->OrderBy('created_at' , 'desc')->first();
+
+            //dd($get_comment);
+            event(new CommentEvent($get_comment , auth()->user()));
+          //  event(new CommentEvent($get_comment , auth()->user()));
             //where(['name'=>'ali' , 'id'=>1])->where('date','12-3-4');
 
         }
-        else if (!$addComment)
-        {
-            $result = "comment is not posted";
-        }
         else
         {
-            $result = PostActions::where(['action'=>3, 'action_perform_user_id'=>$user_id])->get();
+            $result = "comment is not posted";
         }
 
         return response()->json(['result'=>$result , 'userImg' => $userImg , 'userName'=>$userName]);
@@ -169,7 +173,22 @@ class PostController extends Controller
 
         $userImg = auth()->user()->user_images->last();
 
-        $result = PostActions::where(['action'=>3, 'action_perform_user_id'=>$user_id])->get();
+        $id = auth()->user()->id;
+
+        $check_friends1 = Friends::where(['sender_id'=>$id , 'status'=>1])->pluck('receiver_id')->toArray();
+
+        $check_friends2 = Friends::where(['receiver_id'=>$id , 'status'=>1])->pluck('sender_id')->toArray();
+
+        $friends = array_merge($check_friends1 , $check_friends2);
+
+        $auth = array(auth()->user()->id);
+
+        $arr_merge = array_merge($friends , $auth);
+        //dd($arr_merge);
+
+        $result = PostActions::whereIn('action_perform_user_id' ,$arr_merge )->get();
+
+      //  $result = PostActions::whereIn(['action'=>3, 'action_perform_user_id'=>$user_id])->get();
 
         return response()->json(['comments' => $result , 'userImg'=> $userImg , 'userName' => $userName]);
 
@@ -187,7 +206,6 @@ class PostController extends Controller
         $friends = array_merge($check_friends1 , $check_friends2);
 
 
-      //  dd($merge);
         //$friends = Friends::where(['sender_id'=>$id , 'status'=>1])->orWhere('receiver_id' ,$id)->pluck('receiver_id')->toArray();
 
        // dd($friends);
@@ -195,24 +213,28 @@ class PostController extends Controller
         // if($friends->sender_id == $auth){
 
         //     $sender_friends = Friends::where(['sender_id'=>$id , 'status'=>1])->pluck('receiver_id')->toArray();
-        // } 
+        // }
         // if($friends->receiver_id == $auth){
-            
+
         //        $receiver_friends = Friends::where(['sender_id'=>$id , 'status'=>1])->pluck('receiver_id')->toArray();
-        // }  
-        //     $friends 
+        // }
+        //     $friends
 
         //$friends = Friends::where(['sender_id'=>$id, 'status'=>1])->pluck('receiver_id')->toArray();
 
         $posts = Post::whereIn('user_id' , $friends)->orderBy('created_at' , 'desc')->get();
 
-       /// dd($posts);
-
-
+        //$push_id = array_push($friends, "7");
+       //
         $pluck_post = Post::whereIn('user_id' , $friends)->pluck('id')->toArray();
 
-        $post_action = PostActions::whereIn('model_id' , $pluck_post)->get()->toArray();
+        $auth = array(auth()->user()->id);
 
+
+         $arr_merge = array_merge($friends , $auth);
+
+        $post_action = PostActions::whereIn('action_perform_user_id' ,$arr_merge )->get();
+      //  dd($post_action);
         // Post::with('post_action')->whereIn('model_id' , $pluck_post)->get()->toArray();
         //with('post_action')->
 
@@ -224,25 +246,37 @@ class PostController extends Controller
 
         $userImg = auth()->user()->user_images->last();
 
-      //  dd($userImg);
-
-
         return response()->json(['posts'=> $posts , 'post_action'=>$post_action , 'userName'=>$userName , 'userImg'=>$userImg]);
        
+    }
+    public function get_user_newsfeed_similar_data()
+    {
+        $auth_id = auth()->user()->id;
+        $userImg = auth()->user()->user_images->last();
+        $userName = auth()->user()->f_name;
+        $followers = Friends::where('sender_id' , $auth_id)->orWhere('receiver_id' , $auth_id)->
+            where('status' , 1)->count();
+
+        return response()->json(['userName' => $userName , 'userImg' => $userImg , 'followers' => $followers]);
+
     }
     public function add_comments(Request $request)
     {
         $id = auth()->user()->id;
 
+        $comment = $request->comment;
             $add_comment = PostActions::create([
                 'action_perform_user_id' => $id ,
                 'model_name' => 'App/PostActions',
                 'model_id' => $request->post_id,
-                'details' => $request->comment,
+                'details' => $comment,
                 'action' => 3
             ]);
+            $user = User::find($id);
+        $get_comment = PostActions::where(['action_perform_user_id' => $id , 'model_id' => $request->post_id])->OrderBy('created_at' , 'desc')->first();
 
-         $get_comment = PostActions::where(['action_perform_user_id' => $id , 'model_id' => $request->post_id])->OrderBy('created_at' , 'desc')->first();
+        event(new CommentEvent($get_comment , $user));
+
          return response()->json($get_comment);
     }
     public function get_newsfeed_comments(Request $request)

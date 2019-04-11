@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\UserImage;
 use App\Profile;
 use App\User;
+use App\Friends;
 
 class ImageController extends Controller
 {
@@ -78,7 +79,11 @@ class ImageController extends Controller
 
          $getImage = UserImage::where(['user_id'=>$id ])->orderBy('created_at', 'desc')->first();
 
-            return response()->json(['get_image' => $getImage , 'get_profile' => $profile , 'user' => $user]);
+         $followers = Friends::where('sender_id' , $id)->orWhere('receiver_id' , $id)->count();
+
+
+            return response()->json(['get_image' => $getImage , 'get_profile' => $profile , 'user' => $user ,
+                'followers' => $followers]);
     }
 
     public function get_all_images() 

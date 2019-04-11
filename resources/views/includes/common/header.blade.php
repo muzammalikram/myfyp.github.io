@@ -19,6 +19,7 @@
 
             <ul class="nav navbar-nav navbar-right main-menu">
 
+
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Home <span><img src="assets/images/down-arrow.png" alt="" /></span></a>
                   <ul class="dropdown-menu newsfeed-home">
@@ -35,6 +36,7 @@
                     <li><a href="newsfeed-messages.html">Chatroom</a></li>
                     <li><a href="newsfeed-images.html">Images</a></li>
                     <li><a href="newsfeed-videos.html">Videos</a></li>
+
                   </ul>
               </li>
               <li class="dropdown">
@@ -47,11 +49,10 @@
                   <li><a href="edit-profile-basic.html">Edit: Basic Info</a></li>
                   <li><a href="edit-profile-work-edu.html">Edit: Work</a></li>
                   <li><a href="edit-profile-interests.html">Edit: Interests</a></li>
-                  <li><a href="edit-profile-settings.html">Account Settings</a></li>
-                  <li><a href="edit-profile-password.html">Change Password</a></li>
+
                 </ul>
               </li>
-              <li class="dropdown">
+           {{--   <li class="dropdown">
                 <a href="#" class="dropdown-toggle pages" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">All Pages <span><img src="assets/images/down-arrow.png" alt="" /></span></a>
                 <ul class="dropdown-menu page-list">
                   <li><a href="index.html">Landing Page 1</a></li>
@@ -72,7 +73,7 @@
                   <li><a href="404.html">404 Not Found</a></li>
                 </ul>
               </li>
-              <li class="dropdown"><a href="contact.html">Contact</a></li>
+              <li class="dropdown"><a href="contact.html">Contact</a></li>--}}
             </ul>
             <form class="navbar-form navbar-right hidden-sm">
               <div class="form-group">
@@ -80,8 +81,8 @@
                 <input type="text" class="form-control" placeholder="Search friends, photos, videos">
               </div>
             </form>
-                                
-                                
+
+
           </div><!-- /.navbar-collapse -->
         </div><!-- /.container -->
       </nav>

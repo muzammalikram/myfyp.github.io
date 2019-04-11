@@ -20,7 +20,13 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('push_test' , function (){
+    $myarray = array('foo',  'bar');
 
+    $pu = array_push($myarray, 'hello');
+
+    dd($pu);
+});
 
 /*Route::get('/{vue_capture?}', function () {
     return view('home');
@@ -86,3 +92,7 @@ Route::get('get_user' , 'ChatController@get_user');
 Route::get('get_friends' , 'ChatController@get_friends');
 Route::get('getUserMessages/{id}' , 'ChatController@getUserMessages');
 Route::get('get_newsfeed_comments' , 'PostController@get_newsfeed_comments');
+Route::get('get_user_newsfeed_similar_data' , 'PostController@get_user_newsfeed_similar_data');
+Route::get('get_interest' , 'ProfileController@get_interest');
+Route::post('interestDelete/{id}' , 'ProfileController@interestDelete');
+Route::post('friendAdded' , 'ProfileController@friendAdded');

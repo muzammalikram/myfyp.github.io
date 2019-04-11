@@ -2,10 +2,14 @@
 
 @section('content')
 
-
+    <style>
+        strong{
+            color : red;
+        }
+    </style>
 
   <div id="lp-register">
-        <div class="container wrapper">
+        <div class="container wrapper" id="registraion">
         <div class="row">
             <div class="col-sm-5">
             <div class="intro-texts">
@@ -15,50 +19,77 @@
             </div>
           </div>
             <div class="col-sm-6 col-sm-offset-1">
-            <div class="reg-form-container"> 
-            
+            <div class="reg-form-container">
+
               <!-- Register/Login Tabs-->
               <div class="reg-options">
                 <ul class="nav nav-tabs">
                   <li class="active"><a href="#register" data-toggle="tab">Register</a></li>
-                  <li><a href="#login" data-toggle="tab">Login</a></li>
+                  <li><a href="{{ url('/login') }}"  >Login</a></li>
                 </ul><!--Tabs End-->
               </div>
-              
+
               <!--Registration Form Contents-->
               <div class="tab-content">
                 <div class="tab-pane active" id="register">
                   <h3> Register Now !!! </h3>
-                  
+
                   <p class="text-muted">Be cool and join today. Meet millions</p>
-                  
+
                   <!--Register Form-->
                   <form name="registration_form" id='registration_form' class="form-inline"
                   method="POST" action="{{ route('register') }}">
                   @csrf
 
-                  {{ $errors }}
 
                     <div class="row">
                       <div class="form-group col-xs-6">
                         <label for="firstname" class="sr-only">First Name</label>
-                        <input id="firstname" class="form-control input-group-lg" type="text" name="f_name" title="Enter first name" placeholder="First name" value="f_name" />
+                        <input id="firstname" class="form-control {{ $errors->has('f_name') ? ' is-invalid' : '' }}  input-group-lg" type="text" name="f_name" title="Enter first name" placeholder="First name"  />
+
+                          @if ($errors->has('f_name'))
+                              <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('f_name') }}</strong>
+                                    </span>
+                          @endif
+
                       </div>
                       <div class="form-group col-xs-6">
                         <label for="lastname" class="sr-only">Last Name</label>
-                        <input id="lastname" class="form-control input-group-lg" type="text" name="l_name" title="Enter last name" placeholder="Last name" value="l_name"/>
+                        <input id="lastname" class="form-control {{ $errors->has('l_name') ? ' is-invalid' : '' }}  input-group-lg" type="text" name="l_name" title="Enter last name" placeholder="Last name" />
+
+                          @if ($errors->has('l_name'))
+                              <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('l_name') }}</strong>
+                                    </span>
+                          @endif
+
                       </div>
                     </div>
                     <div class="row">
                       <div class="form-group col-xs-12">
                         <label for="email" class="sr-only">Email</label>
-                        <input id="email" class="form-control input-group-lg" type="text" name="email" title="Enter Email" placeholder="Your Email" value="muzamma@gmail.com"/>
+                        <input id="email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }} input-group-lg" type="text" name="email" title="Enter Email" placeholder="Your Email" value=""/>
+
+                          @if ($errors->has('email'))
+                              <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('email') }}</strong>
+                                    </span>
+                          @endif
+
+
                       </div>
                     </div>
                     <div class="row">
                       <div class="form-group col-xs-12">
                         <label for="password" class="sr-only">Password</label>
-                        <input id="password" class="form-control input-group-lg" type="password" name="password" title="Enter password" placeholder="Password" value="f_name"/>
+                        <input id="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }} input-group-lg" type="password" name="password" title="Enter password" placeholder="Password" value="f_name"/>
+
+                          @if ($errors->has('password'))
+                              <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('password') }}</strong>
+                                    </span>
+                          @endif
                       </div>
                     </div>
                     <div class="row">
@@ -146,9 +177,14 @@
                       </label>
                     </div>
                     <div class="row">
-                      <div class="form-group col-xs-6">
+                      <div class="form-group {{ $errors->has('city') ? ' is-invalid' : '' }}  col-xs-6">
                         <label for="city" class="sr-only">City</label>
-                        <input id="city" class="form-control input-group-lg reg_name" type="text" name="city" title="Enter city" placeholder="Your city" value="f_name"/>
+                          @if ($errors->has('city'))
+                              <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('city') }}</strong>
+                                    </span>
+                          @endif
+
                       </div>
                       <div class="form-group col-xs-6">
                         <label for="country" class="sr-only"></label>
@@ -410,42 +446,21 @@
                   <input type="submit" name="submit" class="btn btn-primary" >
 
                   </form><!--Register Now Form Ends-->
-                  
+
+                    <!--Register Now Form Ends-->
+
+
                 </div><!--Registration Form Contents Ends-->
-                
+
                 <!--Login-->
-                <div class="tab-pane" id="login">
-                  <h3>Login</h3>
-                  <p class="text-muted">Log into your account</p>
-                  
-                  <!--Login Form-->
-                  <form name="Login_form" id='Login_form' method="POST" action="{{ route('login') }}">
-                    @csrf
-                    {{ $errors }}
-                     <div class="row">
-                      <div class="form-group col-xs-12">
-                        <label for="my-email" class="sr-only">Email</label>
-                        <input id="m_email" class="form-control input-group-lg" type="text" name="email" title="Enter Email" placeholder="Your Email"/>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="form-group col-xs-12">
-                        <label for="my-password" class="sr-only">Password</label>
-                        <input id="my-password" class="form-control input-group-lg" type="password" name="password" title="Enter password" placeholder="Password"/>
-                      </div>
-                    </div>
-                      <p><a href="#">Forgot Password?</a></p>
-                  <button class="btn btn-primary" type="submit">Login Now</button>
-                  </form><!--Login Form Ends--> 
-                
-                </div>
+
               </div>
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6 col-sm-offset-6">
-          
+
             <!--Social Icons-->
             <ul class="list-inline social-icons">
               <li><a href="#"><i class="icon ion-social-facebook"></i></a></li>
@@ -460,6 +475,5 @@
     </div>
 
 
-
-
 @endsection
+

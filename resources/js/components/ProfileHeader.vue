@@ -31,7 +31,7 @@
                                 <li><router-link to="/friends">Friends</router-link></li>
                                 </ul>
                                 <ul class="follow-me list-inline">
-                                    <li style="margin-top: 8px;">1,299 people following her</li> 
+                                    <li style="margin-top: 8px;">{{ followers }} people following you</li>
 
                                 </ul>
                             </div>
@@ -79,7 +79,8 @@
                 profileImg : '',
                 userImg : '',
                 profile : {},
-                user : {}
+                user : {},
+                followers : '',
             }
         },
         methods : {
@@ -90,6 +91,7 @@
                          _this.userImg =  response.data.get_image.image;
                          _this.profile = response.data.get_profile;
                          _this.user = response.data.user;
+                         _this.followers = response.data.followers;
                         console.log(response.data.get_image);
                     })
                     .catch(function (error) {

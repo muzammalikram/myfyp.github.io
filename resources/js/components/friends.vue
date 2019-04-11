@@ -15,31 +15,39 @@
             <div class="col-md-3"></div>
             <div class="col-md-7">
  
-              <button type="button" @click="allFriends()">all Friendss</button>
+              <!--<button type="button" @click="allFriends()">all Friendss</button>-->
           
-<br>
+
 <!-- {{ imgs }} -->
               <div class="friend-list">
                 <div class="row">
                   <div class="col-md-6 col-sm-6" v-for="(u, index) in users">
-                    <div class="friend-card"> {{ u.id }}  && {{ index }}
+
+                    <!--{{ u.user_image }}-->
+
+
+
+                    <div class="friend-card">
                       <img src="assets/images/covers/1.jpg" alt="profile-cover" class="img-responsive cover" />
                       <div class="card-info">
-                        <img src="assets/images/users/user-3.jpg" alt="user" class="profile-photo-lg" />
-                        <!--   {{ imgs[index].image }} --> 
- 
+
+                        <img v-if="u.user_image == null" src="" alt="No image of this user">
+                        <img v-else :src="'storage/uploads/'+u.user_image.image" alt="user" class="profile-photo-lg" />
+                      <!--  &lt;!&ndash;   {{ imgs[index].image }} &ndash;&gt;-->
+
 
                         <div class="friend-info">
                           <a href="#" class="pull-right text-green">My Friend</a>
-                          <!--<a href="timeline.html" class="profile-link">Sophia Lee</a>-->
                           <h5><router-link :to="{ name: 'friendsProfile', params: { userId: u.id }}" ><a class="profile-link" to="friendsProfile/1">{{ u.f_name }}</a></router-link>
 
-                           
                         </h5>
                           <p >Student at {{ profile[index].university }}</p>
                         </div>
                       </div>
                     </div>
+
+
+
                   </div>
                 </div>
 
@@ -194,7 +202,8 @@
 
     export default {
         mounted() {
-            console.log('Component mounted.')
+            console.log('Component mounted.');
+            this.allFriends();
         },
         data() {
             return {
@@ -209,19 +218,16 @@
                 let _this = this;
                 axios.post('/all_friends')
                     .then(function (response) {
-                         _this.users = response.data.all_friends;
+                          _this.users = response.data.all_friends;
                       //   _this.users.push(response.data.Profiles);
                         _this.profile = response.data.Profiles;
                       //  _this.imgs = response.data.images;
 
                     //    _this.imgs[_this.imgs.length - 1];
 
-                        _this.$toast.success({
-                            title:'as',
-                            message:'ggggggggggg'
-                        })
 
-                        console.log(response.data);
+
+                        console.log(response.data.all_friends);
                     })
                     .catch(function (error) {
                         console.log(error);

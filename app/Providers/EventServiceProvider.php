@@ -21,6 +21,9 @@ class EventServiceProvider extends ServiceProvider
             'App\Events\ChatEvent' => [
                 'App\Listeners\ChatListener',
             ],
+            'App\Events\CommentEvent' => [
+                'App\Listeners\CommentListener',
+            ],
     ];
 
     /**

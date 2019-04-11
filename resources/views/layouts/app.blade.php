@@ -46,6 +46,7 @@
 
    @if (!is_null(auth()->user()))
             <asdsadasdas></asdsadasdas>
+            <br>
   @endif
 
 
@@ -54,7 +55,7 @@
           <main class="py-4">
             @yield('content')
         </main>
-          
+
  
     </div>
 

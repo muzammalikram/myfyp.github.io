@@ -33,19 +33,21 @@
                   <!-- <li><router-link to="/friends">Friends</router-link></li> -->
                 </ul>
                 <ul class="follow-me list-inline">
-                  <li>1,299 people following her   {{ auth_id }}</li>  
+                  <li> 1,299 people following her   {{ auth_id }}</li>
 
                   <!--<li v-if="request_status == "><button  class="btn-primary" @click.prevent="add_friend($route.params.userId)">Add Friend</button></li> -->
 
-                  <li v-if="request_status == 0"><button  class="btn-primary" @click.prevent="add_friend($route.params.userId)">Request Sent</button></li>
+                  <!--<li v-if="request_status == 0"><button  class="btn-primary" @click.prevent="add_friend($route.params.userId, request_status)">Request Sent</button></li>-->
 
-                  <li v-if="request_status == 2"><button  class="btn-primary" @click.prevent="add_friend($route.params.userId)">Accept Request</button></li>
+    <li><button  class="btn-primary" @click.prevent="friendAdded()">Add Friend</button></li>
+
+                  <!--<li v-if="request_status == 2"><button  class="btn-primary" @click.prevent="add_friend($route.params.userId, request_status)">Accept Request</button></li>-->
                   
                   <!-- <li v-if="receiver_id == auth_id"><button  class="btn-primary" @click.prevent="add_friend($route.params.userId)">Accept Request</button></li>  -->
 
-                  <li v-if="request_status == 1"><button  class="btn-success btn-primary">Friend</button></li>
+                  <!--<li v-if="request_status == 1"><button  class="btn-success btn-primary">Friend</button></li>-->
 
-                  <li v-if="request_status == 3"><button  class="btn-success btn-primary" @click.prevent="add_friend($route.params.userId)">Add Friend</button></li>
+                  <!--<li v-if="request_status == 3"><button  class="btn-success btn-primary" @click.prevent="add_friend($route.params.userId,request_status)">Add Friend</button></li>-->
 
                 </ul>
               </div>
@@ -388,11 +390,29 @@
                     });
 
             },
-            add_friend(id) {
+            friendAdded(){
+
+                let _this = this;
+                let url_id = _this.url_id;
+
+                axios.post('/friendAdded' , {'url_id' : url_id})
+                    .then(function (response) {
+
+                        console.log(response.data );
+
+                    })
+                    .catch(function (error) {
+
+                        console.log(error);
+
+                    });
+
+            },
+            add_friend(id , status) {
                 let _this = this;
                 let userId = id;
 
-                axios.post('/addFriend/'+userId )
+                axios.post('/addFriend/'+userId , {'status' : status})
                     .then(function (response) {
 
                           // _this.request_status = response.data.status;

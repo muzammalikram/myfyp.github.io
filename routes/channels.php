@@ -19,3 +19,7 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
 Broadcast::channel('Chat' , function (){
         return true;
 });
+
+Broadcast::channel('Comments' , function (){
+    return true;
+});

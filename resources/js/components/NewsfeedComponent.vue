@@ -9,15 +9,14 @@
           ================================================= -->
                 <newsfeedsimilar></newsfeedsimilar>
                 <div class="col-md-7">
-                  <button type="button" @click.prevent="get_friends_comments()">aaaaa</button>
 
             <!-- Post Create Box
             ================================================= -->
-            <div class="create-post">
+     <!--       <div class="create-post">
                 <div class="row">
                     <div class="col-md-7 col-sm-7">
                   <div class="form-group">
-                    <img src="assets/images/users/user-1.jpg" alt="" class="profile-photo-md" />
+                    <img :src="'/storage/uploads/'+userImg" alt="" class="profile-photo-md" />
                     <textarea name="texts" id="exampleTextarea" cols="30" rows="1" class="form-control" placeholder="Write what you wish"></textarea>
                   </div>
                 </div>
@@ -33,60 +32,68 @@
                   </div>
                 </div>
                 </div>
-            </div><!-- Post Create Box End-->
+            </div>&lt;!&ndash; Post Create Box End&ndash;&gt;
 
            
-       
-
+       -->
 
             <!-- Post Content
             ================================================= -->
-              <div class="post-content" v-for="(post , index) in posts">
 
-            {{ post.id }}
 
-              <img v-if="post.image != null " :src="'/storage/uploads/'+post.image" alt="post-image" class="img-responsive post-image" />
-              <div class="post-container">
-                <img src="assets/images/users/user-5.jpg" alt="user" class="profile-photo-md pull-left" />
-                <div class="post-detail">
-                  <div class="user-info">
-                    <h5><a href="timeline.html" class="profile-link">Alexis Clark</a> <span class="following">following</span></h5>
-                    <p class="text-muted">Published a photo about 3 mins ago</p>
+                   <div v-if="posts == ''">
+                    <h1>No post Available</h1>
                   </div>
-                  <div class="reaction">
-                    <a class="btn text-green"><i class="icon ion-thumbsup"></i> 13</a>
-                    <a class="btn text-red"><i class="fa fa-thumbs-down"></i> 0</a>
+                  <div v-else class="post-content" v-for="(post , index) in posts">
 
-                    <a class="btn btn-danger" v-if="post.price != null ">Add To Cart </a>
-                     <a  class="profile-link" v-if="post.image != null ">Price {{ post.price }}</a>  
-                  </div>
-                  <div class="line-divider"></div>
-                  <div class="post-text">
-                    <p> {{ post.caption }}<i class="em em-anguished"></i> <i class="em em-anguished"></i> <i class="em em-anguished"></i></p>
-                  </div>
-                  <div class="line-divider"></div>
+        {{ post.id }}
 
-                  <div class="post-comment" v-for="comment in comments">
-                    
-                    <div class="post-comment" v-if="comment.model_id == post.id">
-                    <img :src="'/storage/uploads/'+userImg" alt="" class="profile-photo-sm" />
-                    <p><a href="timeline.html" class="profile-link">{{ userName }} </a><i class="em em-laughing"></i> {{ comment.details }}</p>
-                    </div>
-
-                  </div>
-                    <div class="post-comment"  >
-                      <!--{{ post_id = post.id }}-->
-                      <!--{{ userImg.image }}-->
-                      <img  :src="'/storage/uploads/'+userImg" alt="" class="profile-photo-sm" />
-                      <input type="text" class="form-control" placeholder="Post a comment" v-model="comment[index]" v-on:keyup.enter="addComment(post.id , index)"  >
-                    <!--   <button type="button" @click="addComment(post.id , index)">click</button>
- -->
-                    </div>
-
-                  
-                </div>
+          <img v-if="post.image != null " :src="'/storage/uploads/'+post.image" alt="post-image" class="img-responsive post-image" />
+          <div class="post-container">
+            <img src="assets/images/users/user-5.jpg" alt="user" class="profile-photo-md pull-left" />
+            <div class="post-detail">
+              <div class="user-info">
+                <h5><a href="timeline.html" class="profile-link">Alexis Clark</a> <span class="following">following</span></h5>
+                <p class="text-muted">Published a photo about 3 mins ago</p>
               </div>
+              <div class="reaction">
+                <a class="btn text-green"><i class="icon ion-thumbsup"></i> 13</a>
+                <a class="btn text-red"><i class="fa fa-thumbs-down"></i> 0</a>
+
+                <a class="btn btn-danger" v-if="post.price != null ">Add To Cart </a>
+                 <a  class="profile-link" v-if="post.image != null ">Price {{ post.price }}</a>
+              </div>
+              <div class="line-divider"></div>
+              <div class="post-text">
+                <p> {{ post.caption }}<i class="em em-anguished"></i> <i class="em em-anguished"></i> <i class="em em-anguished"></i></p>
+              </div>
+              <div class="line-divider"></div>
+
+              <div  v-for="comment in comments">
+
+                <div class="post-comment" v-if="comment.model_id == post.id">
+
+                <img :src="'/storage/uploads/'+userImg" alt="" class="profile-photo-sm" />
+                <p><a href="timeline.html" class="profile-link">{{ userName }} </a><i class="em em-laughing"></i> {{ comment.details }}</p>
+
+                </div>
+
+              </div>
+
+                <div class="post-comment"  >
+                  <!--{{ post_id = post.id }}-->
+                  <!--{{ userImg.image }}-->
+                  <img  :src="'/storage/uploads/'+userImg" alt="" class="profile-photo-sm" />
+                  <input type="text" class="form-control" placeholder="Post a comment" v-model="comment[index]" v-on:keyup.enter="addComment(post.id , index)"  >
+                <!--   <button type="button" @click="addComment(post.id , index)">click</button>
+-->
+                </div>
+
+
             </div>
+          </div>
+        </div>
+
           </div>
  
 
@@ -145,7 +152,7 @@
         mounted() {
             console.log('Component mounted.');
             this.ClickedFn();
-            this.get_newsfeed_comments();
+          //  this.get_newsfeed_comments();
         },
         data() {
           return {
@@ -153,10 +160,12 @@
               comments : [],
               userName: '',
               userImg : '',
-              comment : []
+              comment : [],
+
           }
         },
         methods : {
+
           ClickedFn() {
             let _this = this;
              axios.get('/get_newsFeed')
@@ -175,7 +184,7 @@
             addComment(p_id , index) {
 
                 let _this = this;
-                let comm  = this.comment[index];
+                let comm  = _this.comment[index];
 
                 if (comm != "")
                 {
@@ -184,8 +193,10 @@
                     axios.post('/add_comments' , params)
                         .then(function (response) {
 
-                            console.log(response.data);
-                            let comm  = '';
+                            _this.comments.push(response.data);
+                            comm = '';
+
+                        //    console.log(response.data);
                         })
                         .catch(function (error) {
                             console.log(error);
@@ -219,6 +230,15 @@
         }, 
         components : {
            newsfeedsimilar
+        },
+        created() {
+            Echo.private('Comments')
+                .listen('CommentEvent', (e) => {
+
+                    this.comments.push(e.comment);
+                    console.log(this.comments);
+                  //  console.log(e.comment);
+                });
         }
     }
 </script> 

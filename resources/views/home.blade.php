@@ -2,11 +2,7 @@
 
 @section('content')
 
-
-    <br><br><br><br>
-
- {{----}}
-					<router-link to="/profile"><a>Go to UserProfile</a></router-link>
+    <br>
 
           <div>
               <form id="logout-form" action="{{ route('logout') }}" method="POST" style="">
@@ -18,8 +14,8 @@
               </a>
               </form>
           </div>
-                 {{----}}
- 
+
+
           <router-view></router-view>
     <vue-progress-bar></vue-progress-bar>
           

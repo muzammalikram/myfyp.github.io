@@ -291,7 +291,7 @@
                         _this.userImg = response.data.userImg;
                         _this.userName = response.data.userName;
 
-//console.log(response.data);
+ console.log(response.data.comments);
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -396,6 +396,15 @@
         },
         components: {
             profileHeader
-        } 
+        },
+         created() {
+             Echo.private('Comments')
+                 .listen('CommentEvent', (e) => {
+
+                     this.post_comments.push(e.comment);
+                     console.log(this.comments);
+                     //  console.log(e.comment);
+                 });
+         }
     }
 </script>

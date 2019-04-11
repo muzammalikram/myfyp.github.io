@@ -39,8 +39,6 @@
                                 <div class="block-title">
                                     <h4 class="grey"><i class="icon ion-android-checkmark-circle"></i>Edit basic information</h4>
                                     <div class="line"></div>
-                                    <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate</p>
-                                    <div class="line"></div>
                                 </div>
                                 <div class="edit-block">
                                     <form name="basic-info" id="basic-info" class="form-inline">
@@ -389,8 +387,7 @@
                                 <div class="block-title">
                                     <h4 class="grey"><i class="icon ion-ios-book-outline"></i>My education</h4>
                                     <div class="line"></div>
-                                    <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate</p>
-                                    <div class="line"></div>
+
                                 </div>
                                 <div class="edit-block">
                                     <form name="education" id="education" class="form-inline">
@@ -428,8 +425,7 @@
                                 <div class="block-title">
                                     <h4 class="grey"><i class="icon ion-ios-briefcase-outline"></i>Work Experiences</h4>
                                     <div class="line"></div>
-                                    <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate</p>
-                                    <div class="line"></div>
+
                                 </div>
                                 <div class="edit-block">
                                     <form name="work" id="work" class="form-inline">
@@ -478,16 +474,15 @@
                                 <div class="block-title">
                                     <h4 class="grey"><i class="icon ion-ios-heart-outline"></i>My Interests</h4>
                                     <div class="line"></div>
-                                    <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate</p>
-                                    <div class="line"></div>
+
                                 </div>
                                 <div class="edit-block">
                                     <ul class="list-inline interests">
-                                        <li><a href="#"><i class="icon ion-android-bicycle"></i> Bycicle</a></li>
-                                        <li><a href="#"><i class="icon ion-ios-camera"></i> Photgraphy</a></li>
-                                        <li><a href="#"><i class="icon ion-android-cart"></i> Shopping</a></li>
-                                        <li><a href="#"><i class="icon ion-android-plane"></i> Traveling</a></li>
-                                        <li><a href="#"><i class="icon ion-android-restaurant"></i> Eating</a></li>
+                                        <li v-for="interest in getInterest">
+                                            <span  >{{ interest.interest }}</span>
+                                            <i class="fa fa-close" style="cursor: pointer;" @click.prevent="interestDelete(interest.id)"></i>
+                                        </li>
+
                                     </ul>
                                     <div class="line"></div>
                                     <div class="row">
@@ -509,8 +504,7 @@
                                 <div class="block-title">
                                     <h4 class="grey"><i class="icon ion-ios-settings"></i>Account Settings</h4>
                                     <div class="line"></div>
-                                    <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate</p>
-                                    <div class="line"></div>
+
                                 </div>
                                 <div class="edit-block">
                                     <div class="settings-block">
@@ -614,8 +608,7 @@
                                 <div class="block-title">
                                     <h4 class="grey"><i class="icon ion-ios-locked-outline"></i>Change Password</h4>
                                     <div class="line"></div>
-                                    <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate</p>
-                                    <div class="line"></div>
+
                                 </div>
                                 <div class="edit-block">
                                     <form name="update-pass" id="education" class="form-inline">
@@ -695,6 +688,7 @@
             //this.get_basic_information();
           //  this.get_edu_information();
           //this.get_auth();
+            this.get_interest();
           
             
         },
@@ -748,6 +742,7 @@
                 ABC : '',
                 auth : {},
                 Color : '',
+                getInterest : {},
                 
                 update_pass : {
                     old_pass : '',
@@ -771,14 +766,51 @@
                 var _this = this;
               //   let user = localStorage.getItem("user");
 
-                axios.post('/interest', _this.interest_info)
-                    .then(function (response) {
+                if (_this.interest_info.user_interest != '') {
+                    axios.post('/interest', _this.interest_info)
+                        .then(function (response) {
 
-                    _this.interest_info.user_interest = '';
-                     _this.$toast.success({
-                            title:'Interest',
-                            message:'Interest Add Successfully'
+                            _this.interest_info.user_interest = '';
+
+
+                            if (response.data.error == 500)
+                            {
+                                _this.$toast.error({
+                                    title:'Error',
+                                    message:'You can not Add more than 5 interests'
+                                })
+                            }
+                            else
+                            {
+                                _this.getInterest = response.data.interests;
+                                _this.$toast.success({
+                                    title:'Interest',
+                                    message:'Interest Add Successfully'
+                                })
+                            }
+
+                            console.log(response.data);
+
                         })
+                        .catch(function (error) {
+
+                            console.log(error);
+                            _this.$toast.error({
+                                title:'Error',
+                                message:'Something Goes wrong'
+                            })
+
+                        });
+                }
+
+            },
+            get_interest(){
+                    let _this = this;
+
+                axios.get('/get_interest', _this.interest_info)
+                    .then(function (response) {
+                        _this.getInterest = response.data.interests;
+
 
                         console.log(response.data);
 
@@ -786,13 +818,27 @@
                     .catch(function (error) {
 
                         console.log(error);
-                         _this.$toast.error({
-                                title:'Error',
-                                message:'Something Goes Wrong'
-                            })
+
 
                     });
+            },
+            interestDelete(id)
+            {
+                let _this = this;
+                alert(id);
+                axios.post('interestDelete/'+id)
+                    .then(function (response) {
+                        _this.getInterest = response.data.interests;
 
+                        console.log(response.data);
+
+                    })
+                    .catch(function (error) {
+
+                        console.log(error);
+
+
+                    });
             },
             ActiveClass() {
                     var _this = this;
@@ -816,7 +862,7 @@
                         console.log(error);
                          _this.$toast.error({
                                 title:'Error',
-                                message:'Something Goes Wrong'
+                                message:'Please Fill the information correctly'
                             })
 
                     });

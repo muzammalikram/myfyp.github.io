@@ -10,7 +10,7 @@ use Hootlex\Friendships\Traits\Friendable;
 class User extends Authenticatable 
 {
     use Notifiable;
-        use Friendable;
+    use Friendable;
 
     /**
      * The attributes that are mass assignable.
@@ -53,6 +53,12 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\UserImage');
     }
+
+    public function user_image()
+    {
+        return $this->hasOne('App\UserImage')->orderBy('created_at','DESC');
+    }
+
     public function friends()
     {
         return $this->hasMany('App\Friends'  , 'sender_id');

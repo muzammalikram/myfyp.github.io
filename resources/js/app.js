@@ -29,7 +29,6 @@ Vue.use(VueRouter)
 
 Vue.use(require('vue-chat-scroll'))
 
-
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -65,8 +64,6 @@ import newsfeedsimilar from './components/newsfeedSimilar'
   { path : '/messages' , component : messages },
 ]
 
-
-
 Vue.use(VueProgressBar, {
         color: '#149AC9',
         failedColor: 'red',
@@ -84,7 +81,9 @@ const router = new VueRouter({
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('asdsadasdas', require('./components/HeaderComponent.vue').default);
-Vue.component('InfiniteLoading', require('vue-infinite-loading'));
+Vue.component('regsitrationSystem', require('./components/register.vue').default);
+
+
 //Vue.component('LoginComponent', require('./components/LoginComponent.vue'));
 
 /**

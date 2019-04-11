@@ -168,12 +168,31 @@ class ProfileController extends Controller
 
         $interest = $request->user_interest;
 
-       // return response()->json(['message' => $interest]);
+        $interst_count = UserInterest::where('user_id' , $id)->count();
 
-        $query = UserInterest::create(['user_id'=>$id , 'interest'=>$interest]);
+        if ($interst_count < 5)
+        {
+            $query = UserInterest::create(['user_id'=>$id , 'interest'=>$interest]);
+            $getInterest = UserInterest::where('user_id' , $id)->get();
+            return response()->json(['interests' => $getInterest]);
+        }
+        else
+        {
+            return response()->json(['error' => 500]);
+        }
 
-        return response()->json(['message' => $query]);
-
+    }
+    public function get_interest()
+    {
+        $id = auth()->user()->id;
+        $getInterest = UserInterest::where('user_id' , $id)->get();
+        return response()->json(['interests' => $getInterest]);
+    }
+    public function interestDelete($id){
+        $auth = auth()->user()->id;
+        $delete = UserInterest::where('id' , $id)->delete();
+        $getInterest = UserInterest::where('user_id' , $auth)->get();
+        return response()->json(['interests' => $getInterest]);
     }
      public function get_friend_info($id)
      {
@@ -195,10 +214,12 @@ class ProfileController extends Controller
             ]);
      }
 
-     public function addFriend($id)
+     public function addFriend(Request $request , $id)
      {
          $sender_id = auth()->user()->id;
          $friend_id = $id;
+
+         dd($request->status); //2 => sent ,
 
          $isFriend1 = $sender_id."_".$friend_id;
 
@@ -214,6 +235,8 @@ class ProfileController extends Controller
          else{
              return response()->json('asd');
          }
+
+         /* Notification::send($friend, new NotifyAddFriend($sender_data));*/
 
          return response()->json($getStatus);
      }
@@ -259,6 +282,42 @@ class ProfileController extends Controller
          //dd($sent);
         return response()->json(3);
      }
+     public function friendAdded(Request $request)
+     {
+         $auth = auth()->user()->id;
+         $slug = $request->url_id;
+             //dd($slug);
+
+       //  $isFriend = $auth."_".$request->url_id;
+
+         /*$add = Friends::create([
+            'sender_id' => $auth ,
+            'receiver_id' => $request->url_id,
+            'isFriends' => $isFriend,
+             'status' => 0
+         ]);*/
+         $user = auth()->user();
+
+        $receiver = User::where('id', $slug)->first();
+
+        dd($receiver->id);
+    // get list of friends (so who have status = 1)
+
+    $friend = Friends::where('status',1)->where(function($query) use ($receiver,$user)
+    {
+        $query->where([
+            'sender_id'   => $auth,
+            'receiver_id' => $receiver->id
+        ])->orWhere([
+            'user_id'   => $receiver->id,
+            'friend_id' => $auth
+        ]);
+
+    })->get();
+
+    return ! $result->isEmpty();
+
+     }
      public function get_user_notification_info($id)
      {
         dd($id);
@@ -296,7 +355,7 @@ class ProfileController extends Controller
 
 //         $resIdsArr2 = auth()->user()->friends->where('status' , 1)->pluck('receiver_id')->toArray();
 //
-            $allFriends = User::whereIn('id', $merge)->get();
+            $allFriends = User::with('user_image')->whereIn('id', $merge)->get();
 
 
             $arr = array();

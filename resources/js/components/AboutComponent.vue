@@ -45,7 +45,7 @@
                 <div class="about-content-block">
                   <h4 class="grey"><i class="ion-ios-briefcase-outline icon-in-title"></i>Work Experiences</h4>
                   <div class="organization">
-                    <img src="images/envato.png" alt="" class="pull-left img-org" />
+
                     <div class="work-info">
                       <h5>{{ profile.work_company }}</h5>
                       <p>{{ profile.work_designation }} <br><span class="text-grey">
@@ -58,27 +58,25 @@
                 <div class="about-content-block">
                   <h4 class="grey"><i class="ion-ios-location-outline icon-in-title"></i>Location</h4>
                   <p>{{ profile.work_city }}</p>
-                  <div class="google-maps">
+                 <!-- <div class="google-maps">
                     <div id="map" class="map"></div>
-                  </div>
+                  </div>-->
                 </div>
-                <div class="about-content-block">
-                  <h4 class="grey"><i class="ion-ios-heart-outline icon-in-title"></i>Interests</h4>
-                  <ul class="interests list-inline">
+
+                <div class="edit-block">
+                  <ul class="list-inline interests">
                     <li v-for="userInterest in userInterests">
-
-                      <span class="int-icons" title="Bycycle riding">
-                        <i class="icon ion-android-bicycle"></i>
-                        {{ userInterest.interest }}
-                      </span>
-
+                      <span> {{ userInterest.interest }}</span>
                     </li>
-                    <!--<li><span class="int-icons" title="Photography"><i class="icon ion-ios-camera"></i></span></li>-->
-                    <!--<li><span class="int-icons" title="Shopping"><i class="icon ion-android-cart"></i></span></li>-->
-                    <!--<li><span class="int-icons" title="Traveling"><i class="icon ion-android-plane"></i></span></li>-->
-                    <!--<li><span class="int-icons" title="Eating"><i class="icon ion-android-restaurant"></i></span></li>-->
                   </ul>
+                  <div class="line"></div>
+
                 </div>
+
+               <!-- <div class="about-content-block">
+                  <h4 class="grey"><i class="ion-ios-heart-outline icon-in-title"></i>Interests</h4>
+
+                </div>-->
                 <div class="about-content-block">
                   <h4 class="grey"><i class="ion-ios-chatbubble-outline icon-in-title"></i>Language</h4>
                   <ul>
