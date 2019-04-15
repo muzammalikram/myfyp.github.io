@@ -430,5 +430,23 @@ class ProfileController extends Controller
         return response()->json($req);
     }
 
+    public function who_to_follow(){
+	    $id = auth()->user()->id;
+	     $check_friends1 = Friends::where(['sender_id'=>$id , 'status'=>1])->pluck('receiver_id')->toArray();
+
+        $check_friends2 = Friends::where(['receiver_id'=>$id , 'status'=>1])->pluck('sender_id')->toArray();
+
+        $friends = array_merge($check_friends1 , $check_friends2);
+
+        $auth_push = array($id);
+
+        $merge = array_merge($friends , $auth_push);
+
+       $users_ids = User::whereNotIn('id' , $merge)->limit(5)->with('user_image')->get();
+
+       return response()->json($users_ids);
+
+       //dd($users_ids);
+    }
 
 }

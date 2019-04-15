@@ -25,12 +25,18 @@
                                     <ul class="nav nav-tabs contact-list scrollbar-wrapper scrollbar-outer">
                                         <!--<div >-->
 
+                                        <button @click.prevent="get_friends()">Click</button>
+                                        <button @click.prevent="Testing()">Testing</button>
+
                                         <li v-for="friend in friends" :class="{active : isActive}" v-on:click="input_show = true">
 
                                             <a :href="'#content'+friend.id" data-toggle="tab"
                                                @click="sender_div(friend.id)">
                                                 <div class="contact">
-                                                    <img src="assets/images/users/user-2.jpg" alt=""
+                                                    <img v-if="friend.user_image == null " src="storage/uploads/dummy.jpg" alt="No user image"
+                                                         class="profile-photo-sm pull-left"/>
+
+                                                    <img v-else :src="'storage/uploads/'+friend.user_image.image" alt=""
                                                          class="profile-photo-sm pull-left"/>
                                                     <div class="msg-preview">
                                                         <h6>{{ friend.f_name }}</h6>
@@ -196,41 +202,20 @@
                     <div class="col-md-2 static">
                         <div class="suggestions" id="sticky-sidebar">
                             <h4 class="grey">Who to Follow</h4>
-                            <div class="follow-user">
-                                <img src="assets/images/users/user-11.jpg" alt="" class="profile-photo-sm pull-left"/>
+
+                            <div class="follow-user" v-for="follower in followers">
+                                <img v-if="follower.user_image == null" src="storage/uploads/dummy.jpg" alt="" class="profile-photo-sm pull-left" />
+                                <img v-else :src="'storage/uploads/'+follower.user_image.image" alt="" class="profile-photo-sm pull-left" />
                                 <div>
-                                    <h5><a href="timeline.html">Diana Amber</a></h5>
-                                    <a href="#" class="text-green">Add friend</a>
+                                    <h5>
+                                        <router-link :to="{ name: 'friendsProfile', params: { userId: follower.id }}" ><a>{{ follower.f_name }}</a></router-link>
+                                        <a href="timeline.html"></a></h5>
+                                    <!--<a href="#" class="text-green">Add friend</a>-->
+                                    <router-link :to="{ name: 'friendsProfile', params: { userId: follower.id }}" ><a href="#" class="text-green">Add friend</a></router-link>
                                 </div>
                             </div>
-                            <div class="follow-user">
-                                <img src="assets/images/users/user-12.jpg" alt="" class="profile-photo-sm pull-left"/>
-                                <div>
-                                    <h5><a href="timeline.html">Cris Haris</a></h5>
-                                    <a href="#" class="text-green">Add friend</a>
-                                </div>
-                            </div>
-                            <div class="follow-user">
-                                <img src="assets/images/users/user-13.jpg" alt="" class="profile-photo-sm pull-left"/>
-                                <div>
-                                    <h5><a href="timeline.html">Brian Walton</a></h5>
-                                    <a href="#" class="text-green">Add friend</a>
-                                </div>
-                            </div>
-                            <div class="follow-user">
-                                <img src="assets/images/users/user-14.jpg" alt="" class="profile-photo-sm pull-left"/>
-                                <div>
-                                    <h5><a href="timeline.html">Olivia Steward</a></h5>
-                                    <a href="#" class="text-green">Add friend</a>
-                                </div>
-                            </div>
-                            <div class="follow-user">
-                                <img src="assets/images/users/user-15.jpg" alt="" class="profile-photo-sm pull-left"/>
-                                <div>
-                                    <h5><a href="timeline.html">Sophia Page</a></h5>
-                                    <a href="#" class="text-green">Add friend</a>
-                                </div>
-                            </div>
+
+
                         </div>
                     </div>
                 </div>
@@ -299,7 +284,7 @@
 
             let userId = document.head.querySelector('meta[name="userId"]').content;
             this.auth_id = userId;
-
+            this.who_to_follow();
 
 
         },
@@ -307,6 +292,8 @@
             return {
                 message: '',
                 friends: {},
+
+                followers : {},
                 typing: '',
                 auth_id  : '',
                 user_id : '',
@@ -329,6 +316,26 @@
             }
         },
         methods: {
+
+            Testing(){
+                    alert('testing');
+            },
+
+            who_to_follow(){
+                let _this = this;
+                axios.get('/who_to_follow')
+                    .then(function (response) {
+                        console.log('asdasd');
+                        _this.followers = response.data;
+                        console.log(response.data);
+                        // _this.userName = response.data.userName;
+                        // _this.userImg = response.data.userImg.image;
+
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
             send() {
 
                 //    alert(id);
@@ -418,6 +425,19 @@
                         console.log('');
                     }
                 });
+
+            Echo.join(`Chat`)
+                .here((users) => {
+                    console.log('users');
+                    console.log(users);
+                })
+                .joining((user) => {
+                 //   console.log(user.name);
+                })
+                .leaving((user) => {
+                  //  console.log(user.name);
+                });
+
         },
         components : {
             newsfeedsimilar

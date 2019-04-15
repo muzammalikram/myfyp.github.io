@@ -40,6 +40,8 @@
 
                 <div class="about-content-block">
                   <h4 class="grey"><i class="ion-ios-information-outline icon-in-title"></i>Personal Information</h4>
+
+              <button type="button" @click.prevent="Testing()">Testing</button>
                   <p>{{ user.description }}</p>
                 </div>
                 <div class="about-content-block">
@@ -141,11 +143,23 @@
             }
         },
         methods : {
+
+          Testing(){
+                let _this = this;
+  alert('sad');
+                axios.post('http://127.0.0.1:9000/api/registered')
+                  .then(function (response) {
+                      console.log( response.data);
+                  })
+                  .catch(function (error) {
+                      console.log(error);
+                  });
+          },
           get_about() {
               let _this = this;
 
               _this.$Progress.start();
-
+ 
 
               axios.get('/get_user_info')
                   .then(function (response) {

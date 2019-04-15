@@ -68,4 +68,9 @@ class User extends Authenticatable
         return $this->hasMany('App\Chat'  , 'sender_id');
     }
 
+    public function post_action()
+    {
+        return $this->hasMany('App\PostActions'  , 'action_perform_user_id');
+    }
+
 }

@@ -63,7 +63,7 @@ class ChatController extends Controller
 
        $friends = array_merge($check_friends1 , $check_friends2);
 
-       $get_friends = User::whereIn('id' , $friends)->get();
+       $get_friends = User::with('user_image')->whereIn('id' , $friends)->get();
 
        return response()->json($get_friends);
 

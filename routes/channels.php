@@ -16,8 +16,8 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
 });
 
 
-Broadcast::channel('Chat' , function (){
-        return true;
+Broadcast::channel('Chat' , function ($user){
+        return ['user'=>$user->name];
 });
 
 Broadcast::channel('Comments' , function (){

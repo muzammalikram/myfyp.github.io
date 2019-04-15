@@ -19,20 +19,20 @@
               ================================================= -->
   
               <ul class="album-photos">
-                <li v-for="user_image in images">
-                  <div class="img-wrapper" data-toggle="modal" data-target=".photo-1">
-                    <img   v-bind:src="'storage/uploads/' + user_image.image" alt="photo" />
+
+                <li v-for="(user_image , index ) in images">
+                  <div class="img-wrapper" data-toggle="modal" :data-target="'#'+index">
+                    <img v-bind:src="'storage/uploads/' + user_image.image" alt="photo" style="width: 200px; height: 150px;" /> <br>
                   </div>
-                  <div class="modal fade photo-1" tabindex="-1" role="dialog" aria-hidden="true">
+
+                  <div class="modal fade" :id="index"  tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                       <div class="modal-content">
-                        <img src="storage/uploads/user_image" alt="photo" />
+                        <img v-bind:src="'storage/uploads/'+ user_image.image" alt="photo" />
                       </div>
                     </div>
                   </div>
                 </li>
-
-
 
               </ul>
             </div>
@@ -114,6 +114,10 @@
                         console.log(error);
                     });
 
+            },
+            ImageDelete(id)
+            {
+                  alert(id);
             }
 
 

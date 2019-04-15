@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\Profile;
+use Auth;
 class CheckProfile
 {
     /**
@@ -16,15 +17,17 @@ class CheckProfile
     public function handle($request, Closure $next)
     {
 
-        /*$user = auth()->user();
-        dd($user);
-        $profile = $user->profile->first();
+//        $user = Auth::user();
+//        $profile = $user->profile->first();
+//
+//        if(is_null($profile)){
+//
+//             return redirect('/home/profile');
+//        }
+//        else{
+//            return redirect('/home/newsfeed');
+//        }
 
-        if(is_null($profile)){
-
-            // redirect
-        }*/
-
-        return $next($request);
+         return $next($request);
     }
 }

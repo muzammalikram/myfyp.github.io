@@ -39,7 +39,7 @@
 
                   <!--<li v-if="request_status == 0"><button  class="btn-primary" @click.prevent="add_friend($route.params.userId, request_status)">Request Sent</button></li>-->
 
-    <li><button  class="btn-primary" @click.prevent="friendAdded()">Add Friend</button></li>
+                    <li><button  class="btn-primary" @click.prevent="friendAdded()">Add Friend</button></li>
 
                   <!--<li v-if="request_status == 2"><button  class="btn-primary" @click.prevent="add_friend($route.params.userId, request_status)">Accept Request</button></li>-->
                   
@@ -116,22 +116,14 @@
                     <div id="map" class="map"></div>
                   </div>
                 </div>
-                <div class="about-content-block">
-                  <h4 class="grey"><i class="ion-ios-heart-outline icon-in-title"></i>Interests</h4>
-                  <ul class="interests list-inline">
+                <div class="edit-block">
+                  <ul class="list-inline interests">
                     <li v-for="userInterest in userInterests">
-
-                      <span class="int-icons" title="Bycycle riding">
-                        <i class="icon ion-android-bicycle"></i>
-                        {{ userInterest.interest }}
-                      </span>
-
+                      <span> {{ userInterest.interest }}</span>
                     </li>
-                    <!--<li><span class="int-icons" title="Photography"><i class="icon ion-ios-camera"></i></span></li>-->
-                    <!--<li><span class="int-icons" title="Shopping"><i class="icon ion-android-cart"></i></span></li>-->
-                    <!--<li><span class="int-icons" title="Traveling"><i class="icon ion-android-plane"></i></span></li>-->
-                    <!--<li><span class="int-icons" title="Eating"><i class="icon ion-android-restaurant"></i></span></li>-->
                   </ul>
+                  <div class="line"></div>
+
                 </div>
                 <div class="about-content-block">
                   <h4 class="grey"><i class="ion-ios-chatbubble-outline icon-in-title"></i>Language</h4>

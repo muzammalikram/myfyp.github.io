@@ -31,7 +31,7 @@
                       <img src="assets/images/covers/1.jpg" alt="profile-cover" class="img-responsive cover" />
                       <div class="card-info">
 
-                        <img v-if="u.user_image == null" src="" alt="No image of this user">
+                        <img v-if="u.user_image == null" src="storage/uploads/dummy.jpg" alt="No image of this user" class="profile-photo-lg">
                         <img v-else :src="'storage/uploads/'+u.user_image.image" alt="user" class="profile-photo-lg" />
                       <!--  &lt;!&ndash;   {{ imgs[index].image }} &ndash;&gt;-->
 

@@ -19,27 +19,11 @@ class PostController extends Controller
      */
     public function index()
     {
-        //dd('asdsda');
         $id = auth()->user()->id;
           $posts = Post::where('user_id' , $id)->orderBy('created_at', 'desc')->get();
 
-         /* $count = Post::where('user_id' , $id)->orderBy('created_at', 'desc')->paginate(5)->count();*/
-
-
-
- 
-      //  $posts = User::find(1);
-        //$abc = $posts->user_images;
-
-            // dd($posts);
-       // return response()->json($posts);
- 
           $image = UserImage::where('user_id' , $id)->orderBy('created_at', 'desc')->first();
-//        $posts = User::find(1);
-//        //$abc = $posts->user_images;
-//
-//            dd($posts);
-     //     return response()->json($posts);
+
         return response()->json(['posts'=>$posts , 'userImg'=>$image ]);
  
 
@@ -186,13 +170,71 @@ class PostController extends Controller
         $arr_merge = array_merge($friends , $auth);
         //dd($arr_merge);
 
-        $result = PostActions::whereIn('action_perform_user_id' ,$arr_merge )->get();
+        $result = PostActions::whereIn('action_perform_user_id' ,$arr_merge )->get(); //paginate(3)
 
       //  $result = PostActions::whereIn(['action'=>3, 'action_perform_user_id'=>$user_id])->get();
 
         return response()->json(['comments' => $result , 'userImg'=> $userImg , 'userName' => $userName]);
 
 
+    }
+
+    public function get_newsFeed_new()
+    {
+
+        $id = auth()->user()->id;
+
+        $check_friends1 = Friends::where(['sender_id'=>$id , 'status'=>1])->pluck('receiver_id')->toArray();
+
+        $check_friends2 = Friends::where(['receiver_id'=>$id , 'status'=>1])->pluck('sender_id')->toArray();
+
+        $friends = array_merge($check_friends1 , $check_friends2);
+
+        $posts = Post::whereIn('user_id' , $friends)->pluck('id')->toArray();
+
+        $ac = PostActions::whereIn('model_id' , $posts)->pluck('action_perform_user_id')->toArray();
+
+     //   return response()->json($posts);
+
+        $all_posts = Post::whereIn('user_id' , $friends)->with('post_Action')->get();
+        return response()->json($all_posts);
+        //  $user = User::whereIn('id' , $ac)->get();
+        //dd($user);
+
+        //  $user_name = User::whereIn('id' , $friends)->with('post_actions')->get();
+
+
+        $user = User::whereIn('id' , $ac)->with('user_image')->get();
+
+        //  $post_actions = Post::whereIn('user_id' , $friends)->with('post_action')->get();
+
+        return response()->json(['posts'=>$posts , 'user' => $user]);
+
+    }
+
+    public function checkProfile()
+    {
+       $user = auth()->user()->id;
+       if (is_null($user))
+       {
+           dd('profile page');
+       }
+       else
+       {
+           dd('newsfeed');
+       }
+
+    }
+
+    public function deleteComment(Request $request , $id)
+    {
+        $delete = PostActions::where('id' , $id)->delete();
+
+        $post_id = $request->post_id;
+
+        $comments = PostActions::where('model_id' , $post_id)->get();
+
+        return response()->json($comments);
     }
 
     public function get_newsFeed() 
@@ -204,6 +246,7 @@ class PostController extends Controller
         $check_friends2 = Friends::where(['receiver_id'=>$id , 'status'=>1])->pluck('sender_id')->toArray();
 
         $friends = array_merge($check_friends1 , $check_friends2);
+
 
 
         //$friends = Friends::where(['sender_id'=>$id , 'status'=>1])->orWhere('receiver_id' ,$id)->pluck('receiver_id')->toArray();
@@ -282,6 +325,34 @@ class PostController extends Controller
     public function get_newsfeed_comments(Request $request)
     {
         dd($request->all());
+    }
+    public function liked(Request $request)
+    {
+        $id = auth()->user()->id;
+        $post_id = $request->post_id;
+
+        $liked = PostActions::where(['action_perform_user_id' => $id  , 'model_id' => $post_id ,  'action' => 1])->first();
+
+        if ($liked)
+        {
+            $deleted = PostActions::where(['action_perform_user_id' => $id  , 'model_id' => $post_id ,  'action' => 1])->delete();
+            //$liked = PostActions::where(['action_perform_user_id' => $id  , 'model_id' => $post_id ,  'action' => 1])->first();
+
+        }
+        else
+        {
+           $add = PostActions::create([
+                'action_perform_user_id' => $id ,
+                'model_id' => $post_id ,
+                'model_name' => 'App/PostActions',
+                'action' => 1 ,
+                'details' => 1
+
+            ]);
+
+            return 'add';
+        }
+
     }
 
     /**

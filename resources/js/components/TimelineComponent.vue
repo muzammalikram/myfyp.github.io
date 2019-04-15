@@ -72,6 +72,7 @@
 
               <!-- Post Content
               ================================================= -->
+              {{ posts }}
               <div class="post-content" v-for="(post , index) in posts">
 
                 {{ post.id }}
@@ -86,7 +87,7 @@
                   <img :src="'storage/uploads/'+postProfile.image" alt="user" class="profile-photo-md pull-left" />
                   <div class="post-detail">
                     <div class="user-info">
-                      <h5><a href="timeline.html" class="profile-link">Sarah Cruiz</a> <span class="following">following</span></h5>
+                      <h5><a href="timeline.html" class="profile-link">{{ userName }}</a> <span class="following">following</span></h5>
                       <p class="text-muted">Published a photo about 15 mins ago</p>
                     </div>
                     <div class="reaction">
@@ -103,9 +104,10 @@
                     <div  v-for="(comments , index) in post_comments">
                       <div class="post-comment" v-if="comments.model_id == post.id">
                         <img :src="'storage/uploads/'+userImg.image" alt="" class="profile-photo-sm" />
-                        <p><a href="timeline.html" class="profile-link"> {{ userName }} </a><i class="em em-laughing"></i> {{ comments.details }}</p>
+                        <p><a href="timeline.html" class="profile-link"> {{ userName }} </a> <a @click.prevent="CommentDelete(comments.id , post.id)" style="cursor : pointer; color: red;">Del</a> <i class="em em-laughing"></i> {{ comments.details }}</p>
                       </div>
                     </div>
+                    <pagination :data="post_comments" @pagination-change-page="getResults"></pagination>
 
 
                     <div class="post-comment"  >
@@ -123,8 +125,6 @@
 
 
               </div>
-
-    <!-- <infinite-loading @distance="1" @infinite="infiniteHandler"></infinite-loading> -->
 
  
 
@@ -180,6 +180,8 @@
 <script>
      
     import profileHeader from './ProfileHeader.vue'
+//    Vue.component('pagination', require('laravel-vue-pagination'));
+    import pagination from 'laravel-vue-pagination';
    // import infiniteScroll from 'vue-infinite-scroll'
    // import { statics } from '../static_variable'
 
@@ -192,8 +194,9 @@
             // console.log(statics.countries);
             // this.countries = statics.countries;
                this.get_posts();
-             this.get_comments(); 
+                this.get_comments();
              //this.loadMore();
+          //  this.getResults();
             
             
         },
@@ -224,32 +227,6 @@
         methods : {
 
 
-            //           infiniteHandler($state) {
-
-            //     let _this = this;
-
-            //     axios.get('/get_posts?page='+_this.page)
-            //         .then(function (response) {
-
-            //             // if (response.data.count > 5) {
-                            
-            //             // } 
-            //             _this.posts = response.data.posts;
-            //             //_this.posts.push(response.data.posts);
-            //             console.log('Record count');
-            //         //    console.log(_this.postProfile);
-            //           //   _this.postProfile.push(response.data.userImg);
-            //             $state.loaded();
-                        
-            //             console.log(_this.posts);
-
-            //         })
-            //         .catch(function (error) {
-            //             console.log(error);
-            //         }); 
-            // },
-
- 
           addComment(id , index){
             //alert(this.comment);
         //      console.log(index);
@@ -283,15 +260,29 @@
 
           },
 
+            CommentDelete(id , p_id)
+            {
+               // alert(p_id);
+
+                let  _this = this;
+                axios.post('/deleteComment/'+id , { 'post_id' : p_id})
+                    .then(function (response) {
+  _this.post_comments = response.data;
+                        console.log(response.data);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
              get_comments(){
                let  _this = this;
-                axios.post('/all_comments/')
+                axios.get('/all_comments/')
                     .then(function (response) {
                          _this.post_comments = response.data.comments;
                         _this.userImg = response.data.userImg;
                         _this.userName = response.data.userName;
 
- console.log(response.data.comments);
+                        console.log(response.data.comments);
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -300,21 +291,6 @@
 
 
             },
-
-           /* get_friends_comments() {
-                let _this = this;
-                let params = {posts: _this.posts}
-
-                axios.post('/get_friends_comments', params)
-                    .then(function (response) {
-
-                        console.log(response.data);
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-
-            },*/
 
             ImageSaved (e) {
                 //console.log(e.target.files[0]);
@@ -384,9 +360,9 @@
                 let _this = this;
                 axios.get('/get_posts')
                     .then(function (response) {
-                        _this.posts = response.data.posts;
-                        _this.postProfile = response.data.userImg;
-                   //     console.log(response.data.userImg);
+                         _this.posts = response.data.posts;
+                          _this.postProfile = response.data.userImg;
+                         console.log(response.data.userImg);
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -395,7 +371,8 @@
 
         },
         components: {
-            profileHeader
+            profileHeader,
+            pagination
         },
          created() {
              Echo.private('Comments')

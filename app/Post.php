@@ -18,7 +18,7 @@ class Post extends Model
 
     public function post_action()
     {
-        return $this->hasMany('App\PostActions' , 'action_perform_user_id');
+        return $this->hasMany('App\PostActions' , 'model_id' , 'id')->where('model_name','App\PostActions');
     }
     
 

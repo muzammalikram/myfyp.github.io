@@ -11,7 +11,12 @@ class PostActions extends Model
 
     public function post()
     {
-        return $this->belongsTo('App\Post');
+        return $this->belongsTo('App\Post' ,'model_id' , 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo('App\User');
     }
 
 }

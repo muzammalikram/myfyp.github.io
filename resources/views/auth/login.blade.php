@@ -2,12 +2,7 @@
 
 @section('content')
 
-    <style>
-        strong{
-            color : red;
-        }
-    </style>
-
+     
     <div id="lp-register">
         <div class="container wrapper" id="registraion">
             <div class="row">
