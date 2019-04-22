@@ -247,10 +247,18 @@ class ProfileController extends Controller
 
         $find = Friends::where([['sender_id' ,$sender_id] , ['receiver_id', $request->user_id]])->orWhere([['receiver_id' ,$sender_id] , ['sender_id', $request->user_id]])->first();
 
+
+
         if(!is_null($find)){
-        
-            $find->status = abs($request->status);        
-            $find->save();
+            
+            if($request->status < 0){
+                $find->delete(); //unfriend
+                return response()->json(5);
+            }else{
+
+                $find->status = abs($request->status);        
+                $find->save();
+            }
         }else{
 
             $find = Friends::create([
@@ -271,7 +279,7 @@ class ProfileController extends Controller
 
     public function get_add_friend($id){
     
-        $user_id = 12;//$id;
+        $user_id = $id;
         $sender_id = auth()->user()->id;
 
         $find = Friends::where([['sender_id' ,$sender_id] , ['receiver_id', $user_id]])->orWhere([['receiver_id' ,$sender_id] , ['sender_id', $user_id]])->first();
@@ -279,7 +287,7 @@ class ProfileController extends Controller
         if(!is_null($find)){
             $status = $find->status;
         }else{            
-            $status = false;
+            $status = 5;
         }
         
         return response()->json($status);

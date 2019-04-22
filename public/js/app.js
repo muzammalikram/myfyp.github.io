@@ -2393,7 +2393,9 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     console.log('Component mounted.');
     this.show_about(this.$route.params.userId);
-    this.get_add_friend(); //this.get_basic_information();
+    this.get_add_friend();
+    this.setRequestButton(this.request_status);
+    console.log(this.request_status); //this.get_basic_information();
     //  this.get_edu_information();
     //this.get_auth();
 
@@ -2413,11 +2415,13 @@ __webpack_require__.r(__webpack_exports__);
       userInterests: {},
       profile: {},
       profileImg: {},
-      request_status: '',
+      request_status: 5,
       url_id: '',
       auth_id: '',
       sender_id: '',
-      receiver_id: ''
+      receiver_id: '',
+      buttonClass: '',
+      buttonText: ''
     };
   },
   computed: {},
@@ -2447,6 +2451,31 @@ __webpack_require__.r(__webpack_exports__);
       this.timeline = true;
       this.album = false;
       this.friends = true;
+    },
+    setRequestButton: function setRequestButton(status) {
+      console.log('Check' + this.request_status);
+
+      if (status == 5) {
+        this.buttonText = 'add friend';
+        this.buttonClass = 'btn-primary';
+      }
+
+      if (status == 0) {
+        this.buttonText = 'Request Sended';
+        this.buttonClass = 'btn-info';
+      }
+
+      if (status == 1) {
+        this.buttonText = 'unfriend';
+        this.buttonClass = 'btn-success';
+      }
+
+      if (status == 2) {
+        this.buttonText = 'Blocked';
+        this.buttonClass = 'btn-danger';
+      }
+
+      console.log('Check 2' + this.buttonClass);
     },
     show_friends: function show_friends() {
       this.about = true;
@@ -2499,17 +2528,27 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     add_friendCustom: function add_friendCustom(id, status) {
+      //status = -1;
       var _this = this;
 
       var userId = id;
+
+      if (status == 2) {
+        //for already blocked or freind request already Sended 
+        console.log('No operation');
+        return;
+      }
+
+      status = status == 5 ? 0 : -1;
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/addFriendCustom', {
         'user_id': userId,
         'status': status
       }).then(function (response) {
-        // _this.request_status = response.data.status;
-        // _this.sender_id = response.data.sender_id;
+        _this.request_status = response.data; // _this.sender_id = response.data.sender_id;
         // _this.receiver_id = response.data.receiver_id;
-        console.log(response.data);
+        //console.log(response.data );
+
+        _this.setRequestButton(response.data);
       }).catch(function (error) {
         console.log(error);
       });
@@ -53271,7 +53310,7 @@ var render = function() {
                   _c(
                     "button",
                     {
-                      staticClass: "btn-primary",
+                      class: _vm.buttonClass,
                       on: {
                         click: function($event) {
                           $event.preventDefault()
@@ -53282,7 +53321,7 @@ var render = function() {
                         }
                       }
                     },
-                    [_vm._v("Add Friend")]
+                    [_vm._v(_vm._s(_vm.buttonText))]
                   )
                 ])
               ])

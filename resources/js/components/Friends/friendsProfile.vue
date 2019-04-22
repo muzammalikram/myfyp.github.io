@@ -40,7 +40,7 @@
                   <!--<li v-if="request_status == 0"><button  class="btn-primary" @click.prevent="add_friend($route.params.userId, request_status)">Request Sent</button></li>-->
 
 <!--                     <li><button  class="btn-primary" @click.prevent="friendAdded()">Add Friend</button></li> -->
-                    <li><button  class="btn-primary" @click.prevent="add_friendCustom($route.params.userId, request_status)">Add Friend</button></li>
+                    <li><button  :class="buttonClass" @click.prevent="add_friendCustom($route.params.userId, request_status)">{{buttonText}}</button></li>
 
                   <!--<li v-if="request_status == 2"><button  class="btn-primary" @click.prevent="add_friend($route.params.userId, request_status)">Accept Request</button></li>-->
                   
@@ -276,7 +276,10 @@
             console.log('Component mounted.');
 
             this.show_about(this.$route.params.userId);
-             this.get_add_friend();
+            this.get_add_friend();
+            this.setRequestButton(this.request_status);
+            console.log(this.request_status);
+             
             //this.get_basic_information();
             //  this.get_edu_information();
             //this.get_auth();
@@ -302,11 +305,13 @@
                 userInterests : {},
                 profile : {},
                 profileImg : {},
-                request_status : '',
+                request_status : 5,
                 url_id : '' ,
                 auth_id : '',
                 sender_id : '',
-                receiver_id : ''
+                receiver_id : '',
+                buttonClass:'',
+                buttonText : '',
 
 
             }
@@ -349,6 +354,29 @@
                 this.album = false;
                 this.friends = true;
             },
+
+            setRequestButton(status){
+
+            console.log('Check'+ this.request_status); 
+            
+            if(status == 5){
+              this.buttonText = 'add friend';
+              this.buttonClass = 'btn-primary';
+             }
+             if(status == 0){
+              this.buttonText = 'Request Sended';
+              this.buttonClass = 'btn-info';
+             }
+              if(status == 1){
+              this.buttonText = 'unfriend';
+              this.buttonClass = 'btn-success';
+             }
+              if(status == 2){
+              this.buttonText = 'Blocked';
+              this.buttonClass = 'btn-danger';
+             }
+             console.log('Check 2'+ this.buttonClass); 
+           },
             show_friends() {
 
                 this.about = true;
@@ -423,16 +451,22 @@
             },
 
             add_friendCustom(id , status) {
+                //status = -1;
                 let _this = this;
                 let userId = id;
+                if( (status == 2) ){//for already blocked or freind request already Sended 
+                  console.log('No operation');
+                  return;
+                }
+                status = (status == 5 ? 0 : -1);
 
                 axios.post('/addFriendCustom', {'user_id' :userId, 'status' : status})
                     .then(function (response) {
-
-                      // _this.request_status = response.data.status;
+                       _this.request_status = response.data;
                       // _this.sender_id = response.data.sender_id;
                       // _this.receiver_id = response.data.receiver_id;
-                      console.log(response.data );
+                       //console.log(response.data );
+                      _this.setRequestButton(response.data);
 
                     })
                     .catch(function (error) {
