@@ -2386,6 +2386,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 // import profileHeader from './ProfileHeader.vue'
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2487,6 +2488,22 @@ __webpack_require__.r(__webpack_exports__);
 
       var userId = id;
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/addFriend/' + userId, {
+        'status': status
+      }).then(function (response) {
+        // _this.request_status = response.data.status;
+        // _this.sender_id = response.data.sender_id;
+        // _this.receiver_id = response.data.receiver_id;
+        console.log(response.data);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+    add_friendCustom: function add_friendCustom(id, status) {
+      var _this = this;
+
+      var userId = id;
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/addFriendCustom', {
+        'user_id': userId,
         'status': status
       }).then(function (response) {
         // _this.request_status = response.data.status;
@@ -53258,7 +53275,10 @@ var render = function() {
                       on: {
                         click: function($event) {
                           $event.preventDefault()
-                          return _vm.friendAdded()
+                          return _vm.add_friendCustom(
+                            _vm.$route.params.userId,
+                            _vm.request_status
+                          )
                         }
                       }
                     },
@@ -53360,7 +53380,7 @@ var render = function() {
                           _vm._v(_vm._s(_vm.profile.work_designation) + " "),
                           _c("span", { staticClass: "text-grey" }, [
                             _vm._v(
-                              "\n                    " +
+                              "\n                        " +
                                 _vm._s(_vm.profile.work_from) +
                                 " To " +
                                 _vm._s(_vm.profile.work_to)
@@ -53411,9 +53431,9 @@ var render = function() {
                   _vm._l(_vm.userImgs, function(userImg) {
                     return _c("li", [
                       _vm._v(
-                        "\n              " +
+                        "\n                  " +
                           _vm._s(userImg.image) +
-                          "\n              "
+                          "\n                  "
                       ),
                       _c(
                         "div",
@@ -53444,7 +53464,7 @@ var render = function() {
             !_vm.friends
               ? _c("div", { staticClass: "post-content" }, [
                   _c("div", { staticClass: "post-container" }, [
-                    _vm._v("\n              FRIENDS \n            ")
+                    _vm._v("\n                  FRIENDS \n                ")
                   ])
                 ])
               : _vm._e()
@@ -76329,8 +76349,8 @@ if (token) {
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
-  key: "f2bd4968185dc3803560",
-  cluster: "ap2",
+  key: "09d4137a960445b97f57",
+  cluster: "mt1",
   encrypted: true
 });
 
@@ -77338,8 +77358,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! F:\xamp\htdocs\TeleFriend\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! F:\xamp\htdocs\TeleFriend\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\xamp\htdocs\telefriend\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\xamp\htdocs\telefriend\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ }),

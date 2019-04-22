@@ -39,7 +39,8 @@
 
                   <!--<li v-if="request_status == 0"><button  class="btn-primary" @click.prevent="add_friend($route.params.userId, request_status)">Request Sent</button></li>-->
 
-                    <li><button  class="btn-primary" @click.prevent="friendAdded()">Add Friend</button></li>
+<!--                     <li><button  class="btn-primary" @click.prevent="friendAdded()">Add Friend</button></li> -->
+                    <li><button  class="btn-primary" @click.prevent="add_friendCustom($route.params.userId, request_status)">Add Friend</button></li>
 
                   <!--<li v-if="request_status == 2"><button  class="btn-primary" @click.prevent="add_friend($route.params.userId, request_status)">Accept Request</button></li>-->
                   
@@ -417,6 +418,26 @@
                     .catch(function (error) {
 
                         console.log(error);
+
+                    });
+            },
+
+            add_friendCustom(id , status) {
+                let _this = this;
+                let userId = id;
+
+                axios.post('/addFriendCustom', {'user_id' :userId, 'status' : status})
+                    .then(function (response) {
+
+                      // _this.request_status = response.data.status;
+                      // _this.sender_id = response.data.sender_id;
+                      // _this.receiver_id = response.data.receiver_id;
+                      console.log(response.data );
+
+                    })
+                    .catch(function (error) {
+
+                      console.log(error);
 
                     });
             },

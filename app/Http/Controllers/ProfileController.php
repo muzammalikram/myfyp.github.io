@@ -240,50 +240,53 @@ class ProfileController extends Controller
 
          return response()->json($getStatus);
      }
-     public function accept_Request($id)
-     {
+
+    public function addFriendCustom(Request $request)
+    {
+        $sender_id = auth()->user()->id;
+
+        $find = Friends::where([['sender_id' ,$sender_id] , ['receiver_id', $request->user_id]])->orWhere([['receiver_id' ,$sender_id] , ['sender_id', $request->user_id]])->first();
+
+        if(!is_null($find)){
+        
+            $find->status = abs($request->status);        
+            $find->save();
+        }else{
+
+            $find = Friends::create([
+            'sender_id' => $sender_id,
+            'receiver_id' => $request->user_id,
+            'isFriends' => '',
+            'status' => 0 ]);
+        }
+        return response()->json($find->status);
+    }
+    
+    public function accept_Request($id)
+    {
          $auth = auth()->user()->id;
          $accept = Friends::orWhere('sender_id' , $id)->orWhere('receiver_id' , $auth)->get();
          dd($accept);
-     }
-     public function get_add_friend($id) 
-     {
-         $auth = auth()->user()->id;
-         $url_id = $id;
+    }
 
+    public function get_add_friend($id){
+    
+        $user_id = 12;//$id;
+        $sender_id = auth()->user()->id;
 
-         $isFriend1 = $auth."_".$url_id;
+        $find = Friends::where([['sender_id' ,$sender_id] , ['receiver_id', $user_id]])->orWhere([['receiver_id' ,$sender_id] , ['sender_id', $user_id]])->first();
 
-         $isFriend2 = $url_id."_".$auth;
-
-         $sent = Friends::where('sender_id' , $auth)->where('isFriends' , $isFriend1)->where('status' , 0)->first();
-
-         if ($sent != null)
-         {
-             return response()->json(0);
-         }
-
-         $accept = Friends::where('receiver_id' , $auth)->where('isFriends' , $isFriend2)->where('status' , 0)->first();
-
-         if ($accept != null )
-         {
-
-             return response()->json(2);
-         }
-
-         $friend = Friends::where('isFriends' , $isFriend1)->orWhere('isFriends' , $isFriend2)->where('status' , 1)->first();
-
-         if ($friend != null)
-         {
-
-             return response()->json(1);
-         }
-
-         //dd($sent);
-        return response()->json(3);
-     }
-     public function friendAdded(Request $request)
-     {
+        if(!is_null($find)){
+            $status = $find->status;
+        }else{            
+            $status = false;
+        }
+        
+        return response()->json($status);
+    }
+    
+    public function friendAdded(Request $request)
+    {
          $auth = auth()->user()->id;
          $slug = $request->url_id;
              //dd($slug);
