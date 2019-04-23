@@ -277,7 +277,7 @@
 
             this.show_about(this.$route.params.userId);
             this.get_add_friend();
-            this.setRequestButton(this.request_status);
+            //this.setRequestButton(this.request_status);
             console.log(this.request_status);
              
             //this.get_basic_information();
@@ -500,6 +500,7 @@
                     .then(function (response) {
 
                       _this.request_status = response.data;
+                     _this.setRequestButton(_this.request_status);
                       console.log('hello 123');
                       console.log(_this.request_status);
 
