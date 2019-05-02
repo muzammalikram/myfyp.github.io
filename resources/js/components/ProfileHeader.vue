@@ -2,7 +2,8 @@
 
 
 <template>
-    
+
+
 		<div class="timeline-cover">
  
                     <!--Timeline Menu for Large Screens-->

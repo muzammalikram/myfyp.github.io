@@ -46,14 +46,14 @@
             </div>
             <div v-else class="post-content" v-for="(post , index) in posts">
 
-              {{ post.id }}
+
 
               <img v-if="post.image != null " :src="'/storage/uploads/'+post.image" alt="post-image" class="img-responsive post-image" />
               <div class="post-container">
-                <img src="assets/images/users/user-5.jpg" alt="user" class="profile-photo-md pull-left" />
+                <img :src="'storage/uploads/'+profileImg.image" alt="user" class="profile-photo-md pull-left" />
                 <div class="post-detail">
                   <div class="user-info">
-                    <h5><a href="timeline.html" class="profile-link">Alexis Clark</a> <span class="following">following</span></h5>
+                    <h5><a href="timeline.html" class="profile-link">{{profileName }}</a> <span class="following">following</span></h5>
                     <p class="text-muted">Published a photo about 3 mins ago</p>
                   </div>
                   <div class="reaction">
@@ -139,6 +139,7 @@
             this.ClickedFn();
             //  this.get_newsfeed_comments();
             this.who_to_follow();
+            this.get_newsfeed_simillar();
         },
         data() {
             return {
@@ -149,7 +150,10 @@
                 comment : [],
                 like : 0,
                 addlike : 0,
-                followers : {}
+                followers : {},
+                profileName : '',
+                profileImg : ''
+
 
             }
         },
@@ -164,6 +168,22 @@
                         console.log(response.data);
                         // _this.userName = response.data.userName;
                         // _this.userImg = response.data.userImg.image;
+
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+
+            get_newsfeed_simillar(){
+                let _this = this;
+                axios.get('/get_user_newsfeed_similar_data' )
+                    .then(function (response) {
+                        _this.profileName = response.data.userName;
+                        _this.profileImg= response.data.userImg;
+                       // _this.followers = response.data.followers;
+
+                        //console.log(response.data);
 
                     })
                     .catch(function (error) {

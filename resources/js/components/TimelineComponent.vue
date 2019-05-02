@@ -72,10 +72,9 @@
 
               <!-- Post Content
               ================================================= -->
-              {{ posts }}
+
               <div class="post-content" v-for="(post , index) in posts">
 
-                {{ post.id }}
                 <!--Post Date-->
                 <div class="post-date hidden-xs hidden-sm">
                   <h5>Sarah</h5>

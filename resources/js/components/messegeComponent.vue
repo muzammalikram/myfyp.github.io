@@ -25,8 +25,6 @@
                                     <ul class="nav nav-tabs contact-list scrollbar-wrapper scrollbar-outer">
                                         <!--<div >-->
 
-                                        <button @click.prevent="get_friends()">Click</button>
-                                        <button @click.prevent="Testing()">Testing</button>
 
                                         <li v-for="friend in friends" :class="{active : isActive}" v-on:click="input_show = true">
 
@@ -41,8 +39,7 @@
                                                     <div class="msg-preview">
                                                         <h6>{{ friend.f_name }}</h6>
                                                         <p class="text-muted">hello</p>
-                                                        <small class="text-muted">a min ago</small>
-                                                        <div class="chat-alert">1</div>
+
                                                     </div>
                                                 </div>
                                             </a>
@@ -220,47 +217,6 @@
                     </div>
                 </div>
             </div>
-            <div id="chat-block">
-                <div class="title">Chat online</div>
-                <ul class="online-users list-inline">
-                    <li><a href="newsfeed-messages.html" title="Linda Lohan"><img src="assets/images/users/user-2.jpg"
-                                                                                  alt="user"
-                                                                                  class="img-responsive profile-photo"/><span
-                            class="online-dot"></span></a></li>
-                    <li><a href="newsfeed-messages.html" title="Sophia Lee"><img src="assets/images/users/user-3.jpg"
-                                                                                 alt="user"
-                                                                                 class="img-responsive profile-photo"/><span
-                            class="online-dot"></span></a></li>
-                    <li><a href="newsfeed-messages.html" title="John Doe"><img src="assets/images/users/user-4.jpg"
-                                                                               alt="user"
-                                                                               class="img-responsive profile-photo"/><span
-                            class="online-dot"></span></a></li>
-                    <li><a href="newsfeed-messages.html" title="Alexis Clark"><img src="assets/images/users/user-5.jpg"
-                                                                                   alt="user"
-                                                                                   class="img-responsive profile-photo"/><span
-                            class="online-dot"></span></a></li>
-                    <li><a href="newsfeed-messages.html" title="James Carter"><img src="assets/images/users/user-6.jpg"
-                                                                                   alt="user"
-                                                                                   class="img-responsive profile-photo"/><span
-                            class="online-dot"></span></a></li>
-                    <li><a href="newsfeed-messages.html" title="Robert Cook"><img src="assets/images/users/user-7.jpg"
-                                                                                  alt="user"
-                                                                                  class="img-responsive profile-photo"/><span
-                            class="online-dot"></span></a></li>
-                    <li><a href="newsfeed-messages.html" title="Richard Bell"><img src="assets/images/users/user-8.jpg"
-                                                                                   alt="user"
-                                                                                   class="img-responsive profile-photo"/><span
-                            class="online-dot"></span></a></li>
-                    <li><a href="newsfeed-messages.html" title="Anna Young"><img src="assets/images/users/user-9.jpg"
-                                                                                 alt="user"
-                                                                                 class="img-responsive profile-photo"/><span
-                            class="online-dot"></span></a></li>
-                    <li><a href="newsfeed-messages.html" title="Julia Cox"><img src="assets/images/users/user-10.jpg"
-                                                                                alt="user"
-                                                                                class="img-responsive profile-photo"/><span
-                            class="online-dot"></span></a></li>
-                </ul>
-            </div><!--chat block ends-->
 
         </div>
 
@@ -351,7 +307,7 @@
                     axios.post('send_message', {'message': _this.message , 'user_id' : _this.user_id})
                         .then(function (response) {
                             _this.message = '';
-                            _this.sender_div(_this.user_id);
+                           _this.sender_div(_this.user_id);
                             console.log(response.data);
 
                         })

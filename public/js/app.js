@@ -2806,6 +2806,7 @@ __webpack_require__.r(__webpack_exports__);
     this.ClickedFn(); //  this.get_newsfeed_comments();
 
     this.who_to_follow();
+    this.get_newsfeed_simillar();
   },
   data: function data() {
     return {
@@ -2816,7 +2817,9 @@ __webpack_require__.r(__webpack_exports__);
       comment: [],
       like: 0,
       addlike: 0,
-      followers: {}
+      followers: {},
+      profileName: '',
+      profileImg: ''
     };
   },
   methods: {
@@ -2828,6 +2831,17 @@ __webpack_require__.r(__webpack_exports__);
         _this.followers = response.data;
         console.log(response.data); // _this.userName = response.data.userName;
         // _this.userImg = response.data.userImg.image;
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+    get_newsfeed_simillar: function get_newsfeed_simillar() {
+      var _this = this;
+
+      axios.get('/get_user_newsfeed_similar_data').then(function (response) {
+        _this.profileName = response.data.userName;
+        _this.profileImg = response.data.userImg; // _this.followers = response.data.followers;
+        //console.log(response.data);
       }).catch(function (error) {
         console.log(error);
       });
@@ -3070,6 +3084,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('ProfileHeader mounted.'); // let userId = $('meta[name="userId"]').attr('content');
@@ -3156,7 +3171,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ProfileHeader_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ProfileHeader.vue */ "./resources/js/components/ProfileHeader.vue");
 /* harmony import */ var laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! laravel-vue-pagination */ "./node_modules/laravel-vue-pagination/dist/laravel-vue-pagination.common.js");
 /* harmony import */ var laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_1__);
-//
 //
 //
 //
@@ -5046,50 +5060,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
@@ -5244,19 +5214,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -54174,11 +54131,6 @@ var render = function() {
                   ? _c("div", [_c("h1", [_vm._v("No post Available")])])
                   : _vm._l(_vm.posts, function(post, index) {
                       return _c("div", { staticClass: "post-content" }, [
-                        _vm._v(
-                          "\n\n            " +
-                            _vm._s(post.id) +
-                            "\n\n            "
-                        ),
                         post.image != null
                           ? _c("img", {
                               staticClass: "img-responsive post-image",
@@ -54193,7 +54145,7 @@ var render = function() {
                           _c("img", {
                             staticClass: "profile-photo-md pull-left",
                             attrs: {
-                              src: "assets/images/users/user-5.jpg",
+                              src: "storage/uploads/" + _vm.profileImg.image,
                               alt: "user"
                             }
                           }),
@@ -54202,7 +54154,26 @@ var render = function() {
                             "div",
                             { staticClass: "post-detail" },
                             [
-                              _vm._m(0, true),
+                              _c("div", { staticClass: "user-info" }, [
+                                _c("h5", [
+                                  _c(
+                                    "a",
+                                    {
+                                      staticClass: "profile-link",
+                                      attrs: { href: "timeline.html" }
+                                    },
+                                    [_vm._v(_vm._s(_vm.profileName))]
+                                  ),
+                                  _vm._v(" "),
+                                  _c("span", { staticClass: "following" }, [
+                                    _vm._v("following")
+                                  ])
+                                ]),
+                                _vm._v(" "),
+                                _c("p", { staticClass: "text-muted" }, [
+                                  _vm._v("Published a photo about 3 mins ago")
+                                ])
+                              ]),
                               _vm._v(" "),
                               _c("div", { staticClass: "reaction" }, [
                                 _c(
@@ -54461,28 +54432,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "user-info" }, [
-      _c("h5", [
-        _c(
-          "a",
-          { staticClass: "profile-link", attrs: { href: "timeline.html" } },
-          [_vm._v("Alexis Clark")]
-        ),
-        _vm._v(" "),
-        _c("span", { staticClass: "following" }, [_vm._v("following")])
-      ]),
-      _vm._v(" "),
-      _c("p", { staticClass: "text-muted" }, [
-        _vm._v("Published a photo about 3 mins ago")
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -54896,17 +54846,8 @@ var render = function() {
                   ])
                 ]),
                 _vm._v(" "),
-                _vm._v(
-                  "\n              " + _vm._s(_vm.posts) + "\n              "
-                ),
                 _vm._l(_vm.posts, function(post, index) {
                   return _c("div", { staticClass: "post-content" }, [
-                    _vm._v(
-                      "\n\n                " +
-                        _vm._s(post.id) +
-                        "\n                "
-                    ),
-                    _vm._v(" "),
                     _vm._m(4, true),
                     _vm._v(" "),
                     post.image != null
@@ -58988,105 +58929,67 @@ var render = function() {
                         staticClass:
                           "nav nav-tabs contact-list scrollbar-wrapper scrollbar-outer"
                       },
-                      [
-                        _c(
-                          "button",
+                      _vm._l(_vm.friends, function(friend) {
+                        return _c(
+                          "li",
                           {
+                            class: { active: _vm.isActive },
                             on: {
                               click: function($event) {
-                                $event.preventDefault()
-                                return _vm.get_friends()
+                                _vm.input_show = true
                               }
                             }
                           },
-                          [_vm._v("Click")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "button",
-                          {
-                            on: {
-                              click: function($event) {
-                                $event.preventDefault()
-                                return _vm.Testing()
-                              }
-                            }
-                          },
-                          [_vm._v("Testing")]
-                        ),
-                        _vm._v(" "),
-                        _vm._l(_vm.friends, function(friend) {
-                          return _c(
-                            "li",
-                            {
-                              class: { active: _vm.isActive },
-                              on: {
-                                click: function($event) {
-                                  _vm.input_show = true
-                                }
-                              }
-                            },
-                            [
-                              _c(
-                                "a",
-                                {
-                                  attrs: {
-                                    href: "#content" + friend.id,
-                                    "data-toggle": "tab"
-                                  },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.sender_div(friend.id)
-                                    }
-                                  }
+                          [
+                            _c(
+                              "a",
+                              {
+                                attrs: {
+                                  href: "#content" + friend.id,
+                                  "data-toggle": "tab"
                                 },
-                                [
-                                  _c("div", { staticClass: "contact" }, [
-                                    friend.user_image == null
-                                      ? _c("img", {
-                                          staticClass:
-                                            "profile-photo-sm pull-left",
-                                          attrs: {
-                                            src: "storage/uploads/dummy.jpg",
-                                            alt: "No user image"
-                                          }
-                                        })
-                                      : _c("img", {
-                                          staticClass:
-                                            "profile-photo-sm pull-left",
-                                          attrs: {
-                                            src:
-                                              "storage/uploads/" +
-                                              friend.user_image.image,
-                                            alt: ""
-                                          }
-                                        }),
+                                on: {
+                                  click: function($event) {
+                                    return _vm.sender_div(friend.id)
+                                  }
+                                }
+                              },
+                              [
+                                _c("div", { staticClass: "contact" }, [
+                                  friend.user_image == null
+                                    ? _c("img", {
+                                        staticClass:
+                                          "profile-photo-sm pull-left",
+                                        attrs: {
+                                          src: "storage/uploads/dummy.jpg",
+                                          alt: "No user image"
+                                        }
+                                      })
+                                    : _c("img", {
+                                        staticClass:
+                                          "profile-photo-sm pull-left",
+                                        attrs: {
+                                          src:
+                                            "storage/uploads/" +
+                                            friend.user_image.image,
+                                          alt: ""
+                                        }
+                                      }),
+                                  _vm._v(" "),
+                                  _c("div", { staticClass: "msg-preview" }, [
+                                    _c("h6", [_vm._v(_vm._s(friend.f_name))]),
                                     _vm._v(" "),
-                                    _c("div", { staticClass: "msg-preview" }, [
-                                      _c("h6", [_vm._v(_vm._s(friend.f_name))]),
-                                      _vm._v(" "),
-                                      _c("p", { staticClass: "text-muted" }, [
-                                        _vm._v("hello")
-                                      ]),
-                                      _vm._v(" "),
-                                      _c(
-                                        "small",
-                                        { staticClass: "text-muted" },
-                                        [_vm._v("a min ago")]
-                                      ),
-                                      _vm._v(" "),
-                                      _c("div", { staticClass: "chat-alert" }, [
-                                        _vm._v("1")
-                                      ])
+                                    _c("p", { staticClass: "text-muted" }, [
+                                      _vm._v("hello")
                                     ])
                                   ])
-                                ]
-                              )
-                            ]
-                          )
-                        })
-                      ],
-                      2
+                                ])
+                              ]
+                            )
+                          ]
+                        )
+                      }),
+                      0
                     )
                   ]),
                   _vm._v(" "),
@@ -59309,9 +59212,7 @@ var render = function() {
           ],
           1
         )
-      ]),
-      _vm._v(" "),
-      _vm._m(1)
+      ])
     ])
   ])
 }
@@ -59379,148 +59280,6 @@ var staticRenderFns = [
               _c("p", [_vm._v("Hey")])
             ])
           ])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { attrs: { id: "chat-block" } }, [
-      _c("div", { staticClass: "title" }, [_vm._v("Chat online")]),
-      _vm._v(" "),
-      _c("ul", { staticClass: "online-users list-inline" }, [
-        _c("li", [
-          _c(
-            "a",
-            { attrs: { href: "newsfeed-messages.html", title: "Linda Lohan" } },
-            [
-              _c("img", {
-                staticClass: "img-responsive profile-photo",
-                attrs: { src: "assets/images/users/user-2.jpg", alt: "user" }
-              }),
-              _c("span", { staticClass: "online-dot" })
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", [
-          _c(
-            "a",
-            { attrs: { href: "newsfeed-messages.html", title: "Sophia Lee" } },
-            [
-              _c("img", {
-                staticClass: "img-responsive profile-photo",
-                attrs: { src: "assets/images/users/user-3.jpg", alt: "user" }
-              }),
-              _c("span", { staticClass: "online-dot" })
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", [
-          _c(
-            "a",
-            { attrs: { href: "newsfeed-messages.html", title: "John Doe" } },
-            [
-              _c("img", {
-                staticClass: "img-responsive profile-photo",
-                attrs: { src: "assets/images/users/user-4.jpg", alt: "user" }
-              }),
-              _c("span", { staticClass: "online-dot" })
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", [
-          _c(
-            "a",
-            {
-              attrs: { href: "newsfeed-messages.html", title: "Alexis Clark" }
-            },
-            [
-              _c("img", {
-                staticClass: "img-responsive profile-photo",
-                attrs: { src: "assets/images/users/user-5.jpg", alt: "user" }
-              }),
-              _c("span", { staticClass: "online-dot" })
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", [
-          _c(
-            "a",
-            {
-              attrs: { href: "newsfeed-messages.html", title: "James Carter" }
-            },
-            [
-              _c("img", {
-                staticClass: "img-responsive profile-photo",
-                attrs: { src: "assets/images/users/user-6.jpg", alt: "user" }
-              }),
-              _c("span", { staticClass: "online-dot" })
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", [
-          _c(
-            "a",
-            { attrs: { href: "newsfeed-messages.html", title: "Robert Cook" } },
-            [
-              _c("img", {
-                staticClass: "img-responsive profile-photo",
-                attrs: { src: "assets/images/users/user-7.jpg", alt: "user" }
-              }),
-              _c("span", { staticClass: "online-dot" })
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", [
-          _c(
-            "a",
-            {
-              attrs: { href: "newsfeed-messages.html", title: "Richard Bell" }
-            },
-            [
-              _c("img", {
-                staticClass: "img-responsive profile-photo",
-                attrs: { src: "assets/images/users/user-8.jpg", alt: "user" }
-              }),
-              _c("span", { staticClass: "online-dot" })
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", [
-          _c(
-            "a",
-            { attrs: { href: "newsfeed-messages.html", title: "Anna Young" } },
-            [
-              _c("img", {
-                staticClass: "img-responsive profile-photo",
-                attrs: { src: "assets/images/users/user-9.jpg", alt: "user" }
-              }),
-              _c("span", { staticClass: "online-dot" })
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", [
-          _c(
-            "a",
-            { attrs: { href: "newsfeed-messages.html", title: "Julia Cox" } },
-            [
-              _c("img", {
-                staticClass: "img-responsive profile-photo",
-                attrs: { src: "assets/images/users/user-10.jpg", alt: "user" }
-              }),
-              _c("span", { staticClass: "online-dot" })
-            ]
-          )
         ])
       ])
     ])
@@ -59629,155 +59388,10 @@ var render = function() {
           1
         )
       ])
-    ]),
-    _vm._v(" "),
-    _vm._m(0)
+    ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { attrs: { id: "chat-block" } }, [
-      _c("div", { staticClass: "title" }, [_vm._v("Chat online")]),
-      _vm._v(" "),
-      _c("ul", { staticClass: "online-users list-inline" }, [
-        _c("li", [
-          _c(
-            "a",
-            { attrs: { href: "newsfeed-messages.html", title: "Linda Lohan" } },
-            [
-              _c("img", {
-                staticClass: "img-responsive profile-photo",
-                attrs: { src: "assets/images/users/user-2.jpg", alt: "user" }
-              }),
-              _c("span", { staticClass: "online-dot" })
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", [
-          _c(
-            "a",
-            { attrs: { href: "newsfeed-messages.html", title: "Sophia Lee" } },
-            [
-              _c("img", {
-                staticClass: "img-responsive profile-photo",
-                attrs: { src: "assets/images/users/user-3.jpg", alt: "user" }
-              }),
-              _c("span", { staticClass: "online-dot" })
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", [
-          _c(
-            "a",
-            { attrs: { href: "newsfeed-messages.html", title: "John Doe" } },
-            [
-              _c("img", {
-                staticClass: "img-responsive profile-photo",
-                attrs: { src: "assets/images/users/user-4.jpg", alt: "user" }
-              }),
-              _c("span", { staticClass: "online-dot" })
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", [
-          _c(
-            "a",
-            {
-              attrs: { href: "newsfeed-messages.html", title: "Alexis Clark" }
-            },
-            [
-              _c("img", {
-                staticClass: "img-responsive profile-photo",
-                attrs: { src: "assets/images/users/user-5.jpg", alt: "user" }
-              }),
-              _c("span", { staticClass: "online-dot" })
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", [
-          _c(
-            "a",
-            {
-              attrs: { href: "newsfeed-messages.html", title: "James Carter" }
-            },
-            [
-              _c("img", {
-                staticClass: "img-responsive profile-photo",
-                attrs: { src: "assets/images/users/user-6.jpg", alt: "user" }
-              }),
-              _c("span", { staticClass: "online-dot" })
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", [
-          _c(
-            "a",
-            { attrs: { href: "newsfeed-messages.html", title: "Robert Cook" } },
-            [
-              _c("img", {
-                staticClass: "img-responsive profile-photo",
-                attrs: { src: "assets/images/users/user-7.jpg", alt: "user" }
-              }),
-              _c("span", { staticClass: "online-dot" })
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", [
-          _c(
-            "a",
-            {
-              attrs: { href: "newsfeed-messages.html", title: "Richard Bell" }
-            },
-            [
-              _c("img", {
-                staticClass: "img-responsive profile-photo",
-                attrs: { src: "assets/images/users/user-8.jpg", alt: "user" }
-              }),
-              _c("span", { staticClass: "online-dot" })
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", [
-          _c(
-            "a",
-            { attrs: { href: "newsfeed-messages.html", title: "Anna Young" } },
-            [
-              _c("img", {
-                staticClass: "img-responsive profile-photo",
-                attrs: { src: "assets/images/users/user-9.jpg", alt: "user" }
-              }),
-              _c("span", { staticClass: "online-dot" })
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", [
-          _c(
-            "a",
-            { attrs: { href: "newsfeed-messages.html", title: "Julia Cox" } },
-            [
-              _c("img", {
-                staticClass: "img-responsive profile-photo",
-                attrs: { src: "assets/images/users/user-10.jpg", alt: "user" }
-              }),
-              _c("span", { staticClass: "online-dot" })
-            ]
-          )
-        ])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

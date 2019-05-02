@@ -298,7 +298,7 @@ textarea{
 }
 
 .screen-reader-text{
-  overflow: hidden;
+  overflow: hidden;timeline-cover
   clip: rect(0, 0, 0, 0);
   position: absolute;
   margin: -1px;
@@ -1544,7 +1544,7 @@ ul.online-users li span.online-dot{
   ==================================================*/
 
 .timeline-cover{
-  background: url("../images/covers/1.jpg") no-repeat;
+  background: url("../images/friendship.jpg") no-repeat;
   background-position: center;
   background-size: cover;
   min-height: 360px;
