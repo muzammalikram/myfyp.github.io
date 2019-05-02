@@ -60,6 +60,7 @@ Route::get('showData' , 'PostController@showData');
 Route::get('get_friend_Image' , 'ImageController@get_friend_Image');
 Route::get('get_friend_info/{id}' , 'ProfileController@get_friend_info');
 Route::post('addFriend/{id}' , 'ProfileController@addFriend');
+Route::post('addFriendCustom' , 'ProfileController@addFriendCustom');
 Route::post('get_notifications' , 'NotificationController@get_notifications');
 Route::get('get_user_info' , 'ProfileController@get_user_info');
 Route::post('post_action/{post_id}' , 'PostController@post_action');

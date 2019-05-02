@@ -6,7 +6,7 @@ $factory->define(App\Friends::class, function (Faker $faker) {
     return [
         'sender_id' => 1,
         'receiver_id' => 2,
-        'isFriend' => 'none'
+        'isFriends' => 'none',
         'status'=>1,
     ];
 });

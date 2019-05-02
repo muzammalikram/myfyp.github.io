@@ -2386,13 +2386,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 // import profileHeader from './ProfileHeader.vue'
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Component mounted.');
     this.show_about(this.$route.params.userId);
-    this.get_add_friend(); //this.get_basic_information();
+    this.get_add_friend();
+    this.setRequestButton(this.request_status);
+    console.log(this.request_status); //this.get_basic_information();
     //  this.get_edu_information();
     //this.get_auth();
 
@@ -2412,11 +2415,13 @@ __webpack_require__.r(__webpack_exports__);
       userInterests: {},
       profile: {},
       profileImg: {},
-      request_status: '',
+      request_status: 5,
       url_id: '',
       auth_id: '',
       sender_id: '',
-      receiver_id: ''
+      receiver_id: '',
+      buttonClass: '',
+      buttonText: ''
     };
   },
   computed: {},
@@ -2446,6 +2451,31 @@ __webpack_require__.r(__webpack_exports__);
       this.timeline = true;
       this.album = false;
       this.friends = true;
+    },
+    setRequestButton: function setRequestButton(status) {
+      console.log('Check' + this.request_status);
+
+      if (status == 5) {
+        this.buttonText = 'add friend';
+        this.buttonClass = 'btn-primary';
+      }
+
+      if (status == 0) {
+        this.buttonText = 'Request Sended';
+        this.buttonClass = 'btn-info';
+      }
+
+      if (status == 1) {
+        this.buttonText = 'unfriend';
+        this.buttonClass = 'btn-success';
+      }
+
+      if (status == 2) {
+        this.buttonText = 'Blocked';
+        this.buttonClass = 'btn-danger';
+      }
+
+      console.log('Check 2' + this.buttonClass);
     },
     show_friends: function show_friends() {
       this.about = true;
@@ -2493,6 +2523,32 @@ __webpack_require__.r(__webpack_exports__);
         // _this.sender_id = response.data.sender_id;
         // _this.receiver_id = response.data.receiver_id;
         console.log(response.data);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+    add_friendCustom: function add_friendCustom(id, status) {
+      //status = -1;
+      var _this = this;
+
+      var userId = id;
+
+      if (status == 2) {
+        //for already blocked or freind request already Sended 
+        console.log('No operation');
+        return;
+      }
+
+      status = status == 5 ? 0 : -1;
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/addFriendCustom', {
+        'user_id': userId,
+        'status': status
+      }).then(function (response) {
+        _this.request_status = response.data; // _this.sender_id = response.data.sender_id;
+        // _this.receiver_id = response.data.receiver_id;
+        //console.log(response.data );
+
+        _this.setRequestButton(response.data);
       }).catch(function (error) {
         console.log(error);
       });
@@ -53211,15 +53267,18 @@ var render = function() {
                   _c(
                     "button",
                     {
-                      staticClass: "btn-primary",
+                      class: _vm.buttonClass,
                       on: {
                         click: function($event) {
                           $event.preventDefault()
-                          return _vm.friendAdded()
+                          return _vm.add_friendCustom(
+                            _vm.$route.params.userId,
+                            _vm.request_status
+                          )
                         }
                       }
                     },
-                    [_vm._v("Add Friend")]
+                    [_vm._v(_vm._s(_vm.buttonText))]
                   )
                 ])
               ])
@@ -53317,7 +53376,7 @@ var render = function() {
                           _vm._v(_vm._s(_vm.profile.work_designation) + " "),
                           _c("span", { staticClass: "text-grey" }, [
                             _vm._v(
-                              "\n                    " +
+                              "\n                        " +
                                 _vm._s(_vm.profile.work_from) +
                                 " To " +
                                 _vm._s(_vm.profile.work_to)
@@ -53368,9 +53427,9 @@ var render = function() {
                   _vm._l(_vm.userImgs, function(userImg) {
                     return _c("li", [
                       _vm._v(
-                        "\n              " +
+                        "\n                  " +
                           _vm._s(userImg.image) +
-                          "\n              "
+                          "\n                  "
                       ),
                       _c(
                         "div",
@@ -53401,7 +53460,7 @@ var render = function() {
             !_vm.friends
               ? _c("div", { staticClass: "post-content" }, [
                   _c("div", { staticClass: "post-container" }, [
-                    _vm._v("\n              FRIENDS \n            ")
+                    _vm._v("\n                  FRIENDS \n                ")
                   ])
                 ])
               : _vm._e()
@@ -75943,8 +76002,8 @@ if (token) {
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
-  key: "f2bd4968185dc3803560",
-  cluster: "ap2",
+  key: "09d4137a960445b97f57",
+  cluster: "mt1",
   encrypted: true
 });
 
@@ -76952,8 +77011,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! F:\xamp\htdocs\TeleFriend\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! F:\xamp\htdocs\TeleFriend\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\xamp\htdocs\telefriend\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\xamp\htdocs\telefriend\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ }),
