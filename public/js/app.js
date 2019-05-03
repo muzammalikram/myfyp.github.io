@@ -2393,8 +2393,8 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     console.log('Component mounted.');
     this.show_about(this.$route.params.userId);
-    this.get_add_friend();
-    this.setRequestButton(this.request_status);
+    this.get_add_friend(); //this.setRequestButton(this.request_status);
+
     console.log(this.request_status); //this.get_basic_information();
     //  this.get_edu_information();
     //this.get_auth();
@@ -2569,6 +2569,9 @@ __webpack_require__.r(__webpack_exports__);
 
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/get_add_friend/' + userId).then(function (response) {
         _this.request_status = response.data;
+
+        _this.setRequestButton(_this.request_status);
+
         console.log('hello 123');
         console.log(_this.request_status);
       }).catch(function (error) {
@@ -76002,8 +76005,8 @@ if (token) {
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
-  key: "09d4137a960445b97f57",
-  cluster: "mt1",
+  key: "f2bd4968185dc3803560",
+  cluster: "ap2",
   encrypted: true
 });
 
@@ -77011,8 +77014,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\xamp\htdocs\telefriend\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\xamp\htdocs\telefriend\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! F:\xamp\htdocs\TeleFriend\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! F:\xamp\htdocs\TeleFriend\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ }),
